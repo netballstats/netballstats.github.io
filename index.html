@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>U15 Girls Development — Fixture Matrix</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; padding: 20px; }
+  h1 { font-size: 1.3rem; color: #1a1a2e; margin-bottom: 4px; }
+  .subtitle { font-size: 0.85rem; color: #555; margin-bottom: 16px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #444; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #ccc; }
+  .scroll-wrapper { overflow-x: auto; border: 1px solid #d0d0d0; border-radius: 8px; background: #fff; }
+  table { border-collapse: collapse; font-size: 0.72rem; min-width: 100%; }
+  th, td { border: 1px solid #ddd; padding: 5px 6px; text-align: center; white-space: nowrap; min-width: 100px; }
+  th { background: #f0f0f4; font-weight: 700; }
+  thead th { position: sticky; top: 0; z-index: 2; }
+  .sticky-col { position: sticky; left: 0; z-index: 3; background: #f0f0f4; min-width: 140px; text-align: left; }
+  thead .sticky-col { z-index: 4; }
+  td.diagonal { background: #e0e0e0; }
+  td.empty-cell { background: #fafafa; }
+  .cell-round { font-weight: 700; font-size: 0.78rem; }
+  .cell-detail { font-size: 0.68rem; color: #555; margin-top: 1px; }
+  .cell-time { font-size: 0.72rem; color: #333; margin-top: 2px; }
+  .cell-court { font-size: 0.66rem; color: #777; margin-top: 1px; }
+  .highlight-row td, .highlight-row .sticky-col { background-color: #dce8f7 !important; }
+  .highlight-row td.diagonal { background-color: #b8cde6 !important; }
+  .highlight-col { background-color: #dce8f7 !important; }
+  .highlight-row .highlight-col { background-color: #c8d8ee !important; }
+  .note { font-size: 0.7rem; color: #888; margin-top: 10px; line-height: 1.5; }
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    th, td { padding: 4px 5px; font-size: 0.65rem; min-width: 82px; }
+    .sticky-col { min-width: 110px; }
+  }
+</style>
+</head>
+<body>
+<h1>U15 Girls Development — Fixture Matrix</h1>
+<p class="subtitle">Representative &amp; Development Carnival 12yrs to Opens, 2026 · Jamison Park Netball Complex · Sunday 29 March 2026</p>
+<div class="legend" id="legend"></div>
+<div class="scroll-wrapper">
+  <table id="matrix"></table>
+</div>
+<p class="note">
+  Upper-right triangle: round &amp; time<br>
+  Lower-left triangle: round, time &amp; court<br>
+  Blue tint = Ku-ring-gai Dev · All matches upcoming — scores will appear after the carnival
+</p>
+
+<script>
+const TEAMS = {
+  "Ku-ring-gai Dev":       { color: "#1565c0" },
+  "Randwick Dev":          { color: "#6a1b9a" },
+  "Hills Dev":             { color: "#2e7d32" },
+  "Canberra Skye":         { color: "#00838f" },
+  "Nth Suburbs Dev":       { color: "#546e7a" },
+  "Penrith Dev":           { color: "#e65100" },
+  "Eastwood Ryde Dev":     { color: "#ad1457" },
+  "Sth Canberra Blue":     { color: "#c62828" }
+};
+
+// [round, time, court, teamA, teamB]
+const MATCHES = [
+  [1,"9:30 AM","Ct 11","Hills Dev","Sth Canberra Blue"],
+  [1,"9:30 AM","Ct 12","Randwick Dev","Ku-ring-gai Dev"],
+  [1,"9:30 AM","Ct 17","Canberra Skye","Eastwood Ryde Dev"],
+  [1,"9:30 AM","Ct 10","Nth Suburbs Dev","Penrith Dev"],
+
+  [2,"10:10 AM","Ct 11","Sth Canberra Blue","Canberra Skye"],
+  [2,"10:10 AM","Ct 12","Eastwood Ryde Dev","Nth Suburbs Dev"],
+  [2,"10:10 AM","Ct 10","Penrith Dev","Randwick Dev"],
+  [2,"10:10 AM","Ct 17","Ku-ring-gai Dev","Hills Dev"],
+
+  [3,"10:50 AM","Ct 10","Penrith Dev","Eastwood Ryde Dev"],
+  [3,"10:50 AM","Ct 11","Canberra Skye","Ku-ring-gai Dev"],
+  [3,"10:50 AM","Ct 12","Nth Suburbs Dev","Sth Canberra Blue"],
+  [3,"10:50 AM","Ct 17","Randwick Dev","Hills Dev"],
+
+  [4,"11:30 AM","Ct 11","Hills Dev","Canberra Skye"],
+  [4,"11:30 AM","Ct 10","Sth Canberra Blue","Penrith Dev"],
+  [4,"11:30 AM","Ct 12","Ku-ring-gai Dev","Nth Suburbs Dev"],
+  [4,"11:30 AM","Ct 17","Eastwood Ryde Dev","Randwick Dev"],
+
+  [5,"12:10 PM","Ct 10","Penrith Dev","Ku-ring-gai Dev"],
+  [5,"12:10 PM","Ct 11","Nth Suburbs Dev","Hills Dev"],
+  [5,"12:10 PM","Ct 12","Randwick Dev","Canberra Skye"],
+  [5,"12:10 PM","Ct 17","Eastwood Ryde Dev","Sth Canberra Blue"],
+
+  [6,"12:50 PM","Ct 11","Ku-ring-gai Dev","Eastwood Ryde Dev"],
+  [6,"12:50 PM","Ct 12","Sth Canberra Blue","Randwick Dev"],
+  [6,"12:50 PM","Ct 10","Hills Dev","Penrith Dev"],
+  [6,"12:50 PM","Ct 17","Canberra Skye","Nth Suburbs Dev"],
+
+  [7,"1:30 PM","Ct 11","Randwick Dev","Nth Suburbs Dev"],
+  [7,"1:30 PM","Ct 10","Penrith Dev","Canberra Skye"],
+  [7,"1:30 PM","Ct 12","Eastwood Ryde Dev","Hills Dev"],
+  [7,"1:30 PM","Ct 17","Sth Canberra Blue","Ku-ring-gai Dev"]
+];
+
+const SHORT = Object.keys(TEAMS);
+const matchMap = {};
+SHORT.forEach(t => matchMap[t] = {});
+
+MATCHES.forEach(([rd, time, court, tA, tB]) => {
+  matchMap[tA][tB] = { round: rd, time, court };
+  matchMap[tB][tA] = { round: rd, time, court };
+});
+
+// Order: Ku-ring-gai Dev first, then opponents in round order, then remainder
+const FOCUS = "Ku-ring-gai Dev";
+const focusOpps = [];
+for (let r = 1; r <= 7; r++) {
+  const m = MATCHES.find(([rd,,, tA, tB]) => rd === r && (tA === FOCUS || tB === FOCUS));
+  if (m) {
+    const opp = m[3] === FOCUS ? m[4] : m[3];
+    if (!focusOpps.includes(opp)) focusOpps.push(opp);
+  }
+}
+const rest = SHORT.filter(t => t !== FOCUS && !focusOpps.includes(t));
+const order = [FOCUS, ...focusOpps, ...rest];
+
+// Legend
+const legendEl = document.getElementById('legend');
+order.forEach(t => {
+  const item = document.createElement('span');
+  item.className = 'legend-item';
+  item.innerHTML = `<span class="legend-swatch" style="border-color:${TEAMS[t].color}"></span><span style="color:${TEAMS[t].color}; font-weight:600">${t}</span>`;
+  legendEl.appendChild(item);
+});
+
+// Build table
+const table = document.getElementById('matrix');
+let html = '<thead><tr><th class="sticky-col"></th>';
+order.forEach(t => {
+  const cls = t === FOCUS ? ' highlight-col' : '';
+  html += `<th class="${cls}" style="color:${TEAMS[t].color}">${t}</th>`;
+});
+html += '</tr></thead><tbody>';
+
+order.forEach((rowT, ri) => {
+  const isHL = rowT === FOCUS;
+  html += `<tr class="${isHL ? 'highlight-row' : ''}">`;
+  html += `<th class="sticky-col" style="color:${TEAMS[rowT].color}">${rowT}</th>`;
+
+  order.forEach((colT, ci) => {
+    const focusC = colT === FOCUS ? ' highlight-col' : '';
+    if (rowT === colT) {
+      html += '<td class="diagonal"></td>';
+      return;
+    }
+    const m = matchMap[rowT]?.[colT];
+    if (!m) {
+      html += `<td class="empty-cell${focusC}"></td>`;
+      return;
+    }
+
+    html += `<td class="${focusC}">
+        <div class="cell-round">R${m.round}</div>
+        <div class="cell-time">${m.time}</div>
+        <div class="cell-court">${m.court}</div>
+      </td>`;
+  });
+  html += '</tr>';
+});
+
+html += '</tbody>';
+table.innerHTML = html;
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+*.db
+*.pyc
+__pycache__/
+debug_*.png
+debug_*.txt
+results.json
+request.json
+response.json
+.venv/
