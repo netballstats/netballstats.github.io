@@ -1,3 +1,0 @@
-# netballstats.github.io
-
-Welcome.
