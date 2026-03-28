@@ -131,12 +131,24 @@ def generate_html(data: dict, config: dict) -> str:
         )
     matches_js = "[\n" + ",\n".join(matches_js_entries) + "\n]"
 
+    # Focus team (shown first, opponents ordered by round)
+    focus_team = config.get("focus_team", "")
+    # Map to short name if it matches a full name
+    focus_short = short_names.get(focus_team, focus_team) if focus_team else ""
+
+    # Generate timestamp in AEDT
+    from datetime import datetime, timezone, timedelta
+    aedt = timezone(timedelta(hours=11))
+    now_aedt = datetime.now(aedt).strftime("%a %d %b %Y, %I:%M %p AEDT")
+
     return HTML_TEMPLATE.format(
         title=escape(title),
         subtitle=escape(subtitle),
         teams_js=teams_js,
         matches_js=matches_js,
         total_rounds=total_rounds,
+        focus_team_js=json.dumps(focus_short),
+        updated_time=now_aedt,
     )
 
 
@@ -179,6 +191,10 @@ HTML_TEMPLATE = """\
   .standings th {{ background: #f0f0f4; }}
   .standings td:nth-child(2) {{ text-align: left; font-weight: 600; }}
   .standings tr:nth-child(even) {{ background: #fafafa; }}
+  .highlight-row td, .highlight-row .sticky-col {{ background-color: #dce8f7 !important; }}
+  .highlight-row td.diagonal {{ background-color: #b8cde6 !important; }}
+  .highlight-col {{ background-color: #dce8f7 !important; }}
+  .highlight-row .highlight-col {{ background-color: #c8d8ee !important; }}
   .bye-list {{ font-size: 0.78rem; color: #555; margin-top: 12px; line-height: 1.8; }}
   .bye-list span {{ display: inline-block; background: #f0f0f4; border: 1px solid #ddd; border-radius: 4px; padding: 1px 8px; margin: 0 2px; font-weight: 600; }}
   @media (max-width: 600px) {{
@@ -201,11 +217,13 @@ HTML_TEMPLATE = """\
   <h2>Standings</h2>
   <table class="standings" id="standings"></table>
 </div>
+<p class="note" id="updated" style="margin-top:16px"></p>
 
 <script>
 const TEAMS = {teams_js};
 const MATCHES = {matches_js};
 const TOTAL_ROUNDS = {total_rounds};
+const FOCUS = {focus_team_js};
 
 const teamNames = Object.keys(TEAMS);
 
@@ -247,13 +265,55 @@ if (hasScores) {{
   }});
 }}
 
-// Sort
-const order = [...teamNames].sort((a, b) => {{
-  if (!hasScores) return a.localeCompare(b);
-  const sa = stats[a], sb = stats[b];
-  if (sb.w !== sa.w) return sb.w - sa.w;
-  return (sb.pf - sb.pa) - (sa.pf - sa.pa);
-}});
+// Sort: focus team first, then opponents in round order, then rest
+let order;
+if (FOCUS && teamNames.includes(FOCUS)) {{
+  const focusOpps = [];
+  for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
+    const m = MATCHES.find(([rd,,, tA, tB]) => rd === r && (tA === FOCUS || tB === FOCUS));
+    if (m) {{
+      const opp = m[3] === FOCUS ? m[4] : m[3];
+      if (!focusOpps.includes(opp)) focusOpps.push(opp);
+    }} else {{
+      // Focus team has a bye this round — insert a BYE marker
+      focusOpps.push(null);
+    }}
+  }}
+  // Remove BYE markers, they're just for ordering
+  const oppsClean = focusOpps.filter(t => t !== null);
+  const rest = teamNames.filter(t => t !== FOCUS && !oppsClean.includes(t));
+  if (hasScores) {{
+    rest.sort((a, b) => {{
+      const sa = stats[a], sb = stats[b];
+      if (sb.w !== sa.w) return sb.w - sa.w;
+      return (sb.pf - sb.pa) - (sa.pf - sa.pa);
+    }});
+  }} else {{
+    rest.sort((a, b) => a.localeCompare(b));
+  }}
+  order = [FOCUS, ...oppsClean, ...rest];
+}} else {{
+  order = [...teamNames].sort((a, b) => {{
+    if (!hasScores) return a.localeCompare(b);
+    const sa = stats[a], sb = stats[b];
+    if (sb.w !== sa.w) return sb.w - sa.w;
+    return (sb.pf - sb.pa) - (sa.pf - sa.pa);
+  }});
+}}
+
+// Build focus team's round-by-round schedule (for bye display)
+const focusSchedule = [];
+if (FOCUS && teamNames.includes(FOCUS)) {{
+  for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
+    const m = MATCHES.find(([rd,,, tA, tB]) => rd === r && (tA === FOCUS || tB === FOCUS));
+    if (m) {{
+      const opp = m[3] === FOCUS ? m[4] : m[3];
+      focusSchedule.push({{ round: r, opponent: opp, time: m[1], court: m[2] }});
+    }} else {{
+      focusSchedule.push({{ round: r, opponent: null, time: '', court: '' }});
+    }}
+  }}
+}}
 
 // Legend
 const legendEl = document.getElementById('legend');
@@ -268,17 +328,20 @@ order.forEach(t => {{
 const table = document.getElementById('matrix');
 let html = '<thead><tr><th class="sticky-col"></th>';
 order.forEach(t => {{
-  html += `<th style="color:${{TEAMS[t].color}}">${{t}}</th>`;
+  const fc = (FOCUS && t === FOCUS) ? ' highlight-col' : '';
+  html += `<th class="${{fc}}" style="color:${{TEAMS[t].color}}">${{t}}</th>`;
 }});
 html += '</tr></thead><tbody>';
 
 order.forEach(rowT => {{
-  html += '<tr>';
+  const isHL = FOCUS && rowT === FOCUS;
+  html += `<tr class="${{isHL ? 'highlight-row' : ''}}">`;
   html += `<th class="sticky-col" style="color:${{TEAMS[rowT].color}}">${{rowT}}</th>`;
   order.forEach(colT => {{
-    if (rowT === colT) {{ html += '<td class="diagonal"></td>'; return; }}
+    const fc = (FOCUS && colT === FOCUS) ? ' highlight-col' : '';
+    if (rowT === colT) {{ html += `<td class="diagonal${{fc}}"></td>`; return; }}
     const m = matchMap[rowT]?.[colT];
-    if (!m) {{ html += '<td class="empty-cell"></td>'; return; }}
+    if (!m) {{ html += `<td class="empty-cell${{fc}}"></td>`; return; }}
 
     let scoreHtml = '';
     if (m.myScore !== null) {{
@@ -290,7 +353,7 @@ order.forEach(rowT => {{
       scoreHtml = '<div class="cell-score"><span class="upcoming">v</span></div>';
     }}
 
-    html += `<td>
+    html += `<td class="${{fc}}">
       <div class="cell-round">R${{m.round}}</div>
       ${{scoreHtml}}
       <div class="cell-time">${{m.time}}</div>
@@ -313,14 +376,28 @@ if (Object.keys(byes).length) {{
   noteEl.innerHTML += '<br>Odd number of teams — one team has a bye each round.';
 }}
 
-// Byes
+// Byes — show in focus team's perspective order
 const byesEl = document.getElementById('byes');
 if (Object.keys(byes).length) {{
   let bh = '<strong>Byes:</strong> ';
-  for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
-    if (byes[r]) byes[r].forEach(t => {{
-      bh += `R${{r}} <span style="color:${{TEAMS[t].color}}">${{t}}</span> `;
-    }});
+  // If focus team exists, show their bye prominently first, then others in round order
+  if (FOCUS && teamNames.includes(FOCUS)) {{
+    for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
+      if (byes[r] && byes[r].includes(FOCUS)) {{
+        bh += `R${{r}} <span style="color:${{TEAMS[FOCUS].color}}; font-weight:700">${{FOCUS}} (bye)</span> `;
+      }}
+    }}
+    for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
+      if (byes[r]) byes[r].filter(t => t !== FOCUS).forEach(t => {{
+        bh += `R${{r}} <span style="color:${{TEAMS[t].color}}">${{t}}</span> `;
+      }});
+    }}
+  }} else {{
+    for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
+      if (byes[r]) byes[r].forEach(t => {{
+        bh += `R${{r}} <span style="color:${{TEAMS[t].color}}">${{t}}</span> `;
+      }});
+    }}
   }}
   byesEl.innerHTML = bh;
 }}
@@ -339,6 +416,8 @@ if (hasScores) {{
   stEl.innerHTML = sh;
   document.getElementById('standings-section').style.display = '';
 }}
+
+document.getElementById('updated').textContent = 'Last updated: {updated_time}';
 </script>
 </body>
 </html>
