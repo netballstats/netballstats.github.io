@@ -9,42 +9,6 @@
       "url": "https://www.playhq.com/netball-australia/org/penrith-district-netball-association/representative-and-development-carnival-12yrs-to-opens-2026/u15-girls-development/15299ca4",
       "fixtures": [
         {
-          "round_name": "Round 1",
-          "date": "29 Mar 26",
-          "time": "09:30 AM",
-          "venue": "Jamison Park Netball Complex",
-          "court": "Court 10",
-          "home_team": "Penrith Dev",
-          "away_team": "Randwick Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
-        },
-        {
-          "round_name": "Round 1",
-          "date": "29 Mar 26",
-          "time": "09:30 AM",
-          "venue": "Jamison Park Netball Complex",
-          "court": "Court 11",
-          "home_team": "Northern Suburbs Dev",
-          "away_team": "Ku-ring-gai Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
-        },
-        {
-          "round_name": "Round 1",
-          "date": "29 Mar 26",
-          "time": "09:30 AM",
-          "venue": "Jamison Park Netball Complex",
-          "court": "Court 12",
-          "home_team": "Canberra Skye",
-          "away_team": "Hills Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
-        },
-        {
           "round_name": "Round 2",
           "date": "29 Mar 26",
           "time": "10:10 AM",
