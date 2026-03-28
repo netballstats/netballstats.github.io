@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>U15 Girls Development — Fixture Matrix</title>
+<title>U15 Girls Development — Representative And Development Carnival 12Yrs To Opens 2026</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; padding: 20px; }
@@ -11,10 +11,10 @@
   .subtitle { font-size: 0.85rem; color: #555; margin-bottom: 16px; }
   .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; align-items: center; }
   .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #444; }
-  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #ccc; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 2px solid #ccc; }
   .scroll-wrapper { overflow-x: auto; border: 1px solid #d0d0d0; border-radius: 8px; background: #fff; }
   table { border-collapse: collapse; font-size: 0.72rem; min-width: 100%; }
-  th, td { border: 1px solid #ddd; padding: 5px 6px; text-align: center; white-space: nowrap; min-width: 100px; }
+  th, td { border: 1px solid #ddd; padding: 5px 6px; text-align: center; white-space: nowrap; min-width: 110px; }
   th { background: #f0f0f4; font-weight: 700; }
   thead th { position: sticky; top: 0; z-index: 2; }
   .sticky-col { position: sticky; left: 0; z-index: 3; background: #f0f0f4; min-width: 140px; text-align: left; }
@@ -22,105 +22,125 @@
   td.diagonal { background: #e0e0e0; }
   td.empty-cell { background: #fafafa; }
   .cell-round { font-weight: 700; font-size: 0.78rem; }
-  .cell-detail { font-size: 0.68rem; color: #555; margin-top: 1px; }
-  .cell-time { font-size: 0.72rem; color: #333; margin-top: 2px; }
+  .cell-score { font-size: 0.82rem; font-weight: 700; margin-top: 2px; }
+  .cell-score .win { color: #2e7d32; }
+  .cell-score .loss { color: #c62828; }
+  .cell-score .draw { color: #555; }
+  .cell-score .upcoming { color: #888; }
+  .cell-time { font-size: 0.68rem; color: #555; margin-top: 1px; }
   .cell-court { font-size: 0.66rem; color: #777; margin-top: 1px; }
-  .highlight-row td, .highlight-row .sticky-col { background-color: #dce8f7 !important; }
-  .highlight-row td.diagonal { background-color: #b8cde6 !important; }
-  .highlight-col { background-color: #dce8f7 !important; }
-  .highlight-row .highlight-col { background-color: #c8d8ee !important; }
   .note { font-size: 0.7rem; color: #888; margin-top: 10px; line-height: 1.5; }
+  h2 { font-size: 1.1rem; color: #1a1a2e; margin-top: 24px; margin-bottom: 8px; }
+  .standings { margin-top: 8px; border-collapse: collapse; font-size: 0.8rem; }
+  .standings th, .standings td { border: 1px solid #ddd; padding: 5px 10px; text-align: center; }
+  .standings th { background: #f0f0f4; }
+  .standings td:nth-child(2) { text-align: left; font-weight: 600; }
+  .standings tr:nth-child(even) { background: #fafafa; }
+  .bye-list { font-size: 0.78rem; color: #555; margin-top: 12px; line-height: 1.8; }
+  .bye-list span { display: inline-block; background: #f0f0f4; border: 1px solid #ddd; border-radius: 4px; padding: 1px 8px; margin: 0 2px; font-weight: 600; }
   @media (max-width: 600px) {
     body { padding: 10px; }
-    th, td { padding: 4px 5px; font-size: 0.65rem; min-width: 82px; }
+    th, td { padding: 4px 5px; font-size: 0.65rem; min-width: 90px; }
     .sticky-col { min-width: 110px; }
   }
 </style>
 </head>
 <body>
-<h1>U15 Girls Development — Fixture Matrix</h1>
-<p class="subtitle">Representative &amp; Development Carnival 12yrs to Opens, 2026 · Jamison Park Netball Complex · Sunday 29 March 2026</p>
+<h1>U15 Girls Development — Representative And Development Carnival 12Yrs To Opens 2026</h1>
+<p class="subtitle">Penrith District Netball Association · Representative And Development Carnival 12Yrs To Opens 2026 · Jamison Park Netball Complex · 29 Mar 26</p>
 <div class="legend" id="legend"></div>
 <div class="scroll-wrapper">
   <table id="matrix"></table>
 </div>
-<p class="note">
-  Upper-right triangle: round &amp; time<br>
-  Lower-left triangle: round, time &amp; court<br>
-  Blue tint = Ku-ring-gai Dev · All matches upcoming — scores will appear after the carnival
-</p>
+<p class="note" id="note"></p>
+<div class="bye-list" id="byes"></div>
+<div id="standings-section" style="display:none">
+  <h2>Standings</h2>
+  <table class="standings" id="standings"></table>
+</div>
 
 <script>
 const TEAMS = {
-  "Ku-ring-gai Dev":       { color: "#1565c0" },
-  "Randwick Dev":          { color: "#6a1b9a" },
-  "Hills Dev":             { color: "#2e7d32" },
-  "Canberra Skye":         { color: "#00838f" },
-  "Nth Suburbs Dev":       { color: "#546e7a" },
-  "Penrith Dev":           { color: "#e65100" },
-  "Eastwood Ryde Dev":     { color: "#ad1457" },
-  "Sth Canberra Blue":     { color: "#c62828" }
+  "Canberra Skye": { color: "#e65100", full: "Canberra Skye" },
+  "Eastwood Ryde Dev": { color: "#1565c0", full: "Eastwood Ryde Dev" },
+  "Hills Dev": { color: "#2e7d32", full: "Hills Dev" },
+  "Ku-ring-gai Dev": { color: "#6a1b9a", full: "Ku-ring-gai Dev" },
+  "Northern Suburbs Dev": { color: "#00838f", full: "Northern Suburbs Dev" },
+  "Penrith Dev": { color: "#546e7a", full: "Penrith Dev" },
+  "Randwick Dev": { color: "#ad1457", full: "Randwick Dev" }
 };
-
-// [round, time, court, teamA, teamB]
 const MATCHES = [
-  [1,"9:30 AM","Ct 11","Hills Dev","Sth Canberra Blue"],
-  [1,"9:30 AM","Ct 12","Randwick Dev","Ku-ring-gai Dev"],
-  [1,"9:30 AM","Ct 17","Canberra Skye","Eastwood Ryde Dev"],
-  [1,"9:30 AM","Ct 10","Nth Suburbs Dev","Penrith Dev"],
-
-  [2,"10:10 AM","Ct 11","Sth Canberra Blue","Canberra Skye"],
-  [2,"10:10 AM","Ct 12","Eastwood Ryde Dev","Nth Suburbs Dev"],
-  [2,"10:10 AM","Ct 10","Penrith Dev","Randwick Dev"],
-  [2,"10:10 AM","Ct 17","Ku-ring-gai Dev","Hills Dev"],
-
-  [3,"10:50 AM","Ct 10","Penrith Dev","Eastwood Ryde Dev"],
-  [3,"10:50 AM","Ct 11","Canberra Skye","Ku-ring-gai Dev"],
-  [3,"10:50 AM","Ct 12","Nth Suburbs Dev","Sth Canberra Blue"],
-  [3,"10:50 AM","Ct 17","Randwick Dev","Hills Dev"],
-
-  [4,"11:30 AM","Ct 11","Hills Dev","Canberra Skye"],
-  [4,"11:30 AM","Ct 10","Sth Canberra Blue","Penrith Dev"],
-  [4,"11:30 AM","Ct 12","Ku-ring-gai Dev","Nth Suburbs Dev"],
-  [4,"11:30 AM","Ct 17","Eastwood Ryde Dev","Randwick Dev"],
-
-  [5,"12:10 PM","Ct 10","Penrith Dev","Ku-ring-gai Dev"],
-  [5,"12:10 PM","Ct 11","Nth Suburbs Dev","Hills Dev"],
-  [5,"12:10 PM","Ct 12","Randwick Dev","Canberra Skye"],
-  [5,"12:10 PM","Ct 17","Eastwood Ryde Dev","Sth Canberra Blue"],
-
-  [6,"12:50 PM","Ct 11","Ku-ring-gai Dev","Eastwood Ryde Dev"],
-  [6,"12:50 PM","Ct 12","Sth Canberra Blue","Randwick Dev"],
-  [6,"12:50 PM","Ct 10","Hills Dev","Penrith Dev"],
-  [6,"12:50 PM","Ct 17","Canberra Skye","Nth Suburbs Dev"],
-
-  [7,"1:30 PM","Ct 11","Randwick Dev","Nth Suburbs Dev"],
-  [7,"1:30 PM","Ct 10","Penrith Dev","Canberra Skye"],
-  [7,"1:30 PM","Ct 12","Eastwood Ryde Dev","Hills Dev"],
-  [7,"1:30 PM","Ct 17","Sth Canberra Blue","Ku-ring-gai Dev"]
+  [1,"09:30 AM","Ct 10","Penrith Dev","Randwick Dev",null,null],
+  [1,"09:30 AM","Ct 11","Northern Suburbs Dev","Ku-ring-gai Dev",null,null],
+  [1,"09:30 AM","Ct 12","Canberra Skye","Hills Dev",null,null],
+  [2,"10:10 AM","Ct 10","Penrith Dev","Hills Dev",null,null],
+  [2,"10:10 AM","Ct 11","Eastwood Ryde Dev","Ku-ring-gai Dev",null,null],
+  [2,"10:10 AM","Ct 12","Northern Suburbs Dev","Canberra Skye",null,null],
+  [3,"10:50 AM","Ct 10","Canberra Skye","Penrith Dev",null,null],
+  [3,"10:50 AM","Ct 11","Hills Dev","Eastwood Ryde Dev",null,null],
+  [3,"10:50 AM","Ct 12","Ku-ring-gai Dev","Randwick Dev",null,null],
+  [4,"11:30 AM","Ct 11","Northern Suburbs Dev","Hills Dev",null,null],
+  [4,"11:30 AM","Ct 10","Penrith Dev","Ku-ring-gai Dev",null,null],
+  [4,"11:30 AM","Ct 12","Eastwood Ryde Dev","Randwick Dev",null,null],
+  [5,"12:10 PM","Ct 11","Ku-ring-gai Dev","Canberra Skye",null,null],
+  [5,"12:10 PM","Ct 12","Randwick Dev","Northern Suburbs Dev",null,null],
+  [5,"12:10 PM","Ct 10","Eastwood Ryde Dev","Penrith Dev",null,null],
+  [6,"12:50 PM","Ct 11","Hills Dev","Randwick Dev",null,null],
+  [6,"12:50 PM","Ct 12","Canberra Skye","Eastwood Ryde Dev",null,null],
+  [6,"12:50 PM","Ct 10","Northern Suburbs Dev","Penrith Dev",null,null],
+  [7,"01:30 PM","Ct 10","Eastwood Ryde Dev","Northern Suburbs Dev",null,null],
+  [7,"01:30 PM","Ct 11","Randwick Dev","Canberra Skye",null,null],
+  [7,"01:30 PM","Ct 12","Ku-ring-gai Dev","Hills Dev",null,null]
 ];
+const TOTAL_ROUNDS = 7;
 
-const SHORT = Object.keys(TEAMS);
+const teamNames = Object.keys(TEAMS);
+
+// Build match map
 const matchMap = {};
-SHORT.forEach(t => matchMap[t] = {});
+teamNames.forEach(t => matchMap[t] = {});
 
-MATCHES.forEach(([rd, time, court, tA, tB]) => {
-  matchMap[tA][tB] = { round: rd, time, court };
-  matchMap[tB][tA] = { round: rd, time, court };
+MATCHES.forEach(([rd, time, court, home, away, hScore, aScore]) => {
+  matchMap[home][away] = { round: rd, time, court, myScore: hScore, theirScore: aScore };
+  matchMap[away][home] = { round: rd, time, court, myScore: aScore, theirScore: hScore };
 });
 
-// Order: Ku-ring-gai Dev first, then opponents in round order, then remainder
-const FOCUS = "Ku-ring-gai Dev";
-const focusOpps = [];
-for (let r = 1; r <= 7; r++) {
-  const m = MATCHES.find(([rd,,, tA, tB]) => rd === r && (tA === FOCUS || tB === FOCUS));
-  if (m) {
-    const opp = m[3] === FOCUS ? m[4] : m[3];
-    if (!focusOpps.includes(opp)) focusOpps.push(opp);
-  }
+// Byes
+const byes = {};
+for (let r = 1; r <= TOTAL_ROUNDS; r++) {
+  const playing = new Set();
+  MATCHES.filter(m => m[0] === r).forEach(([,,, home, away]) => {
+    playing.add(home); playing.add(away);
+  });
+  const byeTeams = teamNames.filter(t => !playing.has(t));
+  if (byeTeams.length) byes[r] = byeTeams;
 }
-const rest = SHORT.filter(t => t !== FOCUS && !focusOpps.includes(t));
-const order = [FOCUS, ...focusOpps, ...rest];
+
+// Standings
+const hasScores = MATCHES.some(m => m[5] !== null);
+const stats = {};
+teamNames.forEach(t => stats[t] = { p: 0, w: 0, l: 0, d: 0, pf: 0, pa: 0, byes: 0 });
+for (const [r, bt] of Object.entries(byes)) bt.forEach(t => stats[t].byes++);
+
+if (hasScores) {
+  MATCHES.forEach(([,,,home, away, hScore, aScore]) => {
+    if (hScore === null) return;
+    stats[home].p++; stats[away].p++;
+    stats[home].pf += hScore; stats[home].pa += aScore;
+    stats[away].pf += aScore; stats[away].pa += hScore;
+    if (hScore > aScore) { stats[home].w++; stats[away].l++; }
+    else if (hScore < aScore) { stats[away].w++; stats[home].l++; }
+    else { stats[home].d++; stats[away].d++; }
+  });
+}
+
+// Sort
+const order = [...teamNames].sort((a, b) => {
+  if (!hasScores) return a.localeCompare(b);
+  const sa = stats[a], sb = stats[b];
+  if (sb.w !== sa.w) return sb.w - sa.w;
+  return (sb.pf - sb.pa) - (sa.pf - sa.pa);
+});
 
 // Legend
 const legendEl = document.getElementById('legend');
@@ -131,43 +151,81 @@ order.forEach(t => {
   legendEl.appendChild(item);
 });
 
-// Build table
+// Matrix
 const table = document.getElementById('matrix');
 let html = '<thead><tr><th class="sticky-col"></th>';
 order.forEach(t => {
-  const cls = t === FOCUS ? ' highlight-col' : '';
-  html += `<th class="${cls}" style="color:${TEAMS[t].color}">${t}</th>`;
+  html += `<th style="color:${TEAMS[t].color}">${t}</th>`;
 });
 html += '</tr></thead><tbody>';
 
-order.forEach((rowT, ri) => {
-  const isHL = rowT === FOCUS;
-  html += `<tr class="${isHL ? 'highlight-row' : ''}">`;
+order.forEach(rowT => {
+  html += '<tr>';
   html += `<th class="sticky-col" style="color:${TEAMS[rowT].color}">${rowT}</th>`;
-
-  order.forEach((colT, ci) => {
-    const focusC = colT === FOCUS ? ' highlight-col' : '';
-    if (rowT === colT) {
-      html += '<td class="diagonal"></td>';
-      return;
-    }
+  order.forEach(colT => {
+    if (rowT === colT) { html += '<td class="diagonal"></td>'; return; }
     const m = matchMap[rowT]?.[colT];
-    if (!m) {
-      html += `<td class="empty-cell${focusC}"></td>`;
-      return;
+    if (!m) { html += '<td class="empty-cell"></td>'; return; }
+
+    let scoreHtml = '';
+    if (m.myScore !== null) {
+      let sc = 'draw';
+      if (m.myScore > m.theirScore) sc = 'win';
+      else if (m.myScore < m.theirScore) sc = 'loss';
+      scoreHtml = `<div class="cell-score"><span class="${sc}">${m.myScore} - ${m.theirScore}</span></div>`;
+    } else {
+      scoreHtml = '<div class="cell-score"><span class="upcoming">v</span></div>';
     }
 
-    html += `<td class="${focusC}">
-        <div class="cell-round">R${m.round}</div>
-        <div class="cell-time">${m.time}</div>
-        <div class="cell-court">${m.court}</div>
-      </td>`;
+    html += `<td>
+      <div class="cell-round">R${m.round}</div>
+      ${scoreHtml}
+      <div class="cell-time">${m.time}</div>
+      <div class="cell-court">${m.court}</div>
+    </td>`;
   });
   html += '</tr>';
 });
-
 html += '</tbody>';
 table.innerHTML = html;
+
+// Note
+const noteEl = document.getElementById('note');
+if (hasScores) {
+  noteEl.innerHTML = 'Each cell shows the round, score (from row team perspective), time &amp; court.<br><span style="color:#2e7d32;font-weight:700">Green</span> = win, <span style="color:#c62828;font-weight:700">Red</span> = loss';
+} else {
+  noteEl.innerHTML = 'Each cell shows the round, time &amp; court. Scores will appear after each game.';
+}
+if (Object.keys(byes).length) {
+  noteEl.innerHTML += '<br>Odd number of teams — one team has a bye each round.';
+}
+
+// Byes
+const byesEl = document.getElementById('byes');
+if (Object.keys(byes).length) {
+  let bh = '<strong>Byes:</strong> ';
+  for (let r = 1; r <= TOTAL_ROUNDS; r++) {
+    if (byes[r]) byes[r].forEach(t => {
+      bh += `R${r} <span style="color:${TEAMS[t].color}">${t}</span> `;
+    });
+  }
+  byesEl.innerHTML = bh;
+}
+
+// Standings table
+if (hasScores) {
+  const stEl = document.getElementById('standings');
+  let sh = '<thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>L</th><th>D</th><th>PF</th><th>PA</th><th>+/-</th></tr></thead><tbody>';
+  order.forEach((t, i) => {
+    const s = stats[t];
+    const diff = s.pf - s.pa;
+    const ds = diff > 0 ? `+${diff}` : `${diff}`;
+    sh += `<tr><td>${i+1}</td><td style="color:${TEAMS[t].color}">${t}</td><td>${s.p}</td><td>${s.w}</td><td>${s.l}</td><td>${s.d}</td><td>${s.pf}</td><td>${s.pa}</td><td style="color:${diff>=0?'#2e7d32':'#c62828'}">${ds}</td></tr>`;
+  });
+  sh += '</tbody>';
+  stEl.innerHTML = sh;
+  document.getElementById('standings-section').style.display = '';
+}
 </script>
 </body>
 </html>

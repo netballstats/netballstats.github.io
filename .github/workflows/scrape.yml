@@ -1,0 +1,66 @@
+name: Scrape PlayHQ Fixtures
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: Scrape fixtures
+        run: |
+          URL=$(python -c "import json; print(json.load(open('config.json'))['url'])")
+          GRADE=$(python -c "import json; g=json.load(open('config.json')).get('grade',''); print(g if g else '')")
+          if [ -n "$GRADE" ]; then
+            python scrape_fixtures.py "$URL" --grade "$GRADE" --output data_new.json
+          else
+            python scrape_fixtures.py "$URL" --output data_new.json
+          fi
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if [ ! -f data.json ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          elif python -c "
+          import json, sys
+          with open('data.json') as a, open('data_new.json') as b:
+              sys.exit(0 if json.load(a) == json.load(b) else 1)
+          "; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate HTML and commit
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          mv data_new.json data.json
+          python generate_html.py --data data.json --config config.json --output index.html
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json index.html
+          git commit -m "Update fixtures $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
