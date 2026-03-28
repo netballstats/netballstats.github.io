@@ -195,8 +195,6 @@ HTML_TEMPLATE = """\
   .highlight-row td.diagonal {{ background-color: #b8cde6 !important; }}
   .highlight-col {{ background-color: #dce8f7 !important; }}
   .highlight-row .highlight-col {{ background-color: #c8d8ee !important; }}
-  .bye-list {{ font-size: 0.78rem; color: #555; margin-top: 12px; line-height: 1.8; }}
-  .bye-list span {{ display: inline-block; background: #f0f0f4; border: 1px solid #ddd; border-radius: 4px; padding: 1px 8px; margin: 0 2px; font-weight: 600; }}
   @media (max-width: 600px) {{
     body {{ padding: 10px; }}
     th, td {{ padding: 4px 5px; font-size: 0.65rem; min-width: 90px; }}
@@ -212,7 +210,6 @@ HTML_TEMPLATE = """\
   <table id="matrix"></table>
 </div>
 <p class="note" id="note"></p>
-<div class="bye-list" id="byes"></div>
 <div id="standings-section" style="display:none">
   <h2>Standings</h2>
   <table class="standings" id="standings"></table>
@@ -339,7 +336,17 @@ order.forEach(rowT => {{
   html += `<th class="sticky-col" style="color:${{TEAMS[rowT].color}}">${{rowT}}</th>`;
   order.forEach(colT => {{
     const fc = (FOCUS && colT === FOCUS) ? ' highlight-col' : '';
-    if (rowT === colT) {{ html += `<td class="diagonal${{fc}}"></td>`; return; }}
+    if (rowT === colT) {{
+      // Show bye round(s) on the diagonal
+      let byeHtml = '';
+      for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
+        if (byes[r] && byes[r].includes(rowT)) {{
+          byeHtml += `<div class="cell-round" style="color:#999">R${{r}} bye</div>`;
+        }}
+      }}
+      html += `<td class="diagonal${{fc}}">${{byeHtml}}</td>`;
+      return;
+    }}
     const m = matchMap[rowT]?.[colT];
     if (!m) {{ html += `<td class="empty-cell${{fc}}"></td>`; return; }}
 
@@ -372,35 +379,7 @@ if (hasScores) {{
 }} else {{
   noteEl.innerHTML = 'Each cell shows the round, time &amp; court. Scores will appear after each game.';
 }}
-if (Object.keys(byes).length) {{
-  noteEl.innerHTML += '<br>Odd number of teams — one team has a bye each round.';
-}}
 
-// Byes — show in focus team's perspective order
-const byesEl = document.getElementById('byes');
-if (Object.keys(byes).length) {{
-  let bh = '<strong>Byes:</strong> ';
-  // If focus team exists, show their bye prominently first, then others in round order
-  if (FOCUS && teamNames.includes(FOCUS)) {{
-    for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
-      if (byes[r] && byes[r].includes(FOCUS)) {{
-        bh += `R${{r}} <span style="color:${{TEAMS[FOCUS].color}}; font-weight:700">${{FOCUS}} (bye)</span> `;
-      }}
-    }}
-    for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
-      if (byes[r]) byes[r].filter(t => t !== FOCUS).forEach(t => {{
-        bh += `R${{r}} <span style="color:${{TEAMS[t].color}}">${{t}}</span> `;
-      }});
-    }}
-  }} else {{
-    for (let r = 1; r <= TOTAL_ROUNDS; r++) {{
-      if (byes[r]) byes[r].forEach(t => {{
-        bh += `R${{r}} <span style="color:${{TEAMS[t].color}}">${{t}}</span> `;
-      }});
-    }}
-  }}
-  byesEl.innerHTML = bh;
-}}
 
 // Standings table
 if (hasScores) {{
