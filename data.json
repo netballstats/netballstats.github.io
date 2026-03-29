@@ -9,6 +9,42 @@
       "url": "https://www.playhq.com/netball-australia/org/penrith-district-netball-association/representative-and-development-carnival-12yrs-to-opens-2026/u15-girls-development/15299ca4",
       "fixtures": [
         {
+          "round_name": "Round 1",
+          "date": "29 Mar 26",
+          "time": "09:30 AM",
+          "venue": "Jamison Park Netball Complex",
+          "court": "Court 10",
+          "home_team": "Penrith Dev",
+          "away_team": "Randwick Dev",
+          "home_score": 10,
+          "away_score": 10,
+          "status": "completed"
+        },
+        {
+          "round_name": "Round 1",
+          "date": "29 Mar 26",
+          "time": "09:30 AM",
+          "venue": "Jamison Park Netball Complex",
+          "court": "Court 11",
+          "home_team": "Northern Suburbs Dev",
+          "away_team": "Ku-ring-gai Dev",
+          "home_score": 8,
+          "away_score": 8,
+          "status": "completed"
+        },
+        {
+          "round_name": "Round 1",
+          "date": "29 Mar 26",
+          "time": "09:30 AM",
+          "venue": "Jamison Park Netball Complex",
+          "court": "Court 12",
+          "home_team": "Canberra Skye",
+          "away_team": "Hills Dev",
+          "home_score": 7,
+          "away_score": 9,
+          "status": "completed"
+        },
+        {
           "round_name": "Round 2",
           "date": "29 Mar 26",
           "time": "10:10 AM",
@@ -16,9 +52,9 @@
           "court": "Court 10",
           "home_team": "Penrith Dev",
           "away_team": "Hills Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
+          "home_score": 15,
+          "away_score": 10,
+          "status": "completed"
         },
         {
           "round_name": "Round 2",
@@ -28,9 +64,9 @@
           "court": "Court 11",
           "home_team": "Eastwood Ryde Dev",
           "away_team": "Ku-ring-gai Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
+          "home_score": 5,
+          "away_score": 10,
+          "status": "completed"
         },
         {
           "round_name": "Round 2",
@@ -40,9 +76,9 @@
           "court": "Court 12",
           "home_team": "Northern Suburbs Dev",
           "away_team": "Canberra Skye",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
+          "home_score": 16,
+          "away_score": 0,
+          "status": "completed"
         },
         {
           "round_name": "Round 3",
@@ -54,7 +90,7 @@
           "away_team": "Penrith Dev",
           "home_score": null,
           "away_score": null,
-          "status": "scheduled"
+          "status": "in progress"
         },
         {
           "round_name": "Round 3",
@@ -66,7 +102,7 @@
           "away_team": "Eastwood Ryde Dev",
           "home_score": null,
           "away_score": null,
-          "status": "scheduled"
+          "status": "in progress"
         },
         {
           "round_name": "Round 3",
@@ -78,7 +114,7 @@
           "away_team": "Randwick Dev",
           "home_score": null,
           "away_score": null,
-          "status": "scheduled"
+          "status": "in progress"
         },
         {
           "round_name": "Round 4",

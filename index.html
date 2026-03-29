@@ -72,9 +72,12 @@ const TEAMS = {
   "Randwick Dev": { color: "#ad1457", full: "Randwick Dev" }
 };
 const MATCHES = [
-  [2,"10:10 AM","Ct 10","Penrith Dev","Hills Dev",null,null],
-  [2,"10:10 AM","Ct 11","Eastwood Ryde Dev","Ku-ring-gai Dev",null,null],
-  [2,"10:10 AM","Ct 12","Northern Suburbs Dev","Canberra Skye",null,null],
+  [1,"09:30 AM","Ct 10","Penrith Dev","Randwick Dev",10,10],
+  [1,"09:30 AM","Ct 11","Northern Suburbs Dev","Ku-ring-gai Dev",8,8],
+  [1,"09:30 AM","Ct 12","Canberra Skye","Hills Dev",7,9],
+  [2,"10:10 AM","Ct 10","Penrith Dev","Hills Dev",15,10],
+  [2,"10:10 AM","Ct 11","Eastwood Ryde Dev","Ku-ring-gai Dev",5,10],
+  [2,"10:10 AM","Ct 12","Northern Suburbs Dev","Canberra Skye",16,0],
   [3,"10:50 AM","Ct 10","Canberra Skye","Penrith Dev",null,null],
   [3,"10:50 AM","Ct 11","Hills Dev","Eastwood Ryde Dev",null,null],
   [3,"10:50 AM","Ct 12","Ku-ring-gai Dev","Randwick Dev",null,null],
@@ -91,7 +94,7 @@ const MATCHES = [
   [7,"01:30 PM","Ct 11","Randwick Dev","Canberra Skye",null,null],
   [7,"01:30 PM","Ct 12","Ku-ring-gai Dev","Hills Dev",null,null]
 ];
-const TOTAL_ROUNDS = 6;
+const TOTAL_ROUNDS = 7;
 const FOCUS = "Ku-ring-gai Dev";
 
 const teamNames = Object.keys(TEAMS);
@@ -268,7 +271,7 @@ if (hasScores) {
   document.getElementById('standings-section').style.display = '';
 }
 
-document.getElementById('updated').textContent = 'Last updated: Sun 29 Mar 2026, 10:03 AM AEDT';
+document.getElementById('updated').textContent = 'Last updated: Sun 29 Mar 2026, 11:03 AM AEDT';
 </script>
 </body>
 </html>
