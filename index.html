@@ -84,14 +84,17 @@ const MATCHES = [
   [4,"11:30 AM","Ct 11","Northern Suburbs Dev","Hills Dev",10,7],
   [4,"11:30 AM","Ct 10","Penrith Dev","Ku-ring-gai Dev",12,14],
   [4,"11:30 AM","Ct 12","Eastwood Ryde Dev","Randwick Dev",11,13],
-  [6,"12:50 PM","Ct 11","Hills Dev","Randwick Dev",null,null],
-  [6,"12:50 PM","Ct 12","Canberra Skye","Eastwood Ryde Dev",null,null],
-  [6,"12:50 PM","Ct 10","Northern Suburbs Dev","Penrith Dev",null,null],
-  [7,"01:30 PM","Ct 10","Eastwood Ryde Dev","Northern Suburbs Dev",null,null],
-  [7,"01:30 PM","Ct 11","Randwick Dev","Canberra Skye",null,null],
-  [7,"01:30 PM","Ct 12","Ku-ring-gai Dev","Hills Dev",null,null]
+  [5,"12:10 PM","Ct 11","Ku-ring-gai Dev","Canberra Skye",13,4],
+  [5,"12:10 PM","Ct 12","Randwick Dev","Northern Suburbs Dev",6,14],
+  [5,"12:10 PM","Ct 10","Eastwood Ryde Dev","Penrith Dev",4,16],
+  [6,"12:50 PM","Ct 11","Hills Dev","Randwick Dev",7,14],
+  [6,"12:50 PM","Ct 12","Canberra Skye","Eastwood Ryde Dev",5,9],
+  [6,"12:50 PM","Ct 10","Northern Suburbs Dev","Penrith Dev",12,9],
+  [7,"01:30 PM","Ct 10","Eastwood Ryde Dev","Northern Suburbs Dev",7,18],
+  [7,"01:30 PM","Ct 11","Randwick Dev","Canberra Skye",16,4],
+  [7,"01:30 PM","Ct 12","Ku-ring-gai Dev","Hills Dev",7,7]
 ];
-const TOTAL_ROUNDS = 6;
+const TOTAL_ROUNDS = 7;
 const FOCUS = "Ku-ring-gai Dev";
 
 const teamNames = Object.keys(TEAMS);
@@ -268,7 +271,7 @@ if (hasScores) {
   document.getElementById('standings-section').style.display = '';
 }
 
-document.getElementById('updated').textContent = 'Last updated: Sun 29 Mar 2026, 12:41 PM AEDT';
+document.getElementById('updated').textContent = 'Last updated: Sun 29 Mar 2026, 02:40 PM AEDT';
 </script>
 </body>
 </html>
