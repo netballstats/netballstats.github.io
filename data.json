@@ -88,9 +88,9 @@
           "court": "Court 10",
           "home_team": "Canberra Skye",
           "away_team": "Penrith Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "in progress"
+          "home_score": 5,
+          "away_score": 18,
+          "status": "completed"
         },
         {
           "round_name": "Round 3",
@@ -100,9 +100,9 @@
           "court": "Court 11",
           "home_team": "Hills Dev",
           "away_team": "Eastwood Ryde Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "in progress"
+          "home_score": 14,
+          "away_score": 6,
+          "status": "completed"
         },
         {
           "round_name": "Round 3",
@@ -112,9 +112,9 @@
           "court": "Court 12",
           "home_team": "Ku-ring-gai Dev",
           "away_team": "Randwick Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "in progress"
+          "home_score": 7,
+          "away_score": 6,
+          "status": "completed"
         },
         {
           "round_name": "Round 4",
@@ -124,9 +124,9 @@
           "court": "Court 11",
           "home_team": "Northern Suburbs Dev",
           "away_team": "Hills Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
+          "home_score": 10,
+          "away_score": 7,
+          "status": "completed"
         },
         {
           "round_name": "Round 4",
@@ -136,9 +136,9 @@
           "court": "Court 10",
           "home_team": "Penrith Dev",
           "away_team": "Ku-ring-gai Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
+          "home_score": 12,
+          "away_score": 14,
+          "status": "completed"
         },
         {
           "round_name": "Round 4",
@@ -148,45 +148,9 @@
           "court": "Court 12",
           "home_team": "Eastwood Ryde Dev",
           "away_team": "Randwick Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
-        },
-        {
-          "round_name": "Round 5",
-          "date": "29 Mar 26",
-          "time": "12:10 PM",
-          "venue": "Jamison Park Netball Complex",
-          "court": "Court 11",
-          "home_team": "Ku-ring-gai Dev",
-          "away_team": "Canberra Skye",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
-        },
-        {
-          "round_name": "Round 5",
-          "date": "29 Mar 26",
-          "time": "12:10 PM",
-          "venue": "Jamison Park Netball Complex",
-          "court": "Court 12",
-          "home_team": "Randwick Dev",
-          "away_team": "Northern Suburbs Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
-        },
-        {
-          "round_name": "Round 5",
-          "date": "29 Mar 26",
-          "time": "12:10 PM",
-          "venue": "Jamison Park Netball Complex",
-          "court": "Court 10",
-          "home_team": "Eastwood Ryde Dev",
-          "away_team": "Penrith Dev",
-          "home_score": null,
-          "away_score": null,
-          "status": "scheduled"
+          "home_score": 11,
+          "away_score": 13,
+          "status": "completed"
         },
         {
           "round_name": "Round 6",

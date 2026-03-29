@@ -78,15 +78,12 @@ const MATCHES = [
   [2,"10:10 AM","Ct 10","Penrith Dev","Hills Dev",15,10],
   [2,"10:10 AM","Ct 11","Eastwood Ryde Dev","Ku-ring-gai Dev",5,10],
   [2,"10:10 AM","Ct 12","Northern Suburbs Dev","Canberra Skye",16,0],
-  [3,"10:50 AM","Ct 10","Canberra Skye","Penrith Dev",null,null],
-  [3,"10:50 AM","Ct 11","Hills Dev","Eastwood Ryde Dev",null,null],
-  [3,"10:50 AM","Ct 12","Ku-ring-gai Dev","Randwick Dev",null,null],
-  [4,"11:30 AM","Ct 11","Northern Suburbs Dev","Hills Dev",null,null],
-  [4,"11:30 AM","Ct 10","Penrith Dev","Ku-ring-gai Dev",null,null],
-  [4,"11:30 AM","Ct 12","Eastwood Ryde Dev","Randwick Dev",null,null],
-  [5,"12:10 PM","Ct 11","Ku-ring-gai Dev","Canberra Skye",null,null],
-  [5,"12:10 PM","Ct 12","Randwick Dev","Northern Suburbs Dev",null,null],
-  [5,"12:10 PM","Ct 10","Eastwood Ryde Dev","Penrith Dev",null,null],
+  [3,"10:50 AM","Ct 10","Canberra Skye","Penrith Dev",5,18],
+  [3,"10:50 AM","Ct 11","Hills Dev","Eastwood Ryde Dev",14,6],
+  [3,"10:50 AM","Ct 12","Ku-ring-gai Dev","Randwick Dev",7,6],
+  [4,"11:30 AM","Ct 11","Northern Suburbs Dev","Hills Dev",10,7],
+  [4,"11:30 AM","Ct 10","Penrith Dev","Ku-ring-gai Dev",12,14],
+  [4,"11:30 AM","Ct 12","Eastwood Ryde Dev","Randwick Dev",11,13],
   [6,"12:50 PM","Ct 11","Hills Dev","Randwick Dev",null,null],
   [6,"12:50 PM","Ct 12","Canberra Skye","Eastwood Ryde Dev",null,null],
   [6,"12:50 PM","Ct 10","Northern Suburbs Dev","Penrith Dev",null,null],
@@ -94,7 +91,7 @@ const MATCHES = [
   [7,"01:30 PM","Ct 11","Randwick Dev","Canberra Skye",null,null],
   [7,"01:30 PM","Ct 12","Ku-ring-gai Dev","Hills Dev",null,null]
 ];
-const TOTAL_ROUNDS = 7;
+const TOTAL_ROUNDS = 6;
 const FOCUS = "Ku-ring-gai Dev";
 
 const teamNames = Object.keys(TEAMS);
@@ -271,7 +268,7 @@ if (hasScores) {
   document.getElementById('standings-section').style.display = '';
 }
 
-document.getElementById('updated').textContent = 'Last updated: Sun 29 Mar 2026, 11:03 AM AEDT';
+document.getElementById('updated').textContent = 'Last updated: Sun 29 Mar 2026, 12:41 PM AEDT';
 </script>
 </body>
 </html>
