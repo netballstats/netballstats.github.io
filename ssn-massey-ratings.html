@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSN 2026 — Massey Ratings</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2129;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #f78166;
+    --green: #3fb950;
+    --red: #f85149;
+    --gold: #d4a017;
+    --silver: #adb5bd;
+    --bronze: #cd7f32;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 16px;
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 3px;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-dim);
+    transition: all 0.2s;
+    border: none;
+    background: transparent;
+    letter-spacing: 0.3px;
+  }
+
+  .tab.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .tab:hover:not(.active) {
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  thead th {
+    text-align: left;
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th.num { text-align: right; }
+
+  tbody td {
+    padding: 10px 6px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .rank {
+    font-weight: 700;
+    font-size: 0.9rem;
+    width: 28px;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .rank-1 { color: var(--gold); }
+  .rank-2 { color: var(--silver); }
+  .rank-3 { color: var(--bronze); }
+
+  .team-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .team-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .team-name {
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+
+  .team-short {
+    display: none;
+  }
+
+  .rating-bar-cell {
+    position: relative;
+    min-width: 80px;
+  }
+
+  .rating-bar {
+    height: 22px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    min-width: 30px;
+    transition: width 0.5s ease;
+  }
+
+  .arrow-up { color: var(--green); font-size: 0.75rem; }
+  .arrow-down { color: var(--red); font-size: 0.75rem; }
+  .arrow-same { color: var(--text-dim); font-size: 0.75rem; }
+
+  .movement {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .section-header {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    margin: 24px 0 8px;
+    color: var(--text);
+  }
+
+  .info-box {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 16px;
+    border-left: 3px solid var(--accent);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
+
+  .info-box strong { color: var(--text); }
+
+  .results-grid {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .round-label {
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    margin-top: 12px;
+  }
+
+  .match-card {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    border: 1px solid var(--border);
+  }
+
+  .match-team {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .match-team.winner { font-weight: 700; }
+  .match-team.loser { color: var(--text-dim); }
+
+  .match-score {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .match-vs {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    padding: 0 8px;
+  }
+
+  .match-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .explanation {
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .explanation p { margin-bottom: 10px; }
+  .explanation strong { color: var(--text); }
+
+  .highlight { color: var(--accent); font-weight: 600; }
+
+  .compare-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 40px 14px 40px;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.82rem;
+  }
+
+  .compare-header {
+    display: grid;
+    grid-template-columns: 28px 1fr 40px 14px 40px;
+    gap: 6px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sos-value {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
+
+  .sos-bar-container {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  .sos-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s;
+  }
+
+  @media (max-width: 500px) {
+    .team-name { display: none; }
+    .team-short { display: inline; font-weight: 600; font-size: 0.82rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>SSN 2026 Massey Ratings</h1>
+<p class="subtitle">Strength-of-schedule adjusted rankings after Round 4</p>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('massey')">Massey</button>
+  <button class="tab" onclick="showTab('ladder')">Ladder</button>
+  <button class="tab" onclick="showTab('compare')">Compare</button>
+  <button class="tab" onclick="showTab('results')">Results</button>
+  <button class="tab" onclick="showTab('about')">About</button>
+</div>
+
+<div id="massey" class="panel active"></div>
+<div id="ladder" class="panel"></div>
+<div id="compare" class="panel"></div>
+<div id="results" class="panel"></div>
+<div id="about" class="panel"></div>
+
+<script>
+// Team colours
+const COLORS = {
+  'Thunderbirds': '#e4002b',
+  'Vixens':       '#00205b',
+  'Fever':        '#00843d',
+  'Lightning':    '#6f2da8',
+  'Mavericks':    '#ff6b00',
+  'Swifts':       '#e31837',
+  'Firebirds':    '#ff5f00',
+  'Giants':       '#f47920'
+};
+
+const SHORT = {
+  'Thunderbirds': 'TBD', 'Vixens': 'VIX', 'Fever': 'FEV',
+  'Lightning': 'LTN', 'Mavericks': 'MAV', 'Swifts': 'SWI',
+  'Firebirds': 'FBD', 'Giants': 'GIA'
+};
+
+// All results: [home, away, homeScore, awayScore, round]
+const RESULTS = [
+  // Round 1
+  ['Mavericks', 'Giants',       61, 52, 1],
+  ['Thunderbirds','Swifts',     74, 54, 1],
+  ['Firebirds', 'Vixens',       49, 60, 1],
+  ['Fever',     'Lightning',    68, 65, 1],
+  // Round 2
+  ['Lightning', 'Firebirds',    63, 62, 2],
+  ['Thunderbirds','Fever',      66, 53, 2],
+  ['Giants',    'Vixens',       52, 68, 2],
+  ['Swifts',    'Mavericks',    70, 69, 2],
+  // Round 3
+  ['Mavericks', 'Vixens',      71, 72, 3],
+  ['Lightning', 'Swifts',      66, 65, 3],
+  ['Firebirds', 'Thunderbirds',46, 73, 3],
+  ['Fever',     'Giants',      69, 50, 3],
+  // Round 4
+  ['Giants',    'Firebirds',   55, 78, 4],
+  ['Mavericks', 'Thunderbirds',48, 55, 4],
+  ['Swifts',    'Fever',       57, 77, 4],
+  ['Vixens',    'Lightning',   70, 59, 4],
+];
+
+const TEAMS = ['Thunderbirds','Vixens','Fever','Lightning','Mavericks','Swifts','Firebirds','Giants'];
+
+// === Massey Rating Calculation ===
+function solveMassey(results, teams) {
+  const n = teams.length;
+  const idx = {};
+  teams.forEach((t, i) => idx[t] = i);
+
+  // Build Massey matrix M and point differential vector p
+  // M[i][i] = games played by team i
+  // M[i][j] = -(games between i and j) for i != j
+  // p[i] = total point differential for team i
+  const M = Array.from({length: n}, () => Array(n).fill(0));
+  const p = Array(n).fill(0);
+
+  results.forEach(([home, away, hs, as]) => {
+    const hi = idx[home], ai = idx[away];
+    M[hi][hi] += 1;
+    M[ai][ai] += 1;
+    M[hi][ai] -= 1;
+    M[ai][hi] -= 1;
+    p[hi] += (hs - as);
+    p[ai] += (as - hs);
+  });
+
+  // Replace last row with constraint: sum of ratings = 0
+  for (let j = 0; j < n; j++) M[n-1][j] = 1;
+  p[n-1] = 0;
+
+  // Gaussian elimination
+  const A = M.map((row, i) => [...row, p[i]]);
+  for (let col = 0; col < n; col++) {
+    // Find pivot
+    let maxRow = col;
+    for (let row = col + 1; row < n; row++) {
+      if (Math.abs(A[row][col]) > Math.abs(A[maxRow][col])) maxRow = row;
+    }
+    [A[col], A[maxRow]] = [A[maxRow], A[col]];
+
+    const pivot = A[col][col];
+    if (Math.abs(pivot) < 1e-12) continue;
+
+    for (let j = col; j <= n; j++) A[col][j] /= pivot;
+
+    for (let row = 0; row < n; row++) {
+      if (row === col) continue;
+      const factor = A[row][col];
+      for (let j = col; j <= n; j++) A[row][j] -= factor * A[col][j];
+    }
+  }
+
+  const ratings = {};
+  teams.forEach((t, i) => ratings[t] = A[i][n]);
+  return ratings;
+}
+
+// Compute traditional ladder
+function computeLadder(results, teams) {
+  const stats = {};
+  teams.forEach(t => stats[t] = { w: 0, l: 0, gf: 0, ga: 0, pts: 0 });
+
+  results.forEach(([home, away, hs, as]) => {
+    stats[home].gf += hs;
+    stats[home].ga += as;
+    stats[away].gf += as;
+    stats[away].ga += hs;
+    if (hs > as) {
+      stats[home].w++; stats[home].pts += 4;
+      stats[away].l++;
+    } else if (as > hs) {
+      stats[away].w++; stats[away].pts += 4;
+      stats[home].l++;
+    } else {
+      stats[home].pts += 2;
+      stats[away].pts += 2;
+    }
+  });
+
+  return teams.slice().sort((a, b) => {
+    if (stats[b].pts !== stats[a].pts) return stats[b].pts - stats[a].pts;
+    const percA = stats[a].gf / (stats[a].ga || 1) * 100;
+    const percB = stats[b].gf / (stats[b].ga || 1) * 100;
+    return percB - percA;
+  }).map((t, i) => ({ team: t, rank: i + 1, ...stats[t], perc: (stats[t].gf / (stats[t].ga || 1) * 100).toFixed(1) }));
+}
+
+// Strength of Schedule
+function computeSOS(results, teams, ratings) {
+  const sos = {};
+  teams.forEach(t => {
+    const opponents = [];
+    results.forEach(([home, away]) => {
+      if (home === t) opponents.push(away);
+      else if (away === t) opponents.push(home);
+    });
+    sos[t] = opponents.reduce((sum, o) => sum + ratings[o], 0) / (opponents.length || 1);
+  });
+  return sos;
+}
+
+// Render functions
+function renderMasseyTable(ratings) {
+  const sorted = TEAMS.slice().sort((a, b) => ratings[b] - ratings[a]);
+  const maxAbs = Math.max(...Object.values(ratings).map(Math.abs));
+
+  const ladderRanks = {};
+  computeLadder(RESULTS, TEAMS).forEach(r => ladderRanks[r.team] = r.rank);
+
+  let html = `<div class="info-box"><strong>Massey Ratings</strong> account for who you've beaten and by how much. A narrow win over the top team counts more than a blowout against the weakest.</div>`;
+  html += `<table><thead><tr><th>#</th><th>Team</th><th class="num">Rating</th><th>Strength</th><th></th></tr></thead><tbody>`;
+
+  sorted.forEach((t, i) => {
+    const r = ratings[t];
+    const rank = i + 1;
+    const ladderRank = ladderRanks[t];
+    const diff = ladderRank - rank;
+    const pct = Math.abs(r) / maxAbs * 100;
+    const barColor = r >= 0 ? 'var(--green)' : 'var(--red)';
+    const rankClass = rank <= 3 ? `rank-${rank}` : '';
+
+    let arrow = '';
+    if (diff > 0) arrow = `<span class="movement"><span class="arrow-up">▲</span>${diff}</span>`;
+    else if (diff < 0) arrow = `<span class="movement"><span class="arrow-down">▼</span>${Math.abs(diff)}</span>`;
+    else arrow = `<span class="movement"><span class="arrow-same">—</span></span>`;
+
+    html += `<tr>
+      <td><span class="rank ${rankClass}">${rank}</span></td>
+      <td><div class="team-cell">
+        <span class="team-dot" style="background:${COLORS[t]}"></span>
+        <span class="team-name">${t}</span>
+        <span class="team-short">${SHORT[t]}</span>
+      </div></td>
+      <td class="num" style="font-weight:700">${r >= 0 ? '+' : ''}${r.toFixed(1)}</td>
+      <td class="rating-bar-cell">
+        <div class="rating-bar" style="width:${Math.max(pct, 15)}%;background:${barColor}">${r.toFixed(1)}</div>
+      </td>
+      <td>${arrow}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+  html += `<p style="font-size:0.7rem;color:var(--text-dim);margin-top:8px;text-align:center">▲▼ vs official ladder position</p>`;
+  return html;
+}
+
+function renderLadderTable() {
+  const ladder = computeLadder(RESULTS, TEAMS);
+  let html = `<div class="info-box"><strong>Official SSN Ladder</strong> — 4 pts for a win, ranked by points then goal percentage. Does not account for opponent strength.</div>`;
+  html += `<table><thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th><th class="num">GF</th><th class="num">GA</th><th class="num">%</th><th class="num">Pts</th></tr></thead><tbody>`;
+
+  ladder.forEach(r => {
+    const rankClass = r.rank <= 3 ? `rank-${r.rank}` : '';
+    html += `<tr>
+      <td><span class="rank ${rankClass}">${r.rank}</span></td>
+      <td><div class="team-cell">
+        <span class="team-dot" style="background:${COLORS[r.team]}"></span>
+        <span class="team-name">${r.team}</span>
+        <span class="team-short">${SHORT[r.team]}</span>
+      </div></td>
+      <td class="num">${r.w}</td>
+      <td class="num">${r.l}</td>
+      <td class="num">${r.gf}</td>
+      <td class="num">${r.ga}</td>
+      <td class="num">${r.perc}</td>
+      <td class="num" style="font-weight:700">${r.pts}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+  return html;
+}
+
+function renderCompare(ratings) {
+  const ladder = computeLadder(RESULTS, TEAMS);
+  const sorted = TEAMS.slice().sort((a, b) => ratings[b] - ratings[a]);
+  const masseyRanks = {};
+  sorted.forEach((t, i) => masseyRanks[t] = i + 1);
+  const ladderRanks = {};
+  ladder.forEach(r => ladderRanks[r.team] = r.rank);
+
+  const sos = computeSOS(RESULTS, TEAMS, ratings);
+  const maxSos = Math.max(...Object.values(sos).map(Math.abs));
+
+  let html = `<div class="info-box"><strong>Strength of Schedule (SoS)</strong> shows the average Massey rating of opponents faced. Teams with harder draws get more credit in the Massey system.</div>`;
+
+  html += `<div class="compare-header"><div>#</div><div>Team</div><div style="text-align:right">Ladder</div><div></div><div style="text-align:right">Massey</div></div>`;
+
+  sorted.forEach((t, i) => {
+    const mr = i + 1;
+    const lr = ladderRanks[t];
+    const diff = lr - mr;
+    let diffStr = '';
+    if (diff > 0) diffStr = `<span class="arrow-up">+${diff}</span>`;
+    else if (diff < 0) diffStr = `<span class="arrow-down">${diff}</span>`;
+    else diffStr = `<span class="arrow-same">=</span>`;
+
+    html += `<div class="compare-row">
+      <div><span class="rank ${mr <= 3 ? 'rank-' + mr : ''}">${mr}</span></div>
+      <div><div class="team-cell">
+        <span class="team-dot" style="background:${COLORS[t]}"></span>
+        <span class="team-name">${t}</span>
+        <span class="team-short">${SHORT[t]}</span>
+      </div>
+      <div class="sos-bar-container"><div class="sos-bar-fill" style="width:${(Math.abs(sos[t]) / maxSos * 100).toFixed(0)}%;background:${sos[t] >= 0 ? 'var(--accent)' : 'var(--accent2)'}"></div></div>
+      <div style="font-size:0.68rem;color:var(--text-dim);margin-top:2px">SoS: ${sos[t] >= 0 ? '+' : ''}${sos[t].toFixed(1)}</div>
+      </div>
+      <div class="sos-value">${lr}</div>
+      <div style="text-align:center;font-size:0.75rem">${diffStr}</div>
+      <div class="sos-value">${mr}</div>
+    </div>`;
+  });
+
+  return html;
+}
+
+function renderResults() {
+  let html = '';
+  for (let rd = 1; rd <= 4; rd++) {
+    html += `<div class="round-label">Round ${rd}</div>`;
+    html += `<div class="results-grid">`;
+    const rdResults = RESULTS.filter(r => r[4] === rd);
+    rdResults.forEach(([home, away, hs, as]) => {
+      const homeWon = hs > as;
+      html += `<div class="match-card">
+        <div class="match-team ${homeWon ? 'winner' : 'loser'}">
+          <span class="team-dot" style="background:${COLORS[home]}"></span>
+          <span>${SHORT[home]}</span>
+          <span class="match-score">${hs}</span>
+        </div>
+        <span class="match-vs">v</span>
+        <div class="match-right">
+          <span class="match-score">${as}</span>
+          <span>${SHORT[away]}</span>
+          <span class="team-dot" style="background:${COLORS[away]}"></span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  return html;
+}
+
+function renderAbout() {
+  return `
+    <div class="explanation">
+      <h3 class="section-header">How Massey Ratings Work</h3>
+      <p>The <strong>Massey Rating System</strong> builds a system of equations from every game's score differential. For each match, the equation says:</p>
+      <p style="text-align:center;color:var(--accent);font-weight:700;font-family:'DM Serif Display',serif;font-size:1rem;margin:12px 0">
+        r<sub>home</sub> − r<sub>away</sub> ≈ score differential
+      </p>
+      <p>With 16 games and 8 teams, we have an overdetermined system. We solve it using <strong>least squares</strong>, which finds the set of ratings that best explains all observed margins simultaneously.</p>
+      <p>The key insight: <span class="highlight">beating a strong team by 2 goals</span> is worth more than <span class="highlight">beating a weak team by 10</span>, because the system already knows how strong each opponent is.</p>
+      <h3 class="section-header">Why It Matters for SSN</h3>
+      <p>In the early rounds of a round robin, teams haven't all played each other yet. The standard ladder rewards teams who happened to face weaker opponents first. Massey adjusts for this — if your 3 wins came against the top 3 teams, that's worth more than 3 wins against the bottom 3.</p>
+      <p>Netball margins are particularly meaningful. A team that consistently wins by 15+ goals signals a fundamentally different level to one squeaking home by 1-2.</p>
+      <h3 class="section-header">Strength of Schedule</h3>
+      <p>The <strong>SoS</strong> value on the Compare tab shows the average Massey rating of a team's opponents so far. A positive SoS means you've faced tougher-than-average opponents; negative means easier.</p>
+      <p>After 4 rounds of an 8-team comp, each team has played exactly 4 of the other 7 — so the schedule is genuinely unbalanced and SoS adjustments matter.</p>
+    </div>`;
+}
+
+// Tab switching
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Initialise
+const ratings = solveMassey(RESULTS, TEAMS);
+document.getElementById('massey').innerHTML = renderMasseyTable(ratings);
+document.getElementById('ladder').innerHTML = renderLadderTable();
+document.getElementById('compare').innerHTML = renderCompare(ratings);
+document.getElementById('results').innerHTML = renderResults();
+document.getElementById('about').innerHTML = renderAbout();
+</script>
+</body>
+</html>
