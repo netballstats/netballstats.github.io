@@ -12,12 +12,92 @@ Usage:
 import asyncio
 import argparse
 import json
+import os
 import re
 import sys
 import time
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 from playwright.async_api import async_playwright, Page, Browser
+
+
+# --- GraphQL intercept support ---
+
+_captured_graphql = []  # list of {"url", "operation", "variables", "query", "response"}
+
+
+async def _on_response(response):
+    """Capture GraphQL responses when intercept mode is active."""
+    url = response.url
+    if "graphql" not in url.lower() and "gql" not in url.lower():
+        return
+
+    request = response.request
+    payload = {}
+    if request.post_data:
+        try:
+            payload = json.loads(request.post_data)
+        except Exception:
+            pass
+
+    op = payload.get("operationName", "unknown")
+    variables = payload.get("variables", {})
+    query = payload.get("query", "")
+
+    body = None
+    try:
+        body = await response.json()
+    except Exception:
+        pass
+
+    # Capture request headers
+    headers = {}
+    try:
+        headers = dict(request.headers)
+    except Exception:
+        pass
+
+    entry = {
+        "url": url,
+        "operation": op,
+        "variables": variables,
+        "query": query,
+        "request_headers": headers,
+        "response": body,
+    }
+    _captured_graphql.append(entry)
+    print(f"  [GQL] {op} -- vars: {json.dumps(variables, separators=(',', ':'))[:120]}")
+
+
+def _attach_intercept(page: Page):
+    """Register the GraphQL response listener on a page."""
+    page.on("response", _on_response)
+
+
+def _save_captured_graphql(output_dir: str = "."):
+    """Write all captured GraphQL calls to JSON files for analysis."""
+    if not _captured_graphql:
+        print("\nNo GraphQL calls captured.")
+        return
+
+    # Save combined log
+    combined_path = os.path.join(output_dir, "graphql_captured.json")
+    with open(combined_path, "w") as f:
+        json.dump(_captured_graphql, f, indent=2)
+    print(f"\nSaved {len(_captured_graphql)} GraphQL calls to {combined_path}")
+
+    # Save per-operation files
+    seen_ops = {}
+    for entry in _captured_graphql:
+        op = entry["operation"]
+        count = seen_ops.get(op, 0) + 1
+        seen_ops[op] = count
+        suffix = f"_{count}" if count > 1 else ""
+        op_path = os.path.join(output_dir, f"graphql_{op}{suffix}.json")
+        with open(op_path, "w") as f:
+            json.dump(entry, f, indent=2)
+
+    print(f"Operations captured: {', '.join(f'{k} (x{v})' for k, v in seen_ops.items())}")
 
 
 @dataclass
@@ -309,9 +389,11 @@ async def scrape_fixtures_from_page(page: Page, preloaded_text: str = "") -> lis
     return fixtures
 
 
-async def scrape_grade_fixtures(browser: Browser, grade_url: str) -> list[Fixture]:
+async def scrape_grade_fixtures(browser: Browser, grade_url: str, intercept: bool = False) -> list[Fixture]:
     """Navigate to a grade page and scrape its fixtures."""
     page = await new_page(browser)
+    if intercept:
+        _attach_intercept(page)
     try:
         print(f"  Loading {grade_url} ...")
         await page.goto(grade_url, wait_until="domcontentloaded", timeout=30000)
@@ -350,7 +432,7 @@ async def scrape_grade_fixtures(browser: Browser, grade_url: str) -> list[Fixtur
         await page.close()
 
 
-async def scrape_competition(url: str, target_grade: Optional[str] = None, all_grades: bool = False, args_debug: bool = False) -> Competition:
+async def scrape_competition(url: str, target_grade: Optional[str] = None, all_grades: bool = False, args_debug: bool = False, intercept: bool = False) -> Competition:
     """Main entry point: scrape a PlayHQ competition URL for fixtures and scores."""
     comp = Competition(url=url)
 
@@ -369,6 +451,8 @@ async def scrape_competition(url: str, target_grade: Optional[str] = None, all_g
         browser = await launch_browser(pw)
         try:
             page = await new_page(browser)
+            if intercept:
+                _attach_intercept(page)
 
             print(f"Loading competition page: {url}")
             await page.goto(url, wait_until="domcontentloaded", timeout=30000)
@@ -462,7 +546,7 @@ async def scrape_competition(url: str, target_grade: Optional[str] = None, all_g
             # Scrape fixtures for selected grades
             for g in grades_data:
                 print(f"\nScraping fixtures for grade: {g['name']}")
-                fixtures = await scrape_grade_fixtures(browser, g["url"])
+                fixtures = await scrape_grade_fixtures(browser, g["url"], intercept=intercept)
                 grade = Grade(
                     name=g["name"],
                     url=g["url"],
@@ -527,10 +611,16 @@ async def main():
     parser.add_argument("--all-grades", "-a", action="store_true", help="Scrape all grades")
     parser.add_argument("--output", "-o", help="Save results to JSON file")
     parser.add_argument("--debug", "-d", action="store_true", help="Save debug screenshots")
+    parser.add_argument("--intercept", "-i", action="store_true",
+                        help="Capture GraphQL API calls to graphql_*.json files")
 
     args = parser.parse_args()
 
-    comp = await scrape_competition(args.url, target_grade=args.grade, all_grades=args.all_grades, args_debug=args.debug)
+    comp = await scrape_competition(args.url, target_grade=args.grade, all_grades=args.all_grades,
+                                    args_debug=args.debug, intercept=args.intercept)
+
+    if args.intercept:
+        _save_captured_graphql()
 
     print_results(comp)
 

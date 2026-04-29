@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14 15 — Junior Representative Carnival 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; padding: 20px; }
+  h1 { font-size: 1.3rem; color: #1a1a2e; margin-bottom: 4px; }
+  .subtitle { font-size: 0.85rem; color: #555; margin-bottom: 16px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #444; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 2px solid #ccc; }
+  .scroll-wrapper { overflow-x: auto; border: 1px solid #d0d0d0; border-radius: 8px; background: #fff; }
+  table { border-collapse: collapse; font-size: 0.72rem; min-width: 100%; }
+  th, td { border: 1px solid #ddd; padding: 5px 6px; text-align: center; white-space: nowrap; min-width: 110px; }
+  th { background: #f0f0f4; font-weight: 700; }
+  thead th { position: sticky; top: 0; z-index: 2; }
+  .sticky-col { position: sticky; left: 0; z-index: 3; background: #f0f0f4; min-width: 140px; text-align: left; }
+  thead .sticky-col { z-index: 4; }
+  td.diagonal { background: #e0e0e0; }
+  td.empty-cell { background: #fafafa; }
+  .cell-round { font-weight: 700; font-size: 0.78rem; }
+  .cell-score { font-size: 0.82rem; font-weight: 700; margin-top: 2px; }
+  .cell-score .win { color: #2e7d32; }
+  .cell-score .loss { color: #c62828; }
+  .cell-score .draw { color: #555; }
+  .cell-score .upcoming { color: #888; }
+  .cell-time { font-size: 0.68rem; color: #555; margin-top: 1px; }
+  .cell-court { font-size: 0.66rem; color: #777; margin-top: 1px; }
+  .note { font-size: 0.7rem; color: #888; margin-top: 10px; line-height: 1.5; }
+  h2 { font-size: 1.1rem; color: #1a1a2e; margin-top: 24px; margin-bottom: 8px; }
+  .standings { margin-top: 8px; border-collapse: collapse; font-size: 0.8rem; }
+  .standings th, .standings td { border: 1px solid #ddd; padding: 5px 10px; text-align: center; }
+  .standings th { background: #f0f0f4; }
+  .standings td:nth-child(2) { text-align: left; font-weight: 600; }
+  .standings tr:nth-child(even) { background: #fafafa; }
+  .bye-list { font-size: 0.78rem; color: #555; margin-top: 12px; line-height: 1.8; }
+  .bye-list span { display: inline-block; background: #f0f0f4; border: 1px solid #ddd; border-radius: 4px; padding: 1px 8px; margin: 0 2px; font-weight: 600; }
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    th, td { padding: 4px 5px; font-size: 0.65rem; min-width: 90px; }
+    .sticky-col { min-width: 110px; }
+  }
+</style>
+</head>
+<body>
+<h1>14 15 — Junior Representative Carnival 2026</h1>
+<p class="subtitle">Hills District Netball Association · Junior Representative Carnival 2026 · Hills District Netball Association · 22 Mar 26</p>
+<div class="legend" id="legend"></div>
+<div class="scroll-wrapper">
+  <table id="matrix"></table>
+</div>
+<p class="note" id="note"></p>
+<div class="bye-list" id="byes"></div>
+<div id="standings-section" style="display:none">
+  <h2>Standings</h2>
+  <table class="standings" id="standings"></table>
+</div>
+
+<script>
+const TEAMS = {
+  "Blacktown 15 Team": { color: "#e65100", full: "Blacktown 15 Team" },
+  "Gosford 15 Team": { color: "#1565c0", full: "Gosford 15 Team" },
+  "HDNA 14 Development": { color: "#2e7d32", full: "HDNA 14 Development" },
+  "HDNA 15 Development": { color: "#6a1b9a", full: "HDNA 15 Development" },
+  "HDNA 15 Team": { color: "#00838f", full: "HDNA 15 Team" },
+  "KNA 14 Development": { color: "#546e7a", full: "KNA 14 Development" },
+  "KNA 15 Development": { color: "#ad1457", full: "KNA 15 Development" },
+  "Nth Subs 15 Dev": { color: "#ef6c00", full: "Northern Suburbs 15 Development" },
+  "Penrith 14 Development": { color: "#283593", full: "Penrith 14 Development" },
+  "Wagga Wagga 15 Team": { color: "#c62828", full: "Wagga Wagga 15 Team" }
+};
+const MATCHES = [
+  [1,"09:00 AM","Ct 08","HDNA 14 Development","Wagga Wagga 15 Team",2,26],
+  [1,"09:00 AM","Ct 10","Blacktown 15 Team","Gosford 15 Team",15,12],
+  [1,"09:00 AM","Ct 09","HDNA 15 Development","Penrith 14 Development",12,16],
+  [1,"09:00 AM","Ct 15","HDNA 15 Team","Nth Subs 15 Dev",10,8],
+  [1,"09:00 AM","Ct 16","KNA 14 Development","KNA 15 Development",12,18],
+  [2,"10:00 AM","Ct 08","Blacktown 15 Team","HDNA 15 Team",19,10],
+  [2,"10:00 AM","Ct 09","Nth Subs 15 Dev","KNA 14 Development",15,6],
+  [2,"10:00 AM","Ct 10","KNA 15 Development","HDNA 15 Development",17,12],
+  [2,"10:00 AM","Ct 15","Wagga Wagga 15 Team","Gosford 15 Team",17,12],
+  [2,"10:00 AM","Ct 16","Penrith 14 Development","HDNA 14 Development",16,7],
+  [3,"11:00 AM","Ct 08","KNA 14 Development","Penrith 14 Development",15,14],
+  [3,"11:00 AM","Ct 09","HDNA 15 Development","Gosford 15 Team",12,17],
+  [3,"11:00 AM","Ct 10","HDNA 15 Team","Wagga Wagga 15 Team",7,16],
+  [3,"11:00 AM","Ct 15","Blacktown 15 Team","HDNA 14 Development",21,11],
+  [3,"11:00 AM","Ct 16","KNA 15 Development","Nth Subs 15 Dev",16,12],
+  [4,"12:00 PM","Ct 15","HDNA 14 Development","HDNA 15 Development",15,8],
+  [4,"12:00 PM","Ct 09","Penrith 14 Development","KNA 15 Development",18,14],
+  [4,"12:00 PM","Ct 08","Wagga Wagga 15 Team","KNA 14 Development",28,4],
+  [4,"12:00 PM","In 18","Gosford 15 Team","HDNA 15 Team",16,15],
+  [4,"12:00 PM","Ct 16","Nth Subs 15 Dev","Blacktown 15 Team",9,17],
+  [5,"01:00 PM","Ct 08","Nth Subs 15 Dev","Gosford 15 Team",13,16],
+  [5,"01:00 PM","Ct 10","HDNA 15 Team","Penrith 14 Development",15,9],
+  [5,"01:00 PM","Ct 09","KNA 14 Development","Blacktown 15 Team",5,31],
+  [5,"01:00 PM","Ct 15","HDNA 15 Development","Wagga Wagga 15 Team",8,24],
+  [5,"01:00 PM","Ct 16","KNA 15 Development","HDNA 14 Development",20,11],
+  [6,"02:00 PM","Ct 09","HDNA 14 Development","KNA 14 Development",20,6],
+  [6,"02:00 PM","In 18","Wagga Wagga 15 Team","Nth Subs 15 Dev",25,7],
+  [6,"02:00 PM","Ct 15","Gosford 15 Team","KNA 15 Development",14,11],
+  [6,"02:00 PM","Ct 10","Penrith 14 Development","Blacktown 15 Team",6,27],
+  [6,"02:00 PM","Ct 16","HDNA 15 Development","HDNA 15 Team",4,26],
+  [7,"03:00 PM","Ct 10","KNA 15 Development","HDNA 15 Team",9,17],
+  [7,"03:00 PM","In 18","KNA 14 Development","HDNA 15 Development",8,20],
+  [7,"03:00 PM","Ct 15","Blacktown 15 Team","Wagga Wagga 15 Team",6,16],
+  [7,"03:00 PM","Ct 16","Nth Subs 15 Dev","HDNA 14 Development",12,13],
+  [7,"03:00 PM","Ct 09","Penrith 14 Development","Gosford 15 Team",7,17]
+];
+const TOTAL_ROUNDS = 7;
+
+const teamNames = Object.keys(TEAMS);
+
+// Build match map
+const matchMap = {};
+teamNames.forEach(t => matchMap[t] = {});
+
+MATCHES.forEach(([rd, time, court, home, away, hScore, aScore]) => {
+  matchMap[home][away] = { round: rd, time, court, myScore: hScore, theirScore: aScore };
+  matchMap[away][home] = { round: rd, time, court, myScore: aScore, theirScore: hScore };
+});
+
+// Byes
+const byes = {};
+for (let r = 1; r <= TOTAL_ROUNDS; r++) {
+  const playing = new Set();
+  MATCHES.filter(m => m[0] === r).forEach(([,,, home, away]) => {
+    playing.add(home); playing.add(away);
+  });
+  const byeTeams = teamNames.filter(t => !playing.has(t));
+  if (byeTeams.length) byes[r] = byeTeams;
+}
+
+// Standings
+const hasScores = MATCHES.some(m => m[5] !== null);
+const stats = {};
+teamNames.forEach(t => stats[t] = { p: 0, w: 0, l: 0, d: 0, pf: 0, pa: 0, byes: 0 });
+for (const [r, bt] of Object.entries(byes)) bt.forEach(t => stats[t].byes++);
+
+if (hasScores) {
+  MATCHES.forEach(([,,,home, away, hScore, aScore]) => {
+    if (hScore === null) return;
+    stats[home].p++; stats[away].p++;
+    stats[home].pf += hScore; stats[home].pa += aScore;
+    stats[away].pf += aScore; stats[away].pa += hScore;
+    if (hScore > aScore) { stats[home].w++; stats[away].l++; }
+    else if (hScore < aScore) { stats[away].w++; stats[home].l++; }
+    else { stats[home].d++; stats[away].d++; }
+  });
+}
+
+// Sort
+const order = [...teamNames].sort((a, b) => {
+  if (!hasScores) return a.localeCompare(b);
+  const sa = stats[a], sb = stats[b];
+  if (sb.w !== sa.w) return sb.w - sa.w;
+  return (sb.pf - sb.pa) - (sa.pf - sa.pa);
+});
+
+// Legend
+const legendEl = document.getElementById('legend');
+order.forEach(t => {
+  const item = document.createElement('span');
+  item.className = 'legend-item';
+  item.innerHTML = `<span class="legend-swatch" style="border-color:${TEAMS[t].color}"></span><span style="color:${TEAMS[t].color}; font-weight:600">${t}</span>`;
+  legendEl.appendChild(item);
+});
+
+// Matrix
+const table = document.getElementById('matrix');
+let html = '<thead><tr><th class="sticky-col"></th>';
+order.forEach(t => {
+  html += `<th style="color:${TEAMS[t].color}">${t}</th>`;
+});
+html += '</tr></thead><tbody>';
+
+order.forEach(rowT => {
+  html += '<tr>';
+  html += `<th class="sticky-col" style="color:${TEAMS[rowT].color}">${rowT}</th>`;
+  order.forEach(colT => {
+    if (rowT === colT) { html += '<td class="diagonal"></td>'; return; }
+    const m = matchMap[rowT]?.[colT];
+    if (!m) { html += '<td class="empty-cell"></td>'; return; }
+
+    let scoreHtml = '';
+    if (m.myScore !== null) {
+      let sc = 'draw';
+      if (m.myScore > m.theirScore) sc = 'win';
+      else if (m.myScore < m.theirScore) sc = 'loss';
+      scoreHtml = `<div class="cell-score"><span class="${sc}">${m.myScore} - ${m.theirScore}</span></div>`;
+    } else {
+      scoreHtml = '<div class="cell-score"><span class="upcoming">v</span></div>';
+    }
+
+    html += `<td>
+      <div class="cell-round">R${m.round}</div>
+      ${scoreHtml}
+      <div class="cell-time">${m.time}</div>
+      <div class="cell-court">${m.court}</div>
+    </td>`;
+  });
+  html += '</tr>';
+});
+html += '</tbody>';
+table.innerHTML = html;
+
+// Note
+const noteEl = document.getElementById('note');
+if (hasScores) {
+  noteEl.innerHTML = 'Each cell shows the round, score (from row team perspective), time &amp; court.<br><span style="color:#2e7d32;font-weight:700">Green</span> = win, <span style="color:#c62828;font-weight:700">Red</span> = loss';
+} else {
+  noteEl.innerHTML = 'Each cell shows the round, time &amp; court. Scores will appear after each game.';
+}
+if (Object.keys(byes).length) {
+  noteEl.innerHTML += '<br>Odd number of teams — one team has a bye each round.';
+}
+
+// Byes
+const byesEl = document.getElementById('byes');
+if (Object.keys(byes).length) {
+  let bh = '<strong>Byes:</strong> ';
+  for (let r = 1; r <= TOTAL_ROUNDS; r++) {
+    if (byes[r]) byes[r].forEach(t => {
+      bh += `R${r} <span style="color:${TEAMS[t].color}">${t}</span> `;
+    });
+  }
+  byesEl.innerHTML = bh;
+}
+
+// Standings table
+if (hasScores) {
+  const stEl = document.getElementById('standings');
+  let sh = '<thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>L</th><th>D</th><th>PF</th><th>PA</th><th>+/-</th></tr></thead><tbody>';
+  order.forEach((t, i) => {
+    const s = stats[t];
+    const diff = s.pf - s.pa;
+    const ds = diff > 0 ? `+${diff}` : `${diff}`;
+    sh += `<tr><td>${i+1}</td><td style="color:${TEAMS[t].color}">${t}</td><td>${s.p}</td><td>${s.w}</td><td>${s.l}</td><td>${s.d}</td><td>${s.pf}</td><td>${s.pa}</td><td style="color:${diff>=0?'#2e7d32':'#c62828'}">${ds}</td></tr>`;
+  });
+  sh += '</tbody>';
+  stEl.innerHTML = sh;
+  document.getElementById('standings-section').style.display = '';
+}
+</script>
+</body>
+</html>

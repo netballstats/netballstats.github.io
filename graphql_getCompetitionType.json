@@ -1,0 +1,44 @@
+{
+  "url": "https://api.playhq.com/graphql",
+  "operation": "getCompetitionType",
+  "variables": {
+    "gradeID": "15299ca4"
+  },
+  "query": "query getCompetitionType($gradeID: ID!) {\n  discoverGrade(gradeID: $gradeID) {\n    id\n    name\n    season {\n      id\n      name\n      competition {\n        id\n        type\n        organisation {\n          id\n          name\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
+  "request_headers": {
+    "sec-ch-ua-platform": "\"Windows\"",
+    "referer": "",
+    "sec-ch-ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"HeadlessChrome\";v=\"140\"",
+    "tenant": "netball-australia",
+    "sec-ch-ua-mobile": "?0",
+    "request-id": "38035ae3-75bf-46b2-92a1-fa64d6d5c660",
+    "traceparent": "00-ce2f5a61136da3566529a72a0c6a856b-5b8c35309800efd0-00",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "accept": "*/*",
+    "content-type": "application/json"
+  },
+  "response": {
+    "data": {
+      "discoverGrade": {
+        "id": "15299ca4",
+        "name": "U15 Girls Development",
+        "season": {
+          "id": "deaa06cd",
+          "name": "2026",
+          "competition": {
+            "id": "9e6f7aae",
+            "type": "TOURNAMENT",
+            "organisation": {
+              "id": "414b289d",
+              "name": "Penrith District Netball Association",
+              "__typename": "DiscoverOrganisation"
+            },
+            "__typename": "DiscoverCompetition"
+          },
+          "__typename": "DiscoverSeason"
+        },
+        "__typename": "DiscoverGrade"
+      }
+    }
+  }
+}

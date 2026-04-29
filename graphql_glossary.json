@@ -1,0 +1,38 @@
+{
+  "url": "https://api.playhq.com/graphql",
+  "operation": "glossary",
+  "variables": {},
+  "query": "query glossary {\n  tenantConfiguration {\n    glossary {\n      playingSurface {\n        singular\n        plural\n        __typename\n      }\n      ladder {\n        singular\n        plural\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
+  "request_headers": {
+    "sec-ch-ua-platform": "\"Windows\"",
+    "referer": "",
+    "sec-ch-ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"HeadlessChrome\";v=\"140\"",
+    "tenant": "netball-australia",
+    "sec-ch-ua-mobile": "?0",
+    "request-id": "7d6a8633-42e0-4994-825a-762e0a5b254d",
+    "traceparent": "00-ec0835a5f7d68d655e8e4543f626da09-862b075056e7c4ec-00",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "accept": "*/*",
+    "content-type": "application/json"
+  },
+  "response": {
+    "data": {
+      "tenantConfiguration": {
+        "glossary": {
+          "playingSurface": {
+            "singular": "Court",
+            "plural": "Courts",
+            "__typename": "Glossary"
+          },
+          "ladder": {
+            "singular": "Ladder",
+            "plural": "Ladders",
+            "__typename": "Glossary"
+          },
+          "__typename": "TenantGlossary"
+        },
+        "__typename": "TenantConfiguration"
+      }
+    }
+  }
+}

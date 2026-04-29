@@ -1,0 +1,30 @@
+{
+  "url": "https://api.playhq.com/graphql",
+  "operation": "tenant",
+  "variables": {},
+  "query": "query tenant {\n  tenantConfiguration {\n    label\n    sport {\n      name\n      __typename\n    }\n    __typename\n  }\n}\n",
+  "request_headers": {
+    "sec-ch-ua-platform": "\"Windows\"",
+    "referer": "",
+    "sec-ch-ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"HeadlessChrome\";v=\"140\"",
+    "tenant": "netball-australia",
+    "sec-ch-ua-mobile": "?0",
+    "request-id": "ae519624-bb48-4332-a2d7-672af13e5d04",
+    "traceparent": "00-9bae8d5239c2c69ef03e74edbbac8dae-8a5c19880db684c1-00",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "accept": "*/*",
+    "content-type": "application/json"
+  },
+  "response": {
+    "data": {
+      "tenantConfiguration": {
+        "label": "na",
+        "sport": {
+          "name": "netball",
+          "__typename": "SportConfiguration"
+        },
+        "__typename": "TenantConfiguration"
+      }
+    }
+  }
+}

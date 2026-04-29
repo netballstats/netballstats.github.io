@@ -1,0 +1,29 @@
+{
+  "url": "https://api.playhq.com/graphql",
+  "operation": "appFooterBanner",
+  "variables": {},
+  "query": "query appFooterBanner {\n  tenantConfiguration {\n    outswingConfiguration {\n      value\n      __typename\n    }\n    __typename\n  }\n}\n",
+  "request_headers": {
+    "sec-ch-ua-platform": "\"Windows\"",
+    "referer": "",
+    "sec-ch-ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"HeadlessChrome\";v=\"140\"",
+    "tenant": "netball-australia",
+    "sec-ch-ua-mobile": "?0",
+    "request-id": "fab506cc-7a33-4da3-880e-1119c251c8a0",
+    "traceparent": "00-4f754562c4ac6bbd52e798d5e8dfee41-21580c55a16de78f-00",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "accept": "*/*",
+    "content-type": "application/json"
+  },
+  "response": {
+    "data": {
+      "tenantConfiguration": {
+        "outswingConfiguration": {
+          "value": "netballhq",
+          "__typename": "OutswingConfiguration"
+        },
+        "__typename": "TenantConfiguration"
+      }
+    }
+  }
+}

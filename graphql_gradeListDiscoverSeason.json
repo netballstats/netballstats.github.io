@@ -1,0 +1,716 @@
+{
+  "url": "https://api.playhq.com/graphql",
+  "operation": "gradeListDiscoverSeason",
+  "variables": {
+    "id": "deaa06cd"
+  },
+  "query": "query gradeListDiscoverSeason($id: String!) {\n  discoverSeason(seasonID: $id) {\n    id\n    name\n    competition {\n      id\n      name\n      type\n      organisation {\n        ...OrganisationDetails\n        __typename\n      }\n      __typename\n    }\n    status {\n      name\n      value\n      __typename\n    }\n    grades {\n      id\n      name\n      day {\n        name\n        value\n        __typename\n      }\n      gender {\n        name\n        value\n        __typename\n      }\n      age {\n        name\n        value\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  tenantConfiguration {\n    label\n    competition {\n      ageGroups {\n        name\n        value\n        __typename\n      }\n      genders {\n        name\n        value\n        __typename\n      }\n      __typename\n    }\n    ...TenantContactRolesConfiguration\n    __typename\n  }\n}\n\nfragment OrganisationDetails on DiscoverOrganisation {\n  id\n  type\n  name\n  email\n  contactNumber\n  websiteUrl\n  address {\n    id\n    line1\n    suburb\n    postcode\n    state\n    country\n    __typename\n  }\n  logo {\n    sizes {\n      url\n      dimensions {\n        width\n        height\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  contacts {\n    id\n    firstName\n    lastName\n    position\n    email\n    phone\n    __typename\n  }\n  shopVisible\n  __typename\n}\n\nfragment TenantContactRolesConfiguration on TenantConfiguration {\n  contactRoles {\n    name\n    value\n    __typename\n  }\n  __typename\n}\n",
+  "response": {
+    "data": {
+      "discoverSeason": {
+        "id": "deaa06cd",
+        "name": "2026",
+        "competition": {
+          "id": "9e6f7aae",
+          "name": "Representative & Development Carnival 12yrs to Opens",
+          "type": "TOURNAMENT",
+          "organisation": {
+            "id": "414b289d",
+            "type": "ASSOCIATION",
+            "name": "Penrith District Netball Association",
+            "email": "admin@penrithnetball.com.au",
+            "contactNumber": "02 4721 4319",
+            "websiteUrl": "https://www.penrithnetball.com/",
+            "address": {
+              "id": "770cf67d-bcfd-4fac-bb8a-eb79f8121671",
+              "line1": "Jamison Park Netball Complex, Cnr York Road & Batt St",
+              "suburb": "Jamisontown",
+              "postcode": "2750",
+              "state": "NSW",
+              "country": "Australia",
+              "__typename": "Address"
+            },
+            "logo": {
+              "sizes": [
+                {
+                  "url": "https://res.cloudinary.com/playhq/image/upload/h_32,w_32/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                  "dimensions": {
+                    "width": 32,
+                    "height": 32,
+                    "__typename": "ImageDimension"
+                  },
+                  "__typename": "ImageSource"
+                },
+                {
+                  "url": "https://res.cloudinary.com/playhq/image/upload/h_48,w_48/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                  "dimensions": {
+                    "width": 48,
+                    "height": 48,
+                    "__typename": "ImageDimension"
+                  },
+                  "__typename": "ImageSource"
+                },
+                {
+                  "url": "https://res.cloudinary.com/playhq/image/upload/h_64,w_64/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                  "dimensions": {
+                    "width": 64,
+                    "height": 64,
+                    "__typename": "ImageDimension"
+                  },
+                  "__typename": "ImageSource"
+                },
+                {
+                  "url": "https://res.cloudinary.com/playhq/image/upload/h_96,w_96/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                  "dimensions": {
+                    "width": 96,
+                    "height": 96,
+                    "__typename": "ImageDimension"
+                  },
+                  "__typename": "ImageSource"
+                },
+                {
+                  "url": "https://res.cloudinary.com/playhq/image/upload/h_128,w_128/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                  "dimensions": {
+                    "width": 128,
+                    "height": 128,
+                    "__typename": "ImageDimension"
+                  },
+                  "__typename": "ImageSource"
+                },
+                {
+                  "url": "https://res.cloudinary.com/playhq/image/upload/h_256,w_256/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                  "dimensions": {
+                    "width": 256,
+                    "height": 256,
+                    "__typename": "ImageDimension"
+                  },
+                  "__typename": "ImageSource"
+                }
+              ],
+              "__typename": "Image"
+            },
+            "contacts": [
+              {
+                "id": "5d094e48-55c9-45d0-821e-c15e0a79243b",
+                "firstName": "Joy",
+                "lastName": "Gillett OAM",
+                "position": "PRESIDENT",
+                "email": "president@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "b8c14f4f-a9c8-401f-b6d3-c52ead060369",
+                "firstName": "Judith",
+                "lastName": "Sibbald",
+                "position": "VICE_PRESIDENT",
+                "email": "vicepresident@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "9fb06929-7adf-470e-96e3-bdee995fa357",
+                "firstName": "Angela",
+                "lastName": "Flood",
+                "position": "SECRETARY",
+                "email": "secretary@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "8e2dac96-9517-4bc2-a45f-d537fec893b6",
+                "firstName": "Michelle",
+                "lastName": "Barnes",
+                "position": "TREASURER",
+                "email": "treasurer@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "2b2d9168-6274-4bf4-a282-d6b72de91bf7",
+                "firstName": "Vikki",
+                "lastName": "Trevena",
+                "position": "REGISTRAR",
+                "email": "seniorregistrar@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "06598c2d-a6ba-48d8-a62f-b9a70a97e508",
+                "firstName": "Meighan",
+                "lastName": "Ellul",
+                "position": "REGISTRAR",
+                "email": "intermediateregistrar@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "510e9010-23cf-403a-9b08-87c9fd59dae5",
+                "firstName": "Barbara",
+                "lastName": "Dallinger",
+                "position": "REGISTRAR",
+                "email": "juniorregistrar@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "3fbfa65c-6bb7-4ba5-8425-b1dee05e7f25",
+                "firstName": "Rebecca",
+                "lastName": "Weston",
+                "position": "UMPIRE_CONVENOR",
+                "email": "juniorumpire@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "6bb101e1-bc78-4afd-ad87-f79e8761a85f",
+                "firstName": "Trish",
+                "lastName": "Connor",
+                "position": "COMMITTEE_MEMBER",
+                "email": "competitions@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "c69844da-5332-43f6-bef1-b0ad2d5d76b0",
+                "firstName": "Leanne",
+                "lastName": "Mostek",
+                "position": "COMMITTEE_MEMBER",
+                "email": "competitions@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "53df11cf-0226-4232-9581-64c32f87ca43",
+                "firstName": "Margaret",
+                "lastName": "Thornton",
+                "position": "COMMITTEE_MEMBER",
+                "email": "juniorreps@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "799e0481-824b-49ce-95d1-e41619b22278",
+                "firstName": "Jenni",
+                "lastName": "May",
+                "position": "COMMITTEE_MEMBER",
+                "email": "coaching@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "290902a2-3218-4f13-af8d-a12360fc3548",
+                "firstName": "Tricia",
+                "lastName": "Mann",
+                "position": "COMMITTEE_MEMBER",
+                "email": "seniorreps@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              },
+              {
+                "id": "056b35c5-51df-406f-9d98-9d999f432cd8",
+                "firstName": "Kellie",
+                "lastName": "Tickner",
+                "position": "COMMITTEE_MEMBER",
+                "email": "pr@penrithnetball.com.au",
+                "phone": "",
+                "__typename": "DiscoverOrganisationContact"
+              }
+            ],
+            "shopVisible": false,
+            "__typename": "DiscoverOrganisation"
+          },
+          "__typename": "DiscoverCompetition"
+        },
+        "status": {
+          "name": "Completed",
+          "value": "COMPLETED",
+          "__typename": "DiscoverSeasonStatus"
+        },
+        "grades": [
+          {
+            "id": "0de7a23a",
+            "name": "U12 State BLACK",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U12",
+              "value": "U12",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "ce0e6114",
+            "name": "U12 State GREEN",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U12",
+              "value": "U12",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "e34855ce",
+            "name": "U12 State RED",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U12",
+              "value": "U12",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "5016952a",
+            "name": "U12 Yellow Dev",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U12",
+              "value": "U12",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "890af674",
+            "name": "U13 Girls Yellow",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U13",
+              "value": "U13",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "c60f0f9b",
+            "name": "U13 State BLACK",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U13",
+              "value": "U13",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "3ec80a28",
+            "name": "U13 State GREEN",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U13",
+              "value": "U13",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "853f094d",
+            "name": "U13 State RED",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U13",
+              "value": "U13",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "5037c1b9",
+            "name": "U14 Girls Development",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U14",
+              "value": "U14",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "1b7438a8",
+            "name": "U14 State BLACK",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U14",
+              "value": "U14",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "f13229a1",
+            "name": "U14 State GREEN",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U14",
+              "value": "U14",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "be3438ab",
+            "name": "U14 State RED",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U14",
+              "value": "U14",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "15299ca4",
+            "name": "U15 Girls Development",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U15",
+              "value": "U15",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "2562b253",
+            "name": "U15 State BLACK",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U15",
+              "value": "U15",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "e0b991a1",
+            "name": "U15 State GREEN",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U15",
+              "value": "U15",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "a31540f8",
+            "name": "U15 State RED",
+            "day": null,
+            "gender": {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U15",
+              "value": "U15",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          },
+          {
+            "id": "78ce2c10",
+            "name": "U17/Opens Women",
+            "day": null,
+            "gender": {
+              "name": "Women",
+              "value": "WOMENS",
+              "__typename": "TenantField"
+            },
+            "age": {
+              "name": "U17",
+              "value": "U17",
+              "__typename": "TenantField"
+            },
+            "__typename": "DiscoverGrade"
+          }
+        ],
+        "__typename": "DiscoverSeason"
+      },
+      "tenantConfiguration": {
+        "label": "na",
+        "competition": {
+          "ageGroups": [
+            {
+              "name": "U8",
+              "value": "U8",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U9",
+              "value": "U9",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U10",
+              "value": "U10",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U11",
+              "value": "U11",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U12",
+              "value": "U12",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U13",
+              "value": "U13",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U14",
+              "value": "U14",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U15",
+              "value": "U15",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U16",
+              "value": "U16",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U17",
+              "value": "U17",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U18",
+              "value": "U18",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U19",
+              "value": "U19",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U20",
+              "value": "U20",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U21",
+              "value": "U21",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U22",
+              "value": "U22",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "U23",
+              "value": "U23",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "Junior",
+              "value": "JUNIOR",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "Intermediate",
+              "value": "INTERMEDIATE",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "Senior",
+              "value": "SENIOR",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "Open",
+              "value": "OPEN",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "Unspecified",
+              "value": "UNSPECIFIED",
+              "__typename": "TenantField"
+            }
+          ],
+          "genders": [
+            {
+              "name": "Boys",
+              "value": "BOYS",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "Girls",
+              "value": "GIRLS",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "Men",
+              "value": "MENS",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "Mixed",
+              "value": "MIXED",
+              "__typename": "TenantField"
+            },
+            {
+              "name": "Women",
+              "value": "WOMENS",
+              "__typename": "TenantField"
+            }
+          ],
+          "__typename": "CompetitionConfiguration"
+        },
+        "contactRoles": [
+          {
+            "name": "Administrator",
+            "value": "ADMINISTRATOR",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Chairperson",
+            "value": "CHAIRPERSON",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Child Safety Officer",
+            "value": "CHILD_SAFETY_OFFICER",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Committee Member",
+            "value": "COMMITTEE_MEMBER",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "President",
+            "value": "PRESIDENT",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Registrar",
+            "value": "REGISTRAR",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Secretary",
+            "value": "SECRETARY",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Treasurer",
+            "value": "TREASURER",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Vice President",
+            "value": "VICE_PRESIDENT",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Other",
+            "value": "OTHER",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Coach Convenor",
+            "value": "COACH_CONVENOR",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Umpire Convenor",
+            "value": "UMPIRE_CONVENOR",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Delegate",
+            "value": "DELEGATE",
+            "__typename": "TenantField"
+          }
+        ],
+        "__typename": "TenantConfiguration"
+      }
+    }
+  }
+}

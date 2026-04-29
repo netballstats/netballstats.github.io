@@ -7,3 +7,4 @@ results.json
 request.json
 response.json
 .venv/
+.sfdx/

@@ -1,0 +1,31 @@
+{
+  "url": "https://api.playhq.com/graphql",
+  "operation": "OrganisationPageWrapperNews",
+  "variables": {
+    "orgCode": "414b289d"
+  },
+  "query": "query OrganisationPageWrapperNews($orgCode: ID!) {\n  discoverOrganisationPosts(input: {organisationID: $orgCode, limit: 0}) {\n    meta {\n      totalRecords\n      __typename\n    }\n    __typename\n  }\n}\n",
+  "request_headers": {
+    "sec-ch-ua-platform": "\"Windows\"",
+    "referer": "",
+    "sec-ch-ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"HeadlessChrome\";v=\"140\"",
+    "tenant": "netball-australia",
+    "sec-ch-ua-mobile": "?0",
+    "request-id": "ab7fb283-1715-446e-9fd9-76135a4341e8",
+    "traceparent": "00-20d245ed770b61f9f5881db2c72d0871-8ac60e26208eb28e-00",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "accept": "*/*",
+    "content-type": "application/json"
+  },
+  "response": {
+    "data": {
+      "discoverOrganisationPosts": {
+        "meta": {
+          "totalRecords": 0,
+          "__typename": "SearchResultMeta"
+        },
+        "__typename": "DiscoverOrganisationPosts"
+      }
+    }
+  }
+}

@@ -1,0 +1,351 @@
+{
+  "url": "https://api.playhq.com/graphql",
+  "operation": "discoverGrade",
+  "variables": {
+    "gradeID": "15299ca4"
+  },
+  "query": "query discoverGrade($gradeID: ID!) {\n  discoverGrade(gradeID: $gradeID) {\n    id\n    name\n    type\n    season {\n      id\n      name\n      competition {\n        id\n        name\n        organisation {\n          ...OrganisationDetails\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  tenantConfiguration {\n    label\n    statistics {\n      enabled\n      __typename\n    }\n    ...TenantContactRolesConfiguration\n    gradeTypes {\n      value\n      isAllPlay\n      features {\n        hasRounds\n        hasSeasonStats\n        hasCareerStats\n        hasGameStats\n        hasFixture\n        hasLadder\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment OrganisationDetails on DiscoverOrganisation {\n  id\n  type\n  name\n  email\n  contactNumber\n  websiteUrl\n  address {\n    id\n    line1\n    suburb\n    postcode\n    state\n    country\n    __typename\n  }\n  logo {\n    sizes {\n      url\n      dimensions {\n        width\n        height\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n  contacts {\n    id\n    firstName\n    lastName\n    position\n    email\n    phone\n    __typename\n  }\n  shopVisible\n  __typename\n}\n\nfragment TenantContactRolesConfiguration on TenantConfiguration {\n  contactRoles {\n    name\n    value\n    __typename\n  }\n  __typename\n}\n",
+  "request_headers": {
+    "sec-ch-ua-platform": "\"Windows\"",
+    "referer": "",
+    "sec-ch-ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"HeadlessChrome\";v=\"140\"",
+    "tenant": "netball-australia",
+    "sec-ch-ua-mobile": "?0",
+    "request-id": "08f821f7-68b4-4ba6-83c1-bb61b1be98dc",
+    "traceparent": "00-36184899346958c3b4e5f5e3d1147d42-9f065b51ddf06a8e-00",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "accept": "*/*",
+    "content-type": "application/json"
+  },
+  "response": {
+    "data": {
+      "discoverGrade": {
+        "id": "15299ca4",
+        "name": "U15 Girls Development",
+        "type": "REGULAR",
+        "season": {
+          "id": "deaa06cd",
+          "name": "2026",
+          "competition": {
+            "id": "9e6f7aae",
+            "name": "Representative & Development Carnival 12yrs to Opens",
+            "organisation": {
+              "id": "414b289d",
+              "type": "ASSOCIATION",
+              "name": "Penrith District Netball Association",
+              "email": "admin@penrithnetball.com.au",
+              "contactNumber": "02 4721 4319",
+              "websiteUrl": "https://www.penrithnetball.com/",
+              "address": {
+                "id": "770cf67d-bcfd-4fac-bb8a-eb79f8121671",
+                "line1": "Jamison Park Netball Complex, Cnr York Road & Batt St",
+                "suburb": "Jamisontown",
+                "postcode": "2750",
+                "state": "NSW",
+                "country": "Australia",
+                "__typename": "Address"
+              },
+              "logo": {
+                "sizes": [
+                  {
+                    "url": "https://res.cloudinary.com/playhq/image/upload/h_32,w_32/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                    "dimensions": {
+                      "width": 32,
+                      "height": 32,
+                      "__typename": "ImageDimension"
+                    },
+                    "__typename": "ImageSource"
+                  },
+                  {
+                    "url": "https://res.cloudinary.com/playhq/image/upload/h_48,w_48/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                    "dimensions": {
+                      "width": 48,
+                      "height": 48,
+                      "__typename": "ImageDimension"
+                    },
+                    "__typename": "ImageSource"
+                  },
+                  {
+                    "url": "https://res.cloudinary.com/playhq/image/upload/h_64,w_64/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                    "dimensions": {
+                      "width": 64,
+                      "height": 64,
+                      "__typename": "ImageDimension"
+                    },
+                    "__typename": "ImageSource"
+                  },
+                  {
+                    "url": "https://res.cloudinary.com/playhq/image/upload/h_96,w_96/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                    "dimensions": {
+                      "width": 96,
+                      "height": 96,
+                      "__typename": "ImageDimension"
+                    },
+                    "__typename": "ImageSource"
+                  },
+                  {
+                    "url": "https://res.cloudinary.com/playhq/image/upload/h_128,w_128/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                    "dimensions": {
+                      "width": 128,
+                      "height": 128,
+                      "__typename": "ImageDimension"
+                    },
+                    "__typename": "ImageSource"
+                  },
+                  {
+                    "url": "https://res.cloudinary.com/playhq/image/upload/h_256,w_256/v1/production/na/414b289d-1216-434c-830c-06c31f1a432e/1633560249173/logo.png?_a=BAMAMifg0",
+                    "dimensions": {
+                      "width": 256,
+                      "height": 256,
+                      "__typename": "ImageDimension"
+                    },
+                    "__typename": "ImageSource"
+                  }
+                ],
+                "__typename": "Image"
+              },
+              "contacts": [
+                {
+                  "id": "5d094e48-55c9-45d0-821e-c15e0a79243b",
+                  "firstName": "Joy",
+                  "lastName": "Gillett OAM",
+                  "position": "PRESIDENT",
+                  "email": "president@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "b8c14f4f-a9c8-401f-b6d3-c52ead060369",
+                  "firstName": "Judith",
+                  "lastName": "Sibbald",
+                  "position": "VICE_PRESIDENT",
+                  "email": "vicepresident@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "9fb06929-7adf-470e-96e3-bdee995fa357",
+                  "firstName": "Angela",
+                  "lastName": "Flood",
+                  "position": "SECRETARY",
+                  "email": "secretary@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "8e2dac96-9517-4bc2-a45f-d537fec893b6",
+                  "firstName": "Michelle",
+                  "lastName": "Barnes",
+                  "position": "TREASURER",
+                  "email": "treasurer@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "2b2d9168-6274-4bf4-a282-d6b72de91bf7",
+                  "firstName": "Vikki",
+                  "lastName": "Trevena",
+                  "position": "REGISTRAR",
+                  "email": "seniorregistrar@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "06598c2d-a6ba-48d8-a62f-b9a70a97e508",
+                  "firstName": "Meighan",
+                  "lastName": "Ellul",
+                  "position": "REGISTRAR",
+                  "email": "intermediateregistrar@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "510e9010-23cf-403a-9b08-87c9fd59dae5",
+                  "firstName": "Barbara",
+                  "lastName": "Dallinger",
+                  "position": "REGISTRAR",
+                  "email": "juniorregistrar@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "3fbfa65c-6bb7-4ba5-8425-b1dee05e7f25",
+                  "firstName": "Rebecca",
+                  "lastName": "Weston",
+                  "position": "UMPIRE_CONVENOR",
+                  "email": "juniorumpire@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "6bb101e1-bc78-4afd-ad87-f79e8761a85f",
+                  "firstName": "Trish",
+                  "lastName": "Connor",
+                  "position": "COMMITTEE_MEMBER",
+                  "email": "competitions@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "c69844da-5332-43f6-bef1-b0ad2d5d76b0",
+                  "firstName": "Leanne",
+                  "lastName": "Mostek",
+                  "position": "COMMITTEE_MEMBER",
+                  "email": "competitions@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "53df11cf-0226-4232-9581-64c32f87ca43",
+                  "firstName": "Margaret",
+                  "lastName": "Thornton",
+                  "position": "COMMITTEE_MEMBER",
+                  "email": "juniorreps@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "799e0481-824b-49ce-95d1-e41619b22278",
+                  "firstName": "Jenni",
+                  "lastName": "May",
+                  "position": "COMMITTEE_MEMBER",
+                  "email": "coaching@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "290902a2-3218-4f13-af8d-a12360fc3548",
+                  "firstName": "Tricia",
+                  "lastName": "Mann",
+                  "position": "COMMITTEE_MEMBER",
+                  "email": "seniorreps@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                },
+                {
+                  "id": "056b35c5-51df-406f-9d98-9d999f432cd8",
+                  "firstName": "Kellie",
+                  "lastName": "Tickner",
+                  "position": "COMMITTEE_MEMBER",
+                  "email": "pr@penrithnetball.com.au",
+                  "phone": "",
+                  "__typename": "DiscoverOrganisationContact"
+                }
+              ],
+              "shopVisible": false,
+              "__typename": "DiscoverOrganisation"
+            },
+            "__typename": "DiscoverCompetition"
+          },
+          "__typename": "DiscoverSeason"
+        },
+        "__typename": "DiscoverGrade"
+      },
+      "tenantConfiguration": {
+        "label": "na",
+        "statistics": {
+          "enabled": true,
+          "__typename": "TenantStatistics"
+        },
+        "contactRoles": [
+          {
+            "name": "Administrator",
+            "value": "ADMINISTRATOR",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Chairperson",
+            "value": "CHAIRPERSON",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Child Safety Officer",
+            "value": "CHILD_SAFETY_OFFICER",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Committee Member",
+            "value": "COMMITTEE_MEMBER",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "President",
+            "value": "PRESIDENT",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Registrar",
+            "value": "REGISTRAR",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Secretary",
+            "value": "SECRETARY",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Treasurer",
+            "value": "TREASURER",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Vice President",
+            "value": "VICE_PRESIDENT",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Other",
+            "value": "OTHER",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Coach Convenor",
+            "value": "COACH_CONVENOR",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Umpire Convenor",
+            "value": "UMPIRE_CONVENOR",
+            "__typename": "TenantField"
+          },
+          {
+            "name": "Delegate",
+            "value": "DELEGATE",
+            "__typename": "TenantField"
+          }
+        ],
+        "__typename": "TenantConfiguration",
+        "gradeTypes": [
+          {
+            "value": "FRIENDLIES",
+            "isAllPlay": true,
+            "features": {
+              "hasRounds": false,
+              "hasSeasonStats": false,
+              "hasCareerStats": false,
+              "hasGameStats": false,
+              "hasFixture": false,
+              "hasLadder": false,
+              "__typename": "GradeTypeFeatures"
+            },
+            "__typename": "GradeTypeConfig"
+          },
+          {
+            "value": "REGULAR",
+            "isAllPlay": false,
+            "features": {
+              "hasRounds": true,
+              "hasSeasonStats": true,
+              "hasCareerStats": true,
+              "hasGameStats": true,
+              "hasFixture": true,
+              "hasLadder": true,
+              "__typename": "GradeTypeFeatures"
+            },
+            "__typename": "GradeTypeConfig"
+          }
+        ]
+      }
+    }
+  }
+}
