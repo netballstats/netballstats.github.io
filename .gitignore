@@ -8,3 +8,8 @@ request.json
 response.json
 .venv/
 .sfdx/
+
+# Google service-account credentials -- never commit these.
+*-credentials.json
+service_account*.json
+google-credentials*.json

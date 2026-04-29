@@ -213,18 +213,28 @@ def get_score(team_result: dict) -> Optional[int]:
 def parse_playhq_url(url: str) -> dict:
     """Parse a PlayHQ URL to extract what we can.
 
-    URL patterns:
-      /org/{org-slug}/{comp-slug}/{season-slug}
-      /org/{org-slug}/{comp-slug}/{season-slug}/grades/{gradeID}/fixture
-    Grade IDs are hex strings in the URL. Org/season IDs are not directly
-    in the URL, so we do a lightweight HTML fetch to get __NEXT_DATA__.
+    URL patterns (hex = 8-char ID):
+      /org/{org-slug}/{org-hex}                                org page
+      /org/{org-slug}/{comp-slug}/{season-hex}                 season page
+      /org/{org-slug}/{comp-slug}/{season-hex}/grades/{grade-hex}/fixture
+    Falls back to fetching __NEXT_DATA__ for anything not directly in the path.
     """
     info = {"url": url, "grade_id": None, "season_id": None, "org_id": None}
 
-    # Extract grade ID if present (8-char hex in /grades/{id}/)
+    # Grade ID -- always after /grades/
     m = re.search(r"/grades/([0-9a-f]{8})", url)
     if m:
         info["grade_id"] = m.group(1)
+
+    # Org ID -- /org/{slug}/{hex} with hex as the segment right after the slug
+    m = re.search(r"/org/[^/]+/([0-9a-f]{8})(?:[/?#]|$)", url)
+    if m:
+        info["org_id"] = m.group(1)
+
+    # Season ID -- /org/{slug}/{comp-slug}/{hex} (one level deeper than org)
+    m = re.search(r"/org/[^/]+/[^/]+/([0-9a-f]{8})(?:[/?#]|$)", url)
+    if m:
+        info["season_id"] = m.group(1)
 
     # Try to get IDs from __NEXT_DATA__
     try:
@@ -315,6 +325,46 @@ def fetch_grade_fixtures(grade_id: str) -> list[dict]:
     """Fetch all rounds/fixtures for a grade. Returns list of rounds."""
     data = gql(Q_GRADE_FIXTURES, {"gradeID": grade_id})
     return data.get("discoverGradeFixture", [])
+
+
+# ---------------------------------------------------------------------------
+# Sheet-ready row builders
+# ---------------------------------------------------------------------------
+
+COMPETITIONS_HEADERS = [
+    "Competition Name",
+    "Competition ID",
+    "Season Name",
+    "Season ID",
+    "Start Date",
+    "End Date",
+    "Status",
+]
+
+
+def competitions_rows(org_id: str) -> tuple[str, list[list]]:
+    """Return (org_name, rows) ready for Google Sheets.
+
+    One row per (competition, season). Columns match COMPETITIONS_HEADERS.
+    """
+    result = fetch_competitions(org_id)
+    org_name = result["organisation"].get("name", "")
+    rows: list[list] = []
+    for c in result["competitions"]:
+        cname = c.get("name", "")
+        cid = c.get("id", "")
+        for s in c.get("seasons", []) or []:
+            status = (s.get("status") or {}).get("name", "")
+            rows.append([
+                cname,
+                cid,
+                s.get("name", ""),
+                s.get("id", ""),
+                s.get("startDate", "") or "",
+                s.get("endDate", "") or "",
+                status,
+            ])
+    return org_name, rows
 
 
 # ---------------------------------------------------------------------------
@@ -542,19 +592,33 @@ def main():
     parser.add_argument("--season-id", default="", help="Season ID (hex)")
     parser.add_argument("--grade-id", default="", help="Grade ID (hex)")
 
+    parser.add_argument("--push-to-sheet", help="Google Sheets spreadsheet ID to push results to")
+    parser.add_argument("--credentials", help="Path to service-account JSON (or set GOOGLE_APPLICATION_CREDENTIALS)")
+    parser.add_argument("--worksheet", default="Competitions", help="Worksheet/tab name (default: Competitions)")
+
     args = parser.parse_args()
 
     if not args.url and not (args.org_id or args.season_id or args.grade_id):
         parser.print_help()
         sys.exit(1)
 
+    # Resolve URL once so push code can branch on what was requested.
+    org_id = args.org_id
+    season_id = args.season_id
+    grade_id = args.grade_id
+    if args.url and not (org_id or season_id or grade_id):
+        info = parse_playhq_url(args.url)
+        org_id = info.get("org_id") or ""
+        season_id = info.get("season_id") or ""
+        grade_id = info.get("grade_id") or ""
+
     comp = scrape_competition(
         url=args.url,
         target_grade=args.grade,
         all_grades=args.all_grades,
-        org_id=args.org_id,
-        season_id=args.season_id,
-        grade_id=args.grade_id,
+        org_id=org_id,
+        season_id=season_id,
+        grade_id=grade_id,
     )
 
     print_results(comp)
@@ -563,6 +627,22 @@ def main():
         with open(args.output, "w") as f:
             json.dump(asdict(comp), f, indent=2)
         print(f"\nResults saved to {args.output}")
+
+    if args.push_to_sheet:
+        if org_id and not season_id and not grade_id:
+            from sheets import push_rows
+            print(f"\nPushing competitions to Google Sheet '{args.worksheet}'...")
+            org_name, rows = competitions_rows(org_id)
+            push_rows(
+                args.push_to_sheet,
+                args.worksheet,
+                COMPETITIONS_HEADERS,
+                rows,
+                credentials_path=args.credentials,
+            )
+        else:
+            print("--push-to-sheet currently only supports the org-level (competitions) view.",
+                  file=sys.stderr)
 
 
 if __name__ == "__main__":
