@@ -72,6 +72,33 @@ query gradeListDiscoverSeason($id: String!) {
 }
 """
 
+Q_GRADE_LADDER = """
+query discoverGrade($gradeID: ID!) {
+  discoverGrade(gradeID: $gradeID) {
+    id
+    name
+    ladder {
+      standings {
+        team { id name __typename }
+        played
+        won
+        lost
+        drawn
+        byes
+        pointsFor
+        pointsAgainst
+        pointsDifference
+        forfeits
+        bonusPoints
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+"""
+
 Q_GRADE_FIXTURES = """
 query gradeAllRounds($gradeID: ID!) {
   discoverGradeFixture(gradeID: $gradeID) {
@@ -327,6 +354,12 @@ def fetch_grade_fixtures(grade_id: str) -> list[dict]:
     return data.get("discoverGradeFixture", [])
 
 
+def fetch_grade_ladder(grade_id: str) -> list[dict]:
+    """Fetch ladder pools for a grade. Returns list of LadderPool dicts."""
+    data = gql(Q_GRADE_LADDER, {"gradeID": grade_id})
+    return (data.get("discoverGrade") or {}).get("ladder", [])
+
+
 # ---------------------------------------------------------------------------
 # Sheet-ready row builders
 # ---------------------------------------------------------------------------
@@ -339,6 +372,50 @@ COMPETITIONS_HEADERS = [
     "Start Date",
     "End Date",
     "Status",
+]
+
+GRADES_HEADERS = [
+    "Grade Name",
+    "Grade ID",
+    "Gender",
+    "Age",
+    "Season Name",
+    "Season ID",
+    "Competition Name",
+    "Competition ID",
+]
+
+FIXTURES_HEADERS = [
+    "Grade Name",
+    "Grade ID",
+    "Round",
+    "Date",
+    "Time",
+    "Venue",
+    "Court",
+    "Home Team",
+    "Away Team",
+    "Home Score",
+    "Away Score",
+    "Status",
+]
+
+LADDER_HEADERS = [
+    "Grade Name",
+    "Grade ID",
+    "Position",
+    "Team",
+    "Team ID",
+    "Played",
+    "Won",
+    "Lost",
+    "Drawn",
+    "Byes",
+    "Points For",
+    "Points Against",
+    "Points Difference",
+    "Forfeits",
+    "Bonus Points",
 ]
 
 
@@ -365,6 +442,88 @@ def competitions_rows(org_id: str) -> tuple[str, list[list]]:
                 status,
             ])
     return org_name, rows
+
+
+def grades_rows(season_id: str) -> list[list]:
+    """Return rows ready for Google Sheets. One row per grade in the season."""
+    data = fetch_grades(season_id)
+    season_name = data.get("name", "")
+    comp = data.get("competition") or {}
+    comp_name = comp.get("name", "")
+    comp_id = comp.get("id", "")
+    rows: list[list] = []
+    for g in data.get("grades", []) or []:
+        rows.append([
+            g.get("name", ""),
+            g.get("id", ""),
+            (g.get("gender") or {}).get("name", ""),
+            (g.get("age") or {}).get("name", ""),
+            season_name,
+            season_id,
+            comp_name,
+            comp_id,
+        ])
+    return rows
+
+
+def fixtures_rows(grade_id: str, grade_name: str = "") -> list[list]:
+    """Return rows ready for Google Sheets. One row per fixture in the grade."""
+    rounds_data = fetch_grade_fixtures(grade_id)
+    fixtures = rounds_to_fixtures(rounds_data)
+    return [
+        [
+            grade_name, grade_id,
+            f.round_name, f.date, f.time, f.venue, f.court,
+            f.home_team, f.away_team,
+            f.home_score if f.home_score is not None else "",
+            f.away_score if f.away_score is not None else "",
+            f.status,
+        ]
+        for f in fixtures
+    ]
+
+
+def comp_to_fixtures_rows(comp: Competition) -> list[list]:
+    """Convert an already-fetched Competition to fixture rows (no extra API calls)."""
+    rows: list[list] = []
+    for grade in comp.grades:
+        gname = grade.get("name", "")
+        gid = grade.get("url", "")  # url field stores the grade ID
+        for f in grade.get("fixtures", []):
+            rows.append([
+                gname, gid,
+                f.get("round_name", ""), f.get("date", ""), f.get("time", ""),
+                f.get("venue", ""), f.get("court", ""),
+                f.get("home_team", ""), f.get("away_team", ""),
+                f["home_score"] if f.get("home_score") is not None else "",
+                f["away_score"] if f.get("away_score") is not None else "",
+                f.get("status", ""),
+            ])
+    return rows
+
+
+def all_ladder_rows(season_id: str) -> list[list]:
+    """Fetch ladder for every grade in the season and return combined rows."""
+    data = fetch_grades(season_id)
+    grades = data.get("grades", []) or []
+    rows: list[list] = []
+    for g in grades:
+        gid = g.get("id", "")
+        gname = g.get("name", "")
+        print(f"  Fetching ladder for {gname} ({gid})...")
+        for pool in fetch_grade_ladder(gid):
+            for pos, s in enumerate(pool.get("standings", []), start=1):
+                team = s.get("team") or {}
+                rows.append([
+                    gname, gid, pos,
+                    team.get("name", ""), team.get("id", ""),
+                    s.get("played", 0),
+                    s.get("won", 0), s.get("lost", 0), s.get("drawn", 0),
+                    s.get("byes", 0),
+                    s.get("pointsFor", 0), s.get("pointsAgainst", 0), s.get("pointsDifference", 0),
+                    s.get("forfeits", 0), s.get("bonusPoints", 0),
+                ])
+    return rows
 
 
 # ---------------------------------------------------------------------------
@@ -593,8 +752,8 @@ def main():
     parser.add_argument("--grade-id", default="", help="Grade ID (hex)")
 
     parser.add_argument("--push-to-sheet", help="Google Sheets spreadsheet ID to push results to")
-    parser.add_argument("--credentials", help="Path to service-account JSON (or set GOOGLE_APPLICATION_CREDENTIALS)")
     parser.add_argument("--worksheet", default="Competitions", help="Worksheet/tab name (default: Competitions)")
+    parser.add_argument("--ladder-worksheet", default="Ladder", help="Worksheet name for ladder data (default: Ladder)")
 
     args = parser.parse_args()
 
@@ -629,8 +788,8 @@ def main():
         print(f"\nResults saved to {args.output}")
 
     if args.push_to_sheet:
+        from sheets import push_rows
         if org_id and not season_id and not grade_id:
-            from sheets import push_rows
             print(f"\nPushing competitions to Google Sheet '{args.worksheet}'...")
             org_name, rows = competitions_rows(org_id)
             push_rows(
@@ -638,10 +797,44 @@ def main():
                 args.worksheet,
                 COMPETITIONS_HEADERS,
                 rows,
-                credentials_path=args.credentials,
+            )
+        elif season_id and args.all_grades and not grade_id:
+            print(f"\nPushing all fixtures to Google Sheet '{args.worksheet}'...")
+            rows = comp_to_fixtures_rows(comp)
+            push_rows(
+                args.push_to_sheet,
+                args.worksheet,
+                FIXTURES_HEADERS,
+                rows,
+            )
+            print(f"\nPushing ladder to Google Sheet '{args.ladder_worksheet}'...")
+            ladder_rows = all_ladder_rows(season_id)
+            push_rows(
+                args.push_to_sheet,
+                args.ladder_worksheet,
+                LADDER_HEADERS,
+                ladder_rows,
+            )
+        elif season_id and not grade_id:
+            print(f"\nPushing grades to Google Sheet '{args.worksheet}'...")
+            rows = grades_rows(season_id)
+            push_rows(
+                args.push_to_sheet,
+                args.worksheet,
+                GRADES_HEADERS,
+                rows,
+            )
+        elif grade_id:
+            print(f"\nPushing fixtures to Google Sheet '{args.worksheet}'...")
+            rows = comp_to_fixtures_rows(comp)
+            push_rows(
+                args.push_to_sheet,
+                args.worksheet,
+                FIXTURES_HEADERS,
+                rows,
             )
         else:
-            print("--push-to-sheet currently only supports the org-level (competitions) view.",
+            print("--push-to-sheet supports org-level (competitions), season-level (grades), and grade-level (fixtures) views.",
                   file=sys.stderr)
 
 
