@@ -99,6 +99,29 @@ def _display_name(name):
     return re.sub(r'\s+\d+U\s*$', '', name).strip()
 
 
+def sanity_check(fixtures, grade_label=""):
+    """Raise ValueError if any team has more than one game in the same round."""
+    from collections import defaultdict
+    team_rounds = defaultdict(dict)  # team -> {round_n: opponent}
+    errors = []
+    for f in fixtures:
+        if f.away_team == "BYE":
+            continue
+        rn = _parse_round_n(f.round_name)
+        if not rn:
+            continue
+        for team, opp in ((f.home_team, f.away_team), (f.away_team, f.home_team)):
+            if rn in team_rounds[team]:
+                errors.append(
+                    f"  {grade_label} R{rn} {team}: plays both "
+                    f"{team_rounds[team][rn]} and {opp}"
+                )
+            else:
+                team_rounds[team][rn] = opp
+    if errors:
+        raise ValueError("Sanity check failed — duplicate rounds detected:\n" + "\n".join(errors))
+
+
 def is_grade_active(fixtures):
     """Return True if the grade is currently within its playing window for today.
 
@@ -577,11 +600,14 @@ def generate_html(data: dict) -> str:
 
 
 def _generate_one(grade_id, title, output, pin=None, max_round=None, next_url=None,
-                  force_regen=False):
+                  force_regen=False, sanity=False):
     print(f"Fetching fixtures for grade {grade_id} ({title})...", file=sys.stderr)
     rounds_data = fetch_grade_fixtures(grade_id)
     fixtures = rounds_to_fixtures(rounds_data)
     print(f"  {len(fixtures)} fixtures across {len(rounds_data)} rounds", file=sys.stderr)
+
+    if sanity:
+        sanity_check(fixtures, grade_label=title)
 
     if not force_regen and output != "-" and os.path.exists(output):
         if not is_grade_active(fixtures):
@@ -613,6 +639,8 @@ def main():
     parser.add_argument("--output", "-o", default="-", help="Output file path (- for stdout)")
     parser.add_argument("--force-regen", action="store_true",
                         help="Regenerate even if the grade is not currently active")
+    parser.add_argument("--sanity-check", action="store_true",
+                        help="Abort if any team has two games in the same round")
     args = parser.parse_args()
 
     if args.config:
@@ -630,6 +658,7 @@ def main():
                 max_round=g.get("rounds"),
                 next_url=next_url if len(grades) > 1 else None,
                 force_regen=args.force_regen,
+                sanity=args.sanity_check,
             )
     elif args.grade_id:
         _generate_one(
@@ -639,6 +668,7 @@ def main():
             pin=args.pin,
             max_round=args.rounds,
             force_regen=args.force_regen,
+            sanity=args.sanity_check,
         )
     else:
         parser.error("Provide --config or --grade-id")
