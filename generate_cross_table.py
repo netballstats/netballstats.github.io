@@ -105,7 +105,7 @@ def sanity_check(fixtures, grade_label=""):
     team_rounds = defaultdict(dict)  # team -> {round_n: opponent}
     errors = []
     for f in fixtures:
-        if f.away_team == "BYE":
+        if f.away_team in ("BYE", "TBC Team") or f.home_team == "TBC Team":
             continue
         rn = _parse_round_n(f.round_name)
         if not rn:
