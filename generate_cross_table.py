@@ -9,41 +9,6 @@ import sys
 from datetime import date as Date, datetime, timedelta
 from playhq_api import fetch_grade_fixtures, rounds_to_fixtures
 
-TEAM_META = {
-    "Baulkham Hills Shire 15U": ("BHS", "#1565c0"),
-    "Bankstown City 15U":       ("BAN", "#c2185b"),
-    "Blacktown City 15U":       ("BCY", "#bf360c"),
-    "Camden & District 15U":   ("CAM", "#2e7d32"),
-    "Charlestown 15U":          ("CHA", "#6a1b9a"),
-    "Eastwood Ryde 15U":        ("ERY", "#00695c"),
-    "Gosford 15U":              ("GOS", "#e65100"),
-    "Hastings Valley 15U":      ("HAS", "#283593"),
-    "Hills District 15U":       ("HDS", "#00838f"),
-    "Illawarra District 15U":   ("ILL", "#558b2f"),
-    "Ku-ring-gai 15U":          ("KNA", "#4527a0"),
-    "Maitland 15U":             ("MAI", "#f57f17"),
-    "Manly Warringah 15U":      ("MAN", "#880e4f"),
-    "Newcastle 15U":            ("NEW", "#1b5e20"),
-    "Northern Suburbs 15U":     ("NSB", "#0d47a1"),
-    "Penrith District 15U":     ("PEN", "#5d4037"),
-    "Randwick 15U":             ("RAN", "#c62828"),
-    "Sutherland Shire 15U":     ("SUT", "#006064"),
-    "Wagga Wagga 15U":          ("WAG", "#37474f"),
-    "Wyong District 15U":       ("WYO", "#4e342e"),
-    "Campbelltown District 15U": ("CDN", "#6d4c41"),
-    "Hawkesbury City 15U":      ("HAW", "#0097a7"),
-    "Lakeside 15U":             ("LAK", "#689f38"),
-    "Liverpool City 15U":       ("LIV", "#d84315"),
-    "St George District 15U":   ("STG", "#f9a825"),
-}
-
-COLOR_PALETTE = [
-    "#1565c0","#c2185b","#bf360c","#2e7d32","#6a1b9a",
-    "#00695c","#e65100","#283593","#00838f","#558b2f",
-    "#4527a0","#f57f17","#880e4f","#1b5e20","#0d47a1",
-    "#5d4037","#c62828","#006064","#37474f","#4e342e",
-]
-
 
 def _parse_round_n(name):
     m = re.search(r'\d+', name or "")
@@ -85,13 +50,6 @@ def _date_range_str(dates):
         return f"{s.strftime('%a %-d')}–{e.strftime('%a %-d %b %Y')}"
     return f"{s.strftime('%a %-d %b')}–{e.strftime('%a %-d %b %Y')}"
 
-
-def _short_code(name):
-    name = re.sub(r'\s+\d+U\s*$', '', name).strip()
-    words = name.split()
-    if len(words) == 1:
-        return words[0][:3].upper()
-    return ''.join(w[0] for w in words[:4]).upper()
 
 
 def _display_name(name):
@@ -153,32 +111,19 @@ def _slugify(title):
     return f"{slug}.html"
 
 
-def build_data(fixtures, team_meta=None, title="Cross Table", pin=None,
+def build_data(fixtures, title="Cross Table", pin=None,
                max_round=None, next_url=None):
     """Return the DATA dict for the HTML template.
 
     max_round: if set, treat any game in a later round as 'upcoming' and
                exclude those results from standings.
     """
-    meta = team_meta or TEAM_META
-
     teams_seen = set()
     for f in fixtures:
         if f.home_team:
             teams_seen.add(f.home_team)
         if f.away_team and f.away_team != "BYE":
             teams_seen.add(f.away_team)
-
-    code_map = {}
-    color_map = {}
-    for i, name in enumerate(sorted(teams_seen)):
-        if name in meta:
-            code, color = meta[name]
-        else:
-            code = _short_code(name)
-            color = COLOR_PALETTE[i % len(COLOR_PALETTE)]
-        code_map[name] = code
-        color_map[name] = color
 
     stats = {t: {"W": 0, "L": 0, "D": 0, "PF": 0, "PA": 0} for t in teams_seen}
     for f in fixtures:
@@ -212,7 +157,7 @@ def build_data(fixtures, team_meta=None, title="Cross Table", pin=None,
         s = stats[name]
         pct = (s["PF"] / s["PA"] * 100) if s["PA"] > 0 else 0
         teams_js.append({
-            "code": code_map[name],
+            "code": name,
             "name": _display_name(name),
             "rank": i,
             "pts": s["W"] * 2 + s["D"],
@@ -239,8 +184,8 @@ def build_data(fixtures, team_meta=None, title="Cross Table", pin=None,
         if f.away_team == "BYE":
             continue
         rn = _parse_round_n(f.round_name)
-        hc = code_map.get(f.home_team, f.home_team[:3])
-        ac = code_map.get(f.away_team, f.away_team[:3])
+        hc = f.home_team
+        ac = f.away_team
         if max_round is not None and rn > max_round:
             st = "upcoming"
             hs, as_ = None, None
