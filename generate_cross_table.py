@@ -440,7 +440,11 @@ function render(d) {
   const key = (a, b) => [a, b].sort().join("|");
   const M = {};
   d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
-    M[key(h, a)] = { rd, h, hs, a, as: as_, court, st };
+    const k = key(h, a);
+    const prev = M[k];
+    // Prefer completed result over upcoming; break ties by earlier round.
+    if (!prev || (prev.st !== "done" && st === "done") || (prev.st === st && rd < prev.rd))
+      M[k] = { rd, h, hs, a, as: as_, court, st };
   });
   const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
 
