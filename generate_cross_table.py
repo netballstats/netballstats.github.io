@@ -202,7 +202,7 @@ def build_data(fixtures, title="Cross Table", pin=None,
         "venue": venue,
         "date": _date_range_str(dates),
         "pin": pin,
-        "next_url": next_url,
+        "menu_url": "index.html",
         "teams": teams_js,
         "rounds": rounds_js,
         "games": games_js,
@@ -431,8 +431,8 @@ function render(d) {
 
   const grid = document.getElementById("grid");
   let html = "<thead><tr>";
-  const titleEl = d.next_url
-    ? `<a href="${d.next_url}">${d.title}</a>`
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
@@ -518,7 +518,7 @@ HTML_TEMPLATE = """\
 <style>
 {css}
 </style>
-</head>
+{scale_css}</head>
 <body>
   <div class="scroll">
     <table class="x" id="grid"></table>
@@ -533,36 +533,20 @@ const DATA = {data_json};
 """
 
 
-def generate_html(data: dict) -> str:
+def generate_html(data: dict, font_scale: float = 1.0) -> str:
     page_title = f"{data['title']} — Cross Table"
     data_json = json.dumps(data, indent=2, ensure_ascii=False)
+    scale_css = f'<style>html {{ zoom: {font_scale}; }}</style>\n' if font_scale != 1.0 else ""
     return HTML_TEMPLATE.format(
         page_title=page_title,
         css=CSS,
+        scale_css=scale_css,
         data_json=data_json,
         js_render=JS_RENDER,
     )
 
 
-def _generate_one(grade_id, title, output, pin=None, max_round=None, next_url=None,
-                  force_regen=False, sanity=False):
-    print(f"Fetching fixtures for grade {grade_id} ({title})...", file=sys.stderr)
-    rounds_data = fetch_grade_fixtures(grade_id)
-    fixtures = rounds_to_fixtures(rounds_data)
-    print(f"  {len(fixtures)} fixtures across {len(rounds_data)} rounds", file=sys.stderr)
-
-    if sanity:
-        sanity_check(fixtures, grade_label=title)
-
-    if not force_regen and output != "-" and os.path.exists(output):
-        if not is_grade_active(fixtures):
-            print(f"  Skipping — not active today (--force-regen to override)", file=sys.stderr)
-            return
-
-    data = build_data(fixtures, title=title, pin=pin,
-                      max_round=max_round, next_url=next_url)
-    html = generate_html(data)
-
+def _write_html(html, output):
     if output == "-":
         print(html)
     else:
@@ -571,6 +555,89 @@ def _generate_one(grade_id, title, output, pin=None, max_round=None, next_url=No
             f.write(html)
         os.replace(tmp, output)
         print(f"  Written to {output}", file=sys.stderr)
+
+
+def _generate_one(grade_id, title, variants, pin=None, max_round=None,
+                  force_regen=False, sanity=False):
+    """Fetch a grade once and write one or more (output, font_scale) variants."""
+    print(f"Fetching fixtures for grade {grade_id} ({title})...", file=sys.stderr)
+    rounds_data = fetch_grade_fixtures(grade_id)
+    fixtures = rounds_to_fixtures(rounds_data)
+    print(f"  {len(fixtures)} fixtures across {len(rounds_data)} rounds", file=sys.stderr)
+
+    if sanity:
+        sanity_check(fixtures, grade_label=title)
+
+    active = force_regen or is_grade_active(fixtures)
+
+    data = build_data(fixtures, title=title, pin=pin, max_round=max_round)
+    for output, font_scale in variants:
+        if not active and output != "-" and os.path.exists(output):
+            print(f"  Skipping {output} — not active today (--force-regen to override)", file=sys.stderr)
+            continue
+        _write_html(generate_html(data, font_scale=font_scale), output)
+
+
+def _generate_menu(grades, base_slugs, output="index.html"):
+    rows = ""
+    for g, slug in zip(grades, base_slugs):
+        title = g.get("title", "Cross Table")
+        medium_slug = slug.replace(".html", "-medium.html")
+        rows += (
+            f'    <li>'
+            f'<span class="gtitle">{title}</span>'
+            f'<span class="links">'
+            f'<a href="{slug}">Small</a>'
+            f'<a href="{medium_slug}">Medium</a>'
+            f'</span></li>\n'
+        )
+    html = f"""\
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cross Tables</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {{
+    --ink: #15223b; --ink-2: #51607a; --line: #dfe3ea;
+    --bg: #f3f5f8; --card: #fff; --accent: #e8542f;
+  }}
+  * {{ box-sizing: border-box; }}
+  html, body {{ margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Barlow', system-ui, sans-serif; }}
+  .wrap {{ max-width: 480px; margin: 0 auto; padding: 32px 20px; }}
+  h1 {{ font-family: 'Barlow Semi Condensed', sans-serif;
+       font-size: 22px; font-weight: 700; color: var(--accent);
+       margin: 0 0 24px; }}
+  ul {{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }}
+  li {{ background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+       padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }}
+  .gtitle {{ font-weight: 600; font-size: 15px; }}
+  .links {{ display: flex; gap: 8px; }}
+  .links a {{
+    font-size: 13px; font-weight: 600; padding: 5px 14px;
+    border-radius: 5px; text-decoration: none;
+    background: var(--bg); color: var(--ink-2); border: 1px solid var(--line);
+  }}
+  .links a:hover {{ background: var(--accent); color: #fff; border-color: var(--accent); }}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Cross Tables</h1>
+    <ul>
+{rows}    </ul>
+  </div>
+</body>
+</html>
+"""
+    with open(output, "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"Menu written to {output}", file=sys.stderr)
 
 
 def main():
@@ -592,24 +659,24 @@ def main():
         with open(args.config) as f:
             cfg = json.load(f)
         grades = cfg["grades"]
-        outputs = [g.get("output") or _slugify(g.get("title", "cross-table")) for g in grades]
-        for i, g in enumerate(grades):
-            next_url = outputs[(i + 1) % len(grades)]
+        base_slugs = [g.get("output") or _slugify(g.get("title", "cross-table")) for g in grades]
+        for g, slug in zip(grades, base_slugs):
+            medium_slug = slug.replace(".html", "-medium.html")
             _generate_one(
                 grade_id=g["grade_id"],
                 title=g.get("title", "Cross Table"),
-                output=outputs[i],
+                variants=[(slug, 1.0), (medium_slug, 1.5)],
                 pin=g.get("pin"),
                 max_round=g.get("rounds"),
-                next_url=next_url if len(grades) > 1 else None,
                 force_regen=args.force_regen,
                 sanity=args.sanity_check,
             )
+        _generate_menu(grades, base_slugs)
     elif args.grade_id:
         _generate_one(
             grade_id=args.grade_id,
             title=args.title,
-            output=args.output,
+            variants=[(args.output, 1.0)],
             pin=args.pin,
             max_round=args.rounds,
             force_regen=args.force_regen,

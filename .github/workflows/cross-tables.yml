@@ -37,7 +37,6 @@ jobs:
         run: |
           mkdir _site
           cp *.html _site/
-          cp _site/15u-championship.html _site/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
