@@ -224,7 +224,7 @@ CSS = """\
     --win-bg:   #e7f3ea;
     --loss:     #b23b2c;
     --loss-bg:  #fbe9e6;
-    --draw-bg:  #f0f1f4;
+    --draw-bg:  #fff3e0;
     --col-w:    52px;
     --name-w:   110px;
     --row-h:    33px;
@@ -358,7 +358,7 @@ CSS = """\
   td.cell.loss { background: var(--loss-bg); }
   td.cell.loss .score { color: var(--loss); }
   td.cell.draw { background: var(--draw-bg); }
-  td.cell.draw .score { color: var(--ink-2); }
+  td.cell.draw .score { color: #e65100; }
   td.cell.live {
     background: var(--accent-bg);
     box-shadow: inset 0 0 0 2px var(--accent);
