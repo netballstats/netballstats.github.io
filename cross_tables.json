@@ -1,0 +1,32 @@
+{
+  "grades": [
+    {
+      "grade_id": "2820ea1b",
+      "title": "15U Championship"
+    },
+    {
+      "grade_id": "c90b8d8b",
+      "title": "17U Championship"
+    },
+    {
+      "grade_id": "2d379505",
+      "title": "17U Division 2"
+    },
+    {
+      "grade_id": "e21ba662",
+      "title": "MALE 17U"
+    },
+    {
+      "grade_id": "f58a9d8e",
+      "title": "Open Championship"
+    },
+    {
+      "grade_id": "0cadbb2c",
+      "title": "MALE Open"
+    },
+    {
+      "grade_id": "1a6f6f95",
+      "title": "All Abilities"
+    }
+  ]
+}

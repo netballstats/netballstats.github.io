@@ -560,6 +560,8 @@ def rounds_to_fixtures(rounds_data: list[dict]) -> list[Fixture]:
                 status = "completed"
             elif status_val in ("UPCOMING", "SCHEDULED"):
                 status = "scheduled"
+            elif status_val == "IN_PROGRESS":
+                status = "live"
             else:
                 status = status_val.lower() if status_val else "scheduled"
 
