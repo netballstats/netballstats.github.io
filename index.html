@@ -1,277 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>U15 Girls Development — Representative And Development Carnival 12Yrs To Opens 2026</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cross Tables</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; padding: 20px; }
-  h1 { font-size: 1.3rem; color: #1a1a2e; margin-bottom: 4px; }
-  .subtitle { font-size: 0.85rem; color: #555; margin-bottom: 16px; }
-  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; align-items: center; }
-  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #444; }
-  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 2px solid #ccc; }
-  .scroll-wrapper { overflow-x: auto; border: 1px solid #d0d0d0; border-radius: 8px; background: #fff; }
-  table { border-collapse: collapse; font-size: 0.72rem; min-width: 100%; }
-  th, td { border: 1px solid #ddd; padding: 5px 6px; text-align: center; white-space: nowrap; min-width: 110px; }
-  th { background: #f0f0f4; font-weight: 700; }
-  thead th { position: sticky; top: 0; z-index: 2; }
-  .sticky-col { position: sticky; left: 0; z-index: 3; background: #f0f0f4; min-width: 140px; text-align: left; }
-  thead .sticky-col { z-index: 4; }
-  td.diagonal { background: #e0e0e0; }
-  td.empty-cell { background: #fafafa; }
-  .cell-round { font-weight: 700; font-size: 0.78rem; }
-  .cell-score { font-size: 0.82rem; font-weight: 700; margin-top: 2px; }
-  .cell-score .win { color: #2e7d32; }
-  .cell-score .loss { color: #c62828; }
-  .cell-score .draw { color: #555; }
-  .cell-score .upcoming { color: #888; }
-  .cell-time { font-size: 0.68rem; color: #555; margin-top: 1px; }
-  .cell-court { font-size: 0.66rem; color: #777; margin-top: 1px; }
-  .note { font-size: 0.7rem; color: #888; margin-top: 10px; line-height: 1.5; }
-  h2 { font-size: 1.1rem; color: #1a1a2e; margin-top: 24px; margin-bottom: 8px; }
-  .standings { margin-top: 8px; border-collapse: collapse; font-size: 0.8rem; }
-  .standings th, .standings td { border: 1px solid #ddd; padding: 5px 10px; text-align: center; }
-  .standings th { background: #f0f0f4; }
-  .standings td:nth-child(2) { text-align: left; font-weight: 600; }
-  .standings tr:nth-child(even) { background: #fafafa; }
-  .highlight-row td, .highlight-row .sticky-col { background-color: #dce8f7 !important; }
-  .highlight-row td.diagonal { background-color: #b8cde6 !important; }
-  .highlight-col { background-color: #dce8f7 !important; }
-  .highlight-row .highlight-col { background-color: #c8d8ee !important; }
-  @media (max-width: 600px) {
-    body { padding: 10px; }
-    th, td { padding: 4px 5px; font-size: 0.65rem; min-width: 90px; }
-    .sticky-col { min-width: 110px; }
+  :root {
+    --ink: #15223b; --ink-2: #51607a; --muted: #9aa4b6;
+    --line: #dfe3ea; --bg: #f3f5f8; --card: #fff; --accent: #e8542f;
   }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Barlow', system-ui, sans-serif; }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 28px 20px; }
+  h1 { font-family: 'Barlow Semi Condensed', sans-serif;
+       font-size: 22px; font-weight: 700; color: var(--accent); margin: 0 0 20px; }
+  .comp { margin-bottom: 24px; }
+  .comp h2 { font-family: 'Barlow Semi Condensed', sans-serif;
+              font-size: 13px; font-weight: 700; text-transform: uppercase;
+              letter-spacing: .6px; color: var(--ink-2);
+              margin: 0 0 8px; padding-bottom: 5px;
+              border-bottom: 1px solid var(--line); }
+  .comp.inactive h2 { color: var(--muted); }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  li.grade { background: var(--card); border: 1px solid var(--line); border-radius: 7px;
+       padding: 11px 14px; display: flex; align-items: center; justify-content: space-between; }
+  li.grade.inactive { opacity: 0.45; }
+  .gtitle { font-weight: 600; font-size: 14px; }
+  .links { display: flex; gap: 6px; }
+  .links a {
+    font-size: 12px; font-weight: 600; padding: 4px 12px;
+    border-radius: 5px; text-decoration: none;
+    background: var(--bg); color: var(--ink-2); border: 1px solid var(--line);
+  }
+  .links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .comp.inactive .links a:hover { background: var(--ink-2); border-color: var(--ink-2); }
 </style>
 </head>
 <body>
-<h1>U15 Girls Development — Representative And Development Carnival 12Yrs To Opens 2026</h1>
-<p class="subtitle">Penrith District Netball Association · Representative And Development Carnival 12Yrs To Opens 2026 · Jamison Park Netball Complex · 29 Mar 26</p>
-<div class="legend" id="legend"></div>
-<div class="scroll-wrapper">
-  <table id="matrix"></table>
-</div>
-<p class="note" id="note"></p>
-<div id="standings-section" style="display:none">
-  <h2>Standings</h2>
-  <table class="standings" id="standings"></table>
-</div>
-<p class="note" id="updated" style="margin-top:16px"></p>
-
-<script>
-const TEAMS = {
-  "Canberra Skye": { color: "#e65100", full: "Canberra Skye" },
-  "Eastwood Ryde Dev": { color: "#1565c0", full: "Eastwood Ryde Dev" },
-  "Hills Dev": { color: "#2e7d32", full: "Hills Dev" },
-  "Ku-ring-gai Dev": { color: "#6a1b9a", full: "Ku-ring-gai Dev" },
-  "Northern Suburbs Dev": { color: "#00838f", full: "Northern Suburbs Dev" },
-  "Penrith Dev": { color: "#546e7a", full: "Penrith Dev" },
-  "Randwick Dev": { color: "#ad1457", full: "Randwick Dev" }
-};
-const MATCHES = [
-  [1,"09:30 AM","Ct 10","Penrith Dev","Randwick Dev",10,10],
-  [1,"09:30 AM","Ct 11","Northern Suburbs Dev","Ku-ring-gai Dev",8,8],
-  [1,"09:30 AM","Ct 12","Canberra Skye","Hills Dev",7,9],
-  [2,"10:10 AM","Ct 10","Penrith Dev","Hills Dev",15,10],
-  [2,"10:10 AM","Ct 11","Eastwood Ryde Dev","Ku-ring-gai Dev",5,10],
-  [2,"10:10 AM","Ct 12","Northern Suburbs Dev","Canberra Skye",16,0],
-  [3,"10:50 AM","Ct 10","Canberra Skye","Penrith Dev",5,18],
-  [3,"10:50 AM","Ct 11","Hills Dev","Eastwood Ryde Dev",14,6],
-  [3,"10:50 AM","Ct 12","Ku-ring-gai Dev","Randwick Dev",7,6],
-  [4,"11:30 AM","Ct 11","Northern Suburbs Dev","Hills Dev",10,7],
-  [4,"11:30 AM","Ct 10","Penrith Dev","Ku-ring-gai Dev",12,14],
-  [4,"11:30 AM","Ct 12","Eastwood Ryde Dev","Randwick Dev",11,13],
-  [5,"12:10 PM","Ct 11","Ku-ring-gai Dev","Canberra Skye",13,4],
-  [5,"12:10 PM","Ct 12","Randwick Dev","Northern Suburbs Dev",6,14],
-  [5,"12:10 PM","Ct 10","Eastwood Ryde Dev","Penrith Dev",4,16],
-  [6,"12:50 PM","Ct 11","Hills Dev","Randwick Dev",7,14],
-  [6,"12:50 PM","Ct 12","Canberra Skye","Eastwood Ryde Dev",5,9],
-  [6,"12:50 PM","Ct 10","Northern Suburbs Dev","Penrith Dev",12,9],
-  [7,"01:30 PM","Ct 10","Eastwood Ryde Dev","Northern Suburbs Dev",7,18],
-  [7,"01:30 PM","Ct 11","Randwick Dev","Canberra Skye",16,4],
-  [7,"01:30 PM","Ct 12","Ku-ring-gai Dev","Hills Dev",7,7]
-];
-const TOTAL_ROUNDS = 7;
-const FOCUS = "Ku-ring-gai Dev";
-
-const teamNames = Object.keys(TEAMS);
-
-// Build match map
-const matchMap = {};
-teamNames.forEach(t => matchMap[t] = {});
-
-MATCHES.forEach(([rd, time, court, home, away, hScore, aScore]) => {
-  matchMap[home][away] = { round: rd, time, court, myScore: hScore, theirScore: aScore };
-  matchMap[away][home] = { round: rd, time, court, myScore: aScore, theirScore: hScore };
-});
-
-// Byes
-const byes = {};
-for (let r = 1; r <= TOTAL_ROUNDS; r++) {
-  const playing = new Set();
-  MATCHES.filter(m => m[0] === r).forEach(([,,, home, away]) => {
-    playing.add(home); playing.add(away);
-  });
-  const byeTeams = teamNames.filter(t => !playing.has(t));
-  if (byeTeams.length) byes[r] = byeTeams;
-}
-
-// Standings
-const hasScores = MATCHES.some(m => m[5] !== null);
-const stats = {};
-teamNames.forEach(t => stats[t] = { p: 0, w: 0, l: 0, d: 0, pf: 0, pa: 0, byes: 0 });
-for (const [r, bt] of Object.entries(byes)) bt.forEach(t => stats[t].byes++);
-
-if (hasScores) {
-  MATCHES.forEach(([,,,home, away, hScore, aScore]) => {
-    if (hScore === null) return;
-    stats[home].p++; stats[away].p++;
-    stats[home].pf += hScore; stats[home].pa += aScore;
-    stats[away].pf += aScore; stats[away].pa += hScore;
-    if (hScore > aScore) { stats[home].w++; stats[away].l++; }
-    else if (hScore < aScore) { stats[away].w++; stats[home].l++; }
-    else { stats[home].d++; stats[away].d++; }
-  });
-}
-
-// Sort: focus team first, then opponents in round order, then rest
-let order;
-if (FOCUS && teamNames.includes(FOCUS)) {
-  const focusOpps = [];
-  for (let r = 1; r <= TOTAL_ROUNDS; r++) {
-    const m = MATCHES.find(([rd,,, tA, tB]) => rd === r && (tA === FOCUS || tB === FOCUS));
-    if (m) {
-      const opp = m[3] === FOCUS ? m[4] : m[3];
-      if (!focusOpps.includes(opp)) focusOpps.push(opp);
-    } else {
-      // Focus team has a bye this round — insert a BYE marker
-      focusOpps.push(null);
-    }
-  }
-  // Remove BYE markers, they're just for ordering
-  const oppsClean = focusOpps.filter(t => t !== null);
-  const rest = teamNames.filter(t => t !== FOCUS && !oppsClean.includes(t));
-  if (hasScores) {
-    rest.sort((a, b) => {
-      const sa = stats[a], sb = stats[b];
-      if (sb.w !== sa.w) return sb.w - sa.w;
-      return (sb.pf - sb.pa) - (sa.pf - sa.pa);
-    });
-  } else {
-    rest.sort((a, b) => a.localeCompare(b));
-  }
-  order = [FOCUS, ...oppsClean, ...rest];
-} else {
-  order = [...teamNames].sort((a, b) => {
-    if (!hasScores) return a.localeCompare(b);
-    const sa = stats[a], sb = stats[b];
-    if (sb.w !== sa.w) return sb.w - sa.w;
-    return (sb.pf - sb.pa) - (sa.pf - sa.pa);
-  });
-}
-
-// Build focus team's round-by-round schedule (for bye display)
-const focusSchedule = [];
-if (FOCUS && teamNames.includes(FOCUS)) {
-  for (let r = 1; r <= TOTAL_ROUNDS; r++) {
-    const m = MATCHES.find(([rd,,, tA, tB]) => rd === r && (tA === FOCUS || tB === FOCUS));
-    if (m) {
-      const opp = m[3] === FOCUS ? m[4] : m[3];
-      focusSchedule.push({ round: r, opponent: opp, time: m[1], court: m[2] });
-    } else {
-      focusSchedule.push({ round: r, opponent: null, time: '', court: '' });
-    }
-  }
-}
-
-// Legend
-const legendEl = document.getElementById('legend');
-order.forEach(t => {
-  const item = document.createElement('span');
-  item.className = 'legend-item';
-  item.innerHTML = `<span class="legend-swatch" style="border-color:${TEAMS[t].color}"></span><span style="color:${TEAMS[t].color}; font-weight:600">${t}</span>`;
-  legendEl.appendChild(item);
-});
-
-// Matrix
-const table = document.getElementById('matrix');
-let html = '<thead><tr><th class="sticky-col"></th>';
-order.forEach(t => {
-  const fc = (FOCUS && t === FOCUS) ? ' highlight-col' : '';
-  html += `<th class="${fc}" style="color:${TEAMS[t].color}">${t}</th>`;
-});
-html += '</tr></thead><tbody>';
-
-order.forEach(rowT => {
-  const isHL = FOCUS && rowT === FOCUS;
-  html += `<tr class="${isHL ? 'highlight-row' : ''}">`;
-  html += `<th class="sticky-col" style="color:${TEAMS[rowT].color}">${rowT}</th>`;
-  order.forEach(colT => {
-    const fc = (FOCUS && colT === FOCUS) ? ' highlight-col' : '';
-    if (rowT === colT) {
-      // Show bye round(s) on the diagonal
-      let byeHtml = '';
-      for (let r = 1; r <= TOTAL_ROUNDS; r++) {
-        if (byes[r] && byes[r].includes(rowT)) {
-          byeHtml += `<div class="cell-round" style="color:#999">R${r} bye</div>`;
-        }
-      }
-      html += `<td class="diagonal${fc}">${byeHtml}</td>`;
-      return;
-    }
-    const m = matchMap[rowT]?.[colT];
-    if (!m) { html += `<td class="empty-cell${fc}"></td>`; return; }
-
-    let scoreHtml = '';
-    if (m.myScore !== null) {
-      let sc = 'draw';
-      if (m.myScore > m.theirScore) sc = 'win';
-      else if (m.myScore < m.theirScore) sc = 'loss';
-      scoreHtml = `<div class="cell-score"><span class="${sc}">${m.myScore} - ${m.theirScore}</span></div>`;
-    } else {
-      scoreHtml = '<div class="cell-score"><span class="upcoming">v</span></div>';
-    }
-
-    html += `<td class="${fc}">
-      <div class="cell-round">R${m.round}</div>
-      ${scoreHtml}
-      <div class="cell-time">${m.time}</div>
-      <div class="cell-court">${m.court}</div>
-    </td>`;
-  });
-  html += '</tr>';
-});
-html += '</tbody>';
-table.innerHTML = html;
-
-// Note
-const noteEl = document.getElementById('note');
-if (hasScores) {
-  noteEl.innerHTML = 'Each cell shows the round, score (from row team perspective), time &amp; court.<br><span style="color:#2e7d32;font-weight:700">Green</span> = win, <span style="color:#c62828;font-weight:700">Red</span> = loss';
-} else {
-  noteEl.innerHTML = 'Each cell shows the round, time &amp; court. Scores will appear after each game.';
-}
-
-
-// Standings table
-if (hasScores) {
-  const stEl = document.getElementById('standings');
-  let sh = '<thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>L</th><th>D</th><th>PF</th><th>PA</th><th>+/-</th></tr></thead><tbody>';
-  order.forEach((t, i) => {
-    const s = stats[t];
-    const diff = s.pf - s.pa;
-    const ds = diff > 0 ? `+${diff}` : `${diff}`;
-    sh += `<tr><td>${i+1}</td><td style="color:${TEAMS[t].color}">${t}</td><td>${s.p}</td><td>${s.w}</td><td>${s.l}</td><td>${s.d}</td><td>${s.pf}</td><td>${s.pa}</td><td style="color:${diff>=0?'#2e7d32':'#c62828'}">${ds}</td></tr>`;
-  });
-  sh += '</tbody>';
-  stEl.innerHTML = sh;
-  document.getElementById('standings-section').style.display = '';
-}
-
-document.getElementById('updated').textContent = 'Last updated: Sun 29 Mar 2026, 02:40 PM AEDT';
-</script>
+  <div class="wrap">
+    <h1>Cross Tables</h1>
+    <section class="comp inactive">
+      <h2>HART Senior State Titles 2026</h2>
+      <ul>
+      <li class="grade inactive"><span class="gtitle">15U Championship</span><span class="links"><a href="15u-championship.html">Small</a><a href="15u-championship-medium.html">Medium</a></span></li>
+      <li class="grade inactive"><span class="gtitle">17U Championship</span><span class="links"><a href="17u-championship.html">Small</a><a href="17u-championship-medium.html">Medium</a></span></li>
+      <li class="grade inactive"><span class="gtitle">17U Division 2</span><span class="links"><a href="17u-division-2.html">Small</a><a href="17u-division-2-medium.html">Medium</a></span></li>
+      <li class="grade inactive"><span class="gtitle">MALE 17U</span><span class="links"><a href="male-17u.html">Small</a><a href="male-17u-medium.html">Medium</a></span></li>
+      <li class="grade inactive"><span class="gtitle">Open Championship</span><span class="links"><a href="open-championship.html">Small</a><a href="open-championship-medium.html">Medium</a></span></li>
+      <li class="grade inactive"><span class="gtitle">MALE Open</span><span class="links"><a href="male-open.html">Small</a><a href="male-open-medium.html">Medium</a></span></li>
+      <li class="grade inactive"><span class="gtitle">All Abilities</span><span class="links"><a href="all-abilities.html">Small</a><a href="all-abilities-medium.html">Medium</a></span></li>
+      </ul>
+    </section>
+    <section class="comp">
+      <h2>Ku-ring-gai Winter 2026</h2>
+      <ul>
+      <li class="grade"><span class="gtitle">11A</span><span class="links"><a href="kna-11a.html">Small</a><a href="kna-11a-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">11B</span><span class="links"><a href="kna-11b.html">Small</a><a href="kna-11b-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">11C</span><span class="links"><a href="kna-11c.html">Small</a><a href="kna-11c-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">12A</span><span class="links"><a href="kna-12a.html">Small</a><a href="kna-12a-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">12B</span><span class="links"><a href="kna-12b.html">Small</a><a href="kna-12b-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">12C</span><span class="links"><a href="kna-12c.html">Small</a><a href="kna-12c-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">12D</span><span class="links"><a href="kna-12d.html">Small</a><a href="kna-12d-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Cadet 1</span><span class="links"><a href="kna-cadet-1.html">Small</a><a href="kna-cadet-1-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Cadet 2</span><span class="links"><a href="kna-cadet-2.html">Small</a><a href="kna-cadet-2-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Cadet 3</span><span class="links"><a href="kna-cadet-3.html">Small</a><a href="kna-cadet-3-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Cadet 4</span><span class="links"><a href="kna-cadet-4.html">Small</a><a href="kna-cadet-4-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Cadet 5</span><span class="links"><a href="kna-cadet-5.html">Small</a><a href="kna-cadet-5-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Cadet 6</span><span class="links"><a href="kna-cadet-6.html">Small</a><a href="kna-cadet-6-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Inters 1</span><span class="links"><a href="kna-inters-1.html">Small</a><a href="kna-inters-1-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Inters 2</span><span class="links"><a href="kna-inters-2.html">Small</a><a href="kna-inters-2-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Inters 3</span><span class="links"><a href="kna-inters-3.html">Small</a><a href="kna-inters-3-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Inters 4</span><span class="links"><a href="kna-inters-4.html">Small</a><a href="kna-inters-4-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">Inters 5</span><span class="links"><a href="kna-inters-5.html">Small</a><a href="kna-inters-5-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">A1-A2</span><span class="links"><a href="kna-a1-a2.html">Small</a><a href="kna-a1-a2-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">A3</span><span class="links"><a href="kna-a3.html">Small</a><a href="kna-a3-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">A4</span><span class="links"><a href="kna-a4.html">Small</a><a href="kna-a4-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">B1</span><span class="links"><a href="kna-b1.html">Small</a><a href="kna-b1-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">B2</span><span class="links"><a href="kna-b2.html">Small</a><a href="kna-b2-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">B3</span><span class="links"><a href="kna-b3.html">Small</a><a href="kna-b3-medium.html">Medium</a></span></li>
+      <li class="grade"><span class="gtitle">B4</span><span class="links"><a href="kna-b4.html">Small</a><a href="kna-b4-medium.html">Medium</a></span></li>
+      </ul>
+    </section>
+  </div>
 </body>
 </html>
