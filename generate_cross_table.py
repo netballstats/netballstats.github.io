@@ -52,6 +52,26 @@ def _date_range_str(dates):
 
 
 
+def _fmt_round_date(date_str, time_str, fmt):
+    """Format a round date/time using a template string.
+    Tokens: ddd=day-abbrev, dd=day-number, MMM=month-abbrev, HH:mm=time."""
+    result = fmt
+    if date_str:
+        try:
+            d = Date.fromisoformat(date_str)
+            result = result.replace("ddd", d.strftime("%a"))
+            result = result.replace("dd",  str(d.day))
+            result = result.replace("MMM", d.strftime("%b"))
+        except Exception:
+            pass
+    if time_str:
+        result = result.replace("HH:mm", time_str[:5])
+    # Drop unresolved tokens if date/time was missing
+    for tok in ("ddd", "dd", "MMM", "HH:mm"):
+        result = result.replace(tok, "").strip()
+    return result
+
+
 def _display_name(name):
     """Strip age-group suffix (e.g. '15U') from a team name for display."""
     return re.sub(r'\s+\d+U\s*$', '', name).strip()
@@ -121,7 +141,7 @@ def _skip_fixture(f):
 
 
 def build_data(fixtures, title="Cross Table", pin=None,
-               max_round=None, menu_url="index.html"):
+               max_round=None, menu_url="index.html", date_format="ddd HH:mm"):
     """Return the DATA dict for the HTML template.
 
     max_round: if set, treat any game in a later round as 'upcoming' and
@@ -184,8 +204,8 @@ def build_data(fixtures, title="Cross Table", pin=None,
             st = "done" if f.status == "completed" else ("live" if f.status == "live" else "upcoming")
             if max_round is not None and rn > max_round:
                 st = "upcoming"
-            round_meta[rn] = {"n": rn, "day": _fmt_day(f.date),
-                              "time": _fmt_time(f.time), "sdate": _fmt_sdate(f.date), "state": st}
+            round_meta[rn] = {"n": rn, "state": st,
+                              "ds": _fmt_round_date(f.date, _fmt_time(f.time), date_format)}
 
     rounds_js = [round_meta[rn] for rn in sorted(round_meta)]
 
@@ -472,7 +492,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${rmeta.ds || ""}</span>
                    </div>`;
         }
       });
@@ -540,7 +560,8 @@ def _write_html(html, output):
 
 
 def _generate_one(grade_id, title, variants, pin=None, max_round=None,
-                  menu_url="index.html", force_regen=False, sanity=False):
+                  menu_url="index.html", date_format="ddd HH:mm",
+                  force_regen=False, sanity=False):
     """Fetch a grade once and write one or more (output, font_scale) variants."""
     print(f"Fetching fixtures for grade {grade_id} ({title})...", file=sys.stderr)
     rounds_data = fetch_grade_fixtures(grade_id)
@@ -552,7 +573,8 @@ def _generate_one(grade_id, title, variants, pin=None, max_round=None,
 
     active = force_regen or is_grade_active(fixtures)
 
-    data = build_data(fixtures, title=title, pin=pin, max_round=max_round, menu_url=menu_url)
+    data = build_data(fixtures, title=title, pin=pin, max_round=max_round,
+                      menu_url=menu_url, date_format=date_format)
     for output, font_scale in variants:
         if not active and output != "-" and os.path.exists(output):
             print(f"  Skipping {output} — not active today (--force-regen to override)", file=sys.stderr)
@@ -686,6 +708,7 @@ def main():
         for comp in competitions:
             comp_active = comp.get("active", True)
             comp_dir = os.path.join("site", comp.get("dir") or _slugify(comp["title"]).replace(".html", ""))
+            date_fmt = comp.get("date_format", "ddd HH:mm")
             for g in comp.get("grades", []):
                 grade_active = comp_active and g.get("active", True)
                 if not grade_active:
@@ -703,6 +726,7 @@ def main():
                     pin=g.get("pin"),
                     max_round=g.get("rounds"),
                     menu_url="../index.html",
+                    date_format=date_fmt,
                     force_regen=args.force_regen,
                     sanity=args.sanity_check,
                 )

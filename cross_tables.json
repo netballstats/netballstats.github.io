@@ -4,6 +4,7 @@
       "title": "Ku-ring-gai Winter 2026",
       "dir": "kna-winter-2026",
       "active": true,
+      "date_format": "dd MMM",
       "grades": [
         {"grade_id": "71348000", "title": "11A"},
         {"grade_id": "b5d1acec", "title": "11B"},
@@ -36,6 +37,7 @@
       "title": "HART Senior State Titles 2026",
       "dir": "hart-2026",
       "active": true,
+      "date_format": "ddd HH:mm",
       "grades": [
         {"grade_id": "2820ea1b", "title": "15U Championship"},
         {"grade_id": "b2e715de", "title": "15U Division 2"},
