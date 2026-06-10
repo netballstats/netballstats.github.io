@@ -111,7 +111,7 @@ def _slugify(title):
     return f"{slug}.html"
 
 
-_PLACEHOLDER_PREFIXES = ("Ladder position ", "Loser Game ", "Winner Game ")
+_PLACEHOLDER_PREFIXES = ("Ladder Position ", "Loser Game ", "Winner Game ")
 
 def _is_placeholder(name):
     return any(name.startswith(p) for p in _PLACEHOLDER_PREFIXES)
