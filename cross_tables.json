@@ -35,14 +35,22 @@
     {
       "title": "HART Senior State Titles 2026",
       "dir": "hart-2026",
-      "active": false,
+      "active": true,
       "grades": [
         {"grade_id": "2820ea1b", "title": "15U Championship"},
+        {"grade_id": "b2e715de", "title": "15U Division 2"},
+        {"grade_id": "7229374d", "title": "15U Division 3"},
+        {"grade_id": "3d4a7895", "title": "15U Division 4"},
         {"grade_id": "c90b8d8b", "title": "17U Championship"},
         {"grade_id": "2d379505", "title": "17U Division 2"},
-        {"grade_id": "e21ba662", "title": "MALE 17U"},
-        {"grade_id": "f58a9d8e", "title": "Open Championship"},
-        {"grade_id": "0cadbb2c", "title": "MALE Open"},
+        {"grade_id": "3e1a0f2f", "title": "17U Division 3"},
+        {"grade_id": "cdbd7a23", "title": "17U Division 4"},
+        {"grade_id": "e21ba662", "title": "17U Male State Challenge"},
+        {"grade_id": "f58a9d8e", "title": "Opens Championship"},
+        {"grade_id": "db498b66", "title": "Opens Division 2"},
+        {"grade_id": "771fd9c0", "title": "Opens Division 3"},
+        {"grade_id": "0cadbb2c", "title": "Opens Male Championship"},
+        {"grade_id": "7e26f716", "title": "Opens Male Division 2"},
         {"grade_id": "1a6f6f95", "title": "All Abilities"}
       ]
     }
