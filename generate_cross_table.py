@@ -121,7 +121,7 @@ def _skip_fixture(f):
 
 
 def build_data(fixtures, title="Cross Table", pin=None,
-               max_round=None):
+               max_round=None, menu_url="index.html"):
     """Return the DATA dict for the HTML template.
 
     max_round: if set, treat any game in a later round as 'upcoming' and
@@ -212,7 +212,7 @@ def build_data(fixtures, title="Cross Table", pin=None,
         "venue": venue,
         "date": _date_range_str(dates),
         "pin": pin,
-        "menu_url": "index.html",
+        "menu_url": menu_url,
         "teams": teams_js,
         "rounds": rounds_js,
         "games": games_js,
@@ -541,7 +541,7 @@ def _write_html(html, output):
 
 
 def _generate_one(grade_id, title, variants, pin=None, max_round=None,
-                  force_regen=False, sanity=False):
+                  menu_url="index.html", force_regen=False, sanity=False):
     """Fetch a grade once and write one or more (output, font_scale) variants."""
     print(f"Fetching fixtures for grade {grade_id} ({title})...", file=sys.stderr)
     rounds_data = fetch_grade_fixtures(grade_id)
@@ -553,7 +553,7 @@ def _generate_one(grade_id, title, variants, pin=None, max_round=None,
 
     active = force_regen or is_grade_active(fixtures)
 
-    data = build_data(fixtures, title=title, pin=pin, max_round=max_round)
+    data = build_data(fixtures, title=title, pin=pin, max_round=max_round, menu_url=menu_url)
     for output, font_scale in variants:
         if not active and output != "-" and os.path.exists(output):
             print(f"  Skipping {output} — not active today (--force-regen to override)", file=sys.stderr)
@@ -561,24 +561,24 @@ def _generate_one(grade_id, title, variants, pin=None, max_round=None,
         _write_html(generate_html(data, font_scale=font_scale), output)
 
 
-def _generate_menu(competitions, output="index.html"):
+def _generate_menu(competitions, output="site/index.html"):
     sections = ""
     for comp in competitions:
         active = comp.get("active", True)
         comp_cls = "" if active else " inactive"
-        prefix = comp.get("slug_prefix", "")
+        comp_dir = comp.get("dir") or _slugify(comp["title"]).replace(".html", "")
         rows = ""
         for g in comp.get("grades", []):
             grade_active = active and g.get("active", True)
-            slug = g.get("output") or (prefix + _slugify(g.get("title", "cross-table")))
+            slug = g.get("output") or _slugify(g.get("title", "cross-table"))
             medium_slug = slug.replace(".html", "-medium.html")
             grade_cls = "" if grade_active else " inactive"
             rows += (
                 f'      <li class="grade{grade_cls}">'
                 f'<span class="gtitle">{g.get("title", "")}</span>'
                 f'<span class="links">'
-                f'<a href="{slug}">Small</a>'
-                f'<a href="{medium_slug}">Medium</a>'
+                f'<a href="{comp_dir}/{slug}">Small</a>'
+                f'<a href="{comp_dir}/{medium_slug}">Medium</a>'
                 f'</span></li>\n'
             )
         sections += (
@@ -638,6 +638,7 @@ def _generate_menu(competitions, output="index.html"):
 </body>
 </html>
 """
+    os.makedirs(os.path.dirname(output), exist_ok=True)
     with open(output, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"Menu written to {output}", file=sys.stderr)
@@ -668,20 +669,24 @@ def main():
             competitions = [{"title": "Cross Tables", "active": True, "grades": cfg["grades"]}]
         for comp in competitions:
             comp_active = comp.get("active", True)
-            prefix = comp.get("slug_prefix", "")
+            comp_dir = os.path.join("site", comp.get("dir") or _slugify(comp["title"]).replace(".html", ""))
             for g in comp.get("grades", []):
                 grade_active = comp_active and g.get("active", True)
                 if not grade_active:
                     print(f"Skipping {g.get('title')} (inactive)", file=sys.stderr)
                     continue
-                slug = g.get("output") or (prefix + _slugify(g.get("title", "cross-table")))
-                medium_slug = slug.replace(".html", "-medium.html")
+                slug = g.get("output") or _slugify(g.get("title", "cross-table"))
+                os.makedirs(comp_dir, exist_ok=True)
                 _generate_one(
                     grade_id=g["grade_id"],
                     title=g.get("title", "Cross Table"),
-                    variants=[(slug, 1.0), (medium_slug, 1.5)],
+                    variants=[
+                        (os.path.join(comp_dir, slug), 1.0),
+                        (os.path.join(comp_dir, slug.replace(".html", "-medium.html")), 1.5),
+                    ],
                     pin=g.get("pin"),
                     max_round=g.get("rounds"),
+                    menu_url="../index.html",
                     force_regen=args.force_regen,
                     sanity=args.sanity_check,
                 )

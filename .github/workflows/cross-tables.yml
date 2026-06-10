@@ -31,15 +31,10 @@ jobs:
       - name: Generate cross tables
         run: python3 generate_cross_table.py --config cross_tables.json --force-regen
 
-      - name: Prepare site
-        run: |
-          mkdir _site
-          cp *.html _site/
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: site
 
       - name: Deploy to GitHub Pages
         id: deploy

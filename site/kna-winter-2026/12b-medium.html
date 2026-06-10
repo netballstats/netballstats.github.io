@@ -1,0 +1,894 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>12B — Cross Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #15223b;
+    --ink-2:    #51607a;
+    --muted:    #9aa4b6;
+    --line:     #dfe3ea;
+    --line-2:   #eef0f4;
+    --bg:       #f3f5f8;
+    --card:     #ffffff;
+    --accent:   #e8542f;
+    --accent-bg:#fdece5;
+    --win:      #157a47;
+    --win-bg:   #e7f3ea;
+    --loss:     #b23b2c;
+    --loss-bg:  #fbe9e6;
+    --draw-bg:  #fff3e0;
+    --col-w:    52px;
+    --name-w:   110px;
+    --row-h:    33px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .scroll {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+  table.x { border-collapse: separate; border-spacing: 0; margin: 0; }
+  table.x th, table.x td { padding: 0; margin: 0; }
+  th.corner {
+    position: sticky; left: 0; top: 0; z-index: 6;
+    width: var(--name-w); min-width: var(--name-w);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 2px solid var(--line);
+  }
+  th.corner .lbl {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    padding: 5px 6px; text-align: left; line-height: 1.3;
+  }
+  th.corner .lbl a { color: inherit; text-decoration: none; }
+  th.corner .lbl a:hover { text-decoration: underline; }
+  th.colhead {
+    position: sticky; top: 0; z-index: 4;
+    width: var(--col-w); min-width: var(--col-w);
+    background: var(--card);
+    border-bottom: 2px solid var(--line);
+    border-left: 1px solid var(--line-2);
+    vertical-align: bottom;
+    padding: 4px 3px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 10px;
+    color: var(--ink); text-align: center;
+    overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.15; vertical-align: top;
+  }
+  th.colhead .ckn {
+    display: block;
+    font-size: 8px; font-weight: 700;
+    color: var(--muted); letter-spacing: .3px;
+    line-height: 1.4;
+  }
+  th.rowhead {
+    position: sticky; left: 0; z-index: 3;
+    width: var(--name-w); min-width: var(--name-w);
+    height: var(--row-h);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: top;
+  }
+  th.rowhead .rn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 5px 3px 5px;
+  }
+  th.rowhead .rkn {
+    flex: 0 0 auto; width: 13px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); text-align: center;
+  }
+  th.rowhead .nm {
+    font-size: 10px; font-weight: 600;
+    line-height: 1.1; color: var(--ink);
+  }
+  td.cell {
+    width: var(--col-w); min-width: var(--col-w);
+    min-height: var(--row-h);
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    background: var(--card);
+    vertical-align: top;
+    display: flex; flex-direction: column;
+  }
+  /* Per-game strip inside a cell */
+  .mg {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    flex: 1 0 auto; min-height: var(--row-h);
+    gap: 1px; padding: 2px; width: 100%;
+  }
+  .mg + .mg { border-top: 1px solid var(--line-2); }
+  .mg .rd {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .3px; color: var(--muted); line-height: 1;
+  }
+  .mg .score {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 13px;
+    line-height: 1; letter-spacing: -.1px;
+  }
+  .mg.win  { background: var(--win-bg); }
+  .mg.win  .score { color: var(--win); }
+  .mg.loss { background: var(--loss-bg); }
+  .mg.loss .score { color: var(--loss); }
+  .mg.draw { background: var(--draw-bg); }
+  .mg.draw .score { color: #e65100; }
+  .mg.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.live .score {
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+  }
+  .mg.live .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: pulse 1.3s infinite;
+  }
+  .mg.fix { background: #f9fafb; text-align: center; line-height: 1.1; }
+  .mg.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .mg.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  .mg.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  .mg.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.fix.live .fl1, .mg.fix.live .fl1 b { color: var(--accent); }
+  .mg.fix.live .fl2 { color: var(--accent); }
+  .mg.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  .mg.next.fix:not(.live) { background: #eef0fb; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
+  td.cell.self {
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
+      var(--ink);
+    overflow: hidden;
+    align-items: center; justify-content: center;
+  }
+  td.cell.self .sl1 { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
+  td.cell.self .sl2 { font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; }
+  tr.pinned th.rowhead { background: #fff7ec; }
+  tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  @media (max-width: 400px) {
+    :root { --col-w: 42px; --name-w: 90px; }
+  }
+
+</style>
+<style>html { zoom: 1.5; }</style>
+</head>
+<body>
+  <div class="scroll">
+    <table class="x" id="grid"></table>
+  </div>
+<script>
+const DATA = {
+  "title": "12B",
+  "venue": "Canoon Road Netball Courts, South Turramurra",
+  "date": "Sat 2 May–Sat 12 Sep 2026",
+  "pin": null,
+  "menu_url": "../index.html",
+  "teams": [
+    {
+      "code": "STI23",
+      "name": "STI23",
+      "rank": 1,
+      "pts": 10,
+      "pct": "274.4",
+      "W": 5,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "NT7",
+      "name": "NT7",
+      "rank": 2,
+      "pts": 8,
+      "pct": "278.6",
+      "W": 4,
+      "L": 1,
+      "D": 0
+    },
+    {
+      "code": "KP21",
+      "name": "KP21",
+      "rank": 3,
+      "pts": 4,
+      "pct": "90.9",
+      "W": 2,
+      "L": 3,
+      "D": 0
+    },
+    {
+      "code": "LNC17",
+      "name": "LNC17",
+      "rank": 4,
+      "pts": 4,
+      "pct": "35.3",
+      "W": 2,
+      "L": 3,
+      "D": 0
+    },
+    {
+      "code": "BER20",
+      "name": "BER20",
+      "rank": 5,
+      "pts": 2,
+      "pct": "93.0",
+      "W": 1,
+      "L": 4,
+      "D": 0
+    },
+    {
+      "code": "WP21",
+      "name": "WP21",
+      "rank": 6,
+      "pts": 2,
+      "pct": "29.9",
+      "W": 1,
+      "L": 4,
+      "D": 0
+    },
+    {
+      "code": "Ladder Position 2",
+      "name": "Ladder Position 2",
+      "rank": 7,
+      "pts": 0,
+      "pct": "0.0",
+      "W": 0,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "Ladder Position 1",
+      "name": "Ladder Position 1",
+      "rank": 8,
+      "pts": 0,
+      "pct": "0.0",
+      "W": 0,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "Ladder Position 3",
+      "name": "Ladder Position 3",
+      "rank": 9,
+      "pts": 0,
+      "pct": "0.0",
+      "W": 0,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "Ladder Position 4",
+      "name": "Ladder Position 4",
+      "rank": 10,
+      "pts": 0,
+      "pct": "0.0",
+      "W": 0,
+      "L": 0,
+      "D": 0
+    }
+  ],
+  "rounds": [
+    {
+      "n": 1,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "2/5",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "9/5",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "16/5",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "23/5",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "30/5",
+      "state": "done"
+    },
+    {
+      "n": 6,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "13/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 7,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "20/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 8,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "27/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 9,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "18/7",
+      "state": "upcoming"
+    },
+    {
+      "n": 10,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "25/7",
+      "state": "upcoming"
+    },
+    {
+      "n": 11,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "1/8",
+      "state": "upcoming"
+    },
+    {
+      "n": 12,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "8/8",
+      "state": "upcoming"
+    },
+    {
+      "n": 13,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "15/8",
+      "state": "upcoming"
+    },
+    {
+      "n": 14,
+      "day": "Sat",
+      "time": "10:40",
+      "sdate": "22/8",
+      "state": "upcoming"
+    }
+  ],
+  "games": [
+    [
+      1,
+      "BER20",
+      23,
+      "LNC17",
+      4,
+      5,
+      "done"
+    ],
+    [
+      1,
+      "KP21",
+      6,
+      "STI23",
+      15,
+      6,
+      "done"
+    ],
+    [
+      1,
+      "NT7",
+      31,
+      "WP21",
+      2,
+      8,
+      "done"
+    ],
+    [
+      2,
+      "STI23",
+      15,
+      "BER20",
+      3,
+      5,
+      "done"
+    ],
+    [
+      2,
+      "LNC17",
+      3,
+      "NT7",
+      38,
+      6,
+      "done"
+    ],
+    [
+      2,
+      "WP21",
+      1,
+      "KP21",
+      11,
+      8,
+      "done"
+    ],
+    [
+      3,
+      "WP21",
+      7,
+      "LNC17",
+      11,
+      5,
+      "done"
+    ],
+    [
+      3,
+      "NT7",
+      16,
+      "STI23",
+      18,
+      6,
+      "done"
+    ],
+    [
+      3,
+      "KP21",
+      12,
+      "BER20",
+      10,
+      8,
+      "done"
+    ],
+    [
+      4,
+      "STI23",
+      36,
+      "WP21",
+      8,
+      5,
+      "done"
+    ],
+    [
+      4,
+      "LNC17",
+      12,
+      "KP21",
+      11,
+      6,
+      "done"
+    ],
+    [
+      4,
+      "BER20",
+      9,
+      "NT7",
+      15,
+      8,
+      "done"
+    ],
+    [
+      5,
+      "KP21",
+      10,
+      "NT7",
+      17,
+      5,
+      "done"
+    ],
+    [
+      5,
+      "WP21",
+      11,
+      "BER20",
+      8,
+      6,
+      "done"
+    ],
+    [
+      5,
+      "LNC17",
+      6,
+      "STI23",
+      23,
+      8,
+      "done"
+    ],
+    [
+      6,
+      "LNC17",
+      null,
+      "BER20",
+      null,
+      5,
+      "upcoming"
+    ],
+    [
+      6,
+      "STI23",
+      null,
+      "KP21",
+      null,
+      6,
+      "upcoming"
+    ],
+    [
+      6,
+      "WP21",
+      null,
+      "NT7",
+      null,
+      8,
+      "upcoming"
+    ],
+    [
+      7,
+      "BER20",
+      null,
+      "STI23",
+      null,
+      5,
+      "upcoming"
+    ],
+    [
+      7,
+      "NT7",
+      null,
+      "LNC17",
+      null,
+      6,
+      "upcoming"
+    ],
+    [
+      7,
+      "KP21",
+      null,
+      "WP21",
+      null,
+      8,
+      "upcoming"
+    ],
+    [
+      8,
+      "LNC17",
+      null,
+      "WP21",
+      null,
+      5,
+      "upcoming"
+    ],
+    [
+      8,
+      "STI23",
+      null,
+      "NT7",
+      null,
+      6,
+      "upcoming"
+    ],
+    [
+      8,
+      "BER20",
+      null,
+      "KP21",
+      null,
+      8,
+      "upcoming"
+    ],
+    [
+      9,
+      "WP21",
+      null,
+      "STI23",
+      null,
+      5,
+      "upcoming"
+    ],
+    [
+      9,
+      "KP21",
+      null,
+      "LNC17",
+      null,
+      6,
+      "upcoming"
+    ],
+    [
+      9,
+      "NT7",
+      null,
+      "BER20",
+      null,
+      8,
+      "upcoming"
+    ],
+    [
+      10,
+      "NT7",
+      null,
+      "KP21",
+      null,
+      5,
+      "upcoming"
+    ],
+    [
+      10,
+      "BER20",
+      null,
+      "WP21",
+      null,
+      6,
+      "upcoming"
+    ],
+    [
+      10,
+      "STI23",
+      null,
+      "LNC17",
+      null,
+      8,
+      "upcoming"
+    ],
+    [
+      11,
+      "BER20",
+      null,
+      "LNC17",
+      null,
+      1,
+      "upcoming"
+    ],
+    [
+      11,
+      "KP21",
+      null,
+      "STI23",
+      null,
+      2,
+      "upcoming"
+    ],
+    [
+      11,
+      "NT7",
+      null,
+      "WP21",
+      null,
+      4,
+      "upcoming"
+    ],
+    [
+      12,
+      "STI23",
+      null,
+      "BER20",
+      null,
+      5,
+      "upcoming"
+    ],
+    [
+      12,
+      "LNC17",
+      null,
+      "NT7",
+      null,
+      6,
+      "upcoming"
+    ],
+    [
+      12,
+      "WP21",
+      null,
+      "KP21",
+      null,
+      8,
+      "upcoming"
+    ],
+    [
+      13,
+      "WP21",
+      null,
+      "LNC17",
+      null,
+      5,
+      "upcoming"
+    ],
+    [
+      13,
+      "NT7",
+      null,
+      "STI23",
+      null,
+      6,
+      "upcoming"
+    ],
+    [
+      13,
+      "KP21",
+      null,
+      "BER20",
+      null,
+      8,
+      "upcoming"
+    ],
+    [
+      14,
+      "STI23",
+      null,
+      "WP21",
+      null,
+      5,
+      "upcoming"
+    ],
+    [
+      14,
+      "LNC17",
+      null,
+      "KP21",
+      null,
+      6,
+      "upcoming"
+    ],
+    [
+      14,
+      "BER20",
+      null,
+      "NT7",
+      null,
+      8,
+      "upcoming"
+    ],
+    [
+      1,
+      "Ladder Position 1",
+      null,
+      "Ladder Position 2",
+      null,
+      0,
+      "upcoming"
+    ],
+    [
+      1,
+      "Ladder Position 3",
+      null,
+      "Ladder Position 4",
+      null,
+      0,
+      "upcoming"
+    ]
+  ]
+};
+
+function render(d) {
+  const key = (a, b) => [a, b].sort().join("|");
+
+  // Build M as arrays — all games per pair, sorted by round.
+  const M = {};
+  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+    const k = key(h, a);
+    if (!M[k]) M[k] = [];
+    M[k].push({ rd, h, hs, a, as: as_, court, st });
+  });
+  Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
+
+  const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
+
+  // Per-team next round: min round where their game isn't done
+  const nextRound = {};
+  d.teams.forEach(t => {
+    let min = Infinity;
+    d.games.forEach(([rd, h, , a, , , st]) => {
+      if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
+    });
+    nextRound[t.code] = min === Infinity ? null : min;
+  });
+
+  const grid = document.getElementById("grid");
+  let html = "<thead><tr>";
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
+    : d.title;
+  html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
+  d.teams.forEach(t => {
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+
+  d.teams.forEach((rowT) => {
+    const pinnedRow = rowT.code === d.pin;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<th class="rowhead">
+               <div class="rn">
+                 <span class="rkn">${rowT.rank}</span>
+                 <span class="nm">${rowT.name}</span>
+               </div>
+             </th>`;
+
+    d.teams.forEach((colT) => {
+      const pinCol = colT.code === d.pin && !pinnedRow;
+      const pcls = pinCol ? " pincol" : "";
+
+      if (rowT.code === colT.code) {
+        html += `<td class="cell self">
+                   <span class="sl1">${rowT.pts} pts</span>
+                   <span class="sl2">${rowT.pct}%</span>
+                 </td>`;
+        return;
+      }
+
+      const games = M[key(rowT.code, colT.code)];
+      if (!games) { html += `<td class="cell${pcls}"></td>`; return; }
+
+      html += `<td class="cell${pcls}">`;
+      games.forEach(m => {
+        const rowScore = m.h === rowT.code ? m.hs : m.as;
+        const colScore = m.h === rowT.code ? m.as : m.hs;
+        const rmeta = roundByN[m.rd] || {};
+        const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+        if (m.st === "live" && rowScore != null) {
+          html += `<div class="mg live${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
+                   </div>`;
+        } else if (m.st === "done" && rowScore != null) {
+          const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">${rowScore}–${colScore}</span>
+                   </div>`;
+        } else {
+          const liveCls = m.st === "live" ? " live" : "";
+          html += `<div class="mg fix${liveCls}${ncls}">
+                     <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
+                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                   </div>`;
+        }
+      });
+      html += `</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody>";
+  grid.innerHTML = html;
+}
+render(DATA);
+
+</script>
+</body>
+</html>
