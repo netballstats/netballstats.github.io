@@ -307,97 +307,74 @@ CSS = """\
   }
   td.cell {
     width: var(--col-w); min-width: var(--col-w);
-    height: var(--row-h);
+    min-height: var(--row-h);
     border-left: 1px solid var(--line-2);
     border-bottom: 1px solid var(--line-2);
-    position: relative;
     background: var(--card);
     vertical-align: top;
+    display: flex; flex-direction: column;
   }
-  td.cell .scblock {
-    position: absolute; inset: 0;
+  /* Per-game strip inside a cell */
+  .mg {
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 1px; padding: 2px;
+    flex: 1 0 auto; min-height: var(--row-h);
+    gap: 1px; padding: 2px; width: 100%;
   }
-  td.cell .scblock .rd {
+  .mg + .mg { border-top: 1px solid var(--line-2); }
+  .mg .rd {
     font-size: 8px; font-weight: 700;
     letter-spacing: .3px; color: var(--muted); line-height: 1;
   }
-  td.cell .scblock .score {
+  .mg .score {
     font-family: 'Barlow Semi Condensed', sans-serif;
     font-weight: 700; font-size: 13px;
     line-height: 1; letter-spacing: -.1px;
   }
-  td.cell.fix { background: #f9fafb; }
-  td.cell.fix .fxblock {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 1px; padding: 2px;
-    text-align: center; line-height: 1.1;
-  }
-  td.cell.fix .fl1 {
-    font-size: 9.5px; font-weight: 600;
-    color: var(--ink-2); white-space: nowrap;
-  }
-  td.cell.fix .fl1 b { color: var(--ink); font-weight: 700; }
-  td.cell.fix .fl2 {
-    font-size: 8.5px; font-weight: 500;
-    color: var(--muted); white-space: nowrap;
-  }
-  td.cell.fix.done { background: #f5f6f8; }
-  td.cell.fix.done .fl1 { color: var(--muted); }
-  td.cell.fix.done .fl1 b { color: var(--ink-2); }
-  td.cell.fix.done .fl2 { color: #bcc4d0; }
-  td.cell.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
-  td.cell.fix.live .fl1, td.cell.fix.live .fl1 b { color: var(--accent); }
-  td.cell.fix.live .fl2 { color: var(--accent); }
-  td.cell.win  { background: var(--win-bg); }
-  td.cell.win  .score { color: var(--win); }
-  td.cell.loss { background: var(--loss-bg); }
-  td.cell.loss .score { color: var(--loss); }
-  td.cell.draw { background: var(--draw-bg); }
-  td.cell.draw .score { color: #e65100; }
-  td.cell.live {
-    background: var(--accent-bg);
-    box-shadow: inset 0 0 0 2px var(--accent);
-  }
-  td.cell.live .score {
+  .mg.win  { background: var(--win-bg); }
+  .mg.win  .score { color: var(--win); }
+  .mg.loss { background: var(--loss-bg); }
+  .mg.loss .score { color: var(--loss); }
+  .mg.draw { background: var(--draw-bg); }
+  .mg.draw .score { color: #e65100; }
+  .mg.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.live .score {
     color: var(--accent);
     display: flex; align-items: center; justify-content: center; gap: 3px;
   }
-  td.cell.live .dot {
+  .mg.live .dot {
     width: 5px; height: 5px; border-radius: 50%;
     background: var(--accent); display: inline-block;
     animation: pulse 1.3s infinite;
   }
-  td.cell.upcoming .score { color: var(--muted); font-size: 11px; }
-  td.cell.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
-  td.cell.next.fix:not(.live) { background: #eef0fb; }
+  .mg.fix { background: #f9fafb; text-align: center; line-height: 1.1; }
+  .mg.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .mg.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  .mg.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  .mg.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.fix.live .fl1, .mg.fix.live .fl1 b { color: var(--accent); }
+  .mg.fix.live .fl2 { color: var(--accent); }
+  .mg.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  .mg.next.fix:not(.live) { background: #eef0fb; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
   td.cell.self {
     background:
       repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
       var(--ink);
     overflow: hidden;
-  }
-  td.cell.self .selfblock {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 1px; padding: 2px;
-    font-family: 'Barlow Semi Condensed', sans-serif;
-    color: #fff; text-align: center; line-height: 1.1;
   }
-  td.cell.self .sl1 { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; }
+  td.cell.self .sl1 { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
   td.cell.self .sl2 { font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; }
   tr.pinned th.rowhead { background: #fff7ec; }
-  tr.pinned td.cell:not(.self) { background-color: #fffaf2; }
-  tr.pinned td.cell.win  { background-color: var(--win-bg); }
-  tr.pinned td.cell.loss { background-color: var(--loss-bg); }
-  tr.pinned td.cell.live { background-color: var(--accent-bg); }
-  td.cell.pincol:not(.self):not(.win):not(.loss):not(.live) { background-color: #fffaf2; }
+  tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   @media (max-width: 400px) {
     :root { --col-w: 42px; --name-w: 90px; }
   }
@@ -406,23 +383,22 @@ CSS = """\
 JS_RENDER = """\
 function render(d) {
   const key = (a, b) => [a, b].sort().join("|");
+
+  // Build M as arrays — all games per pair, sorted by round.
   const M = {};
   d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
     const k = key(h, a);
-    const prev = M[k];
-    // Prefer completed result over upcoming; break ties by earlier round.
-    if (!prev || (prev.st !== "done" && st === "done") || (prev.st === st && rd < prev.rd))
-      M[k] = { rd, h, hs, a, as: as_, court, st };
+    if (!M[k]) M[k] = [];
+    M[k].push({ rd, h, hs, a, as: as_, court, st });
   });
+  Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
+
   const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
 
   // Per-team next round: min round where their game isn't done
   const nextRound = {};
   d.teams.forEach(t => {
     let min = Infinity;
-    d.games.forEach(([rd,, , , , , st]) => { if (st !== "done" && rd < min) min = rd; });
-    // narrow to this team's games
-    min = Infinity;
     d.games.forEach(([rd, h, , a, , , st]) => {
       if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
     });
@@ -440,7 +416,7 @@ function render(d) {
   });
   html += "</tr></thead><tbody>";
 
-  d.teams.forEach((rowT, ri) => {
+  d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
     html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
     html += `<th class="rowhead">
@@ -450,51 +426,48 @@ function render(d) {
                </div>
              </th>`;
 
-    d.teams.forEach((colT, ci) => {
+    d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
       const pcls = pinCol ? " pincol" : "";
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
-                   <div class="selfblock">
-                     <span class="sl1">${rowT.pts} pts</span>
-                     <span class="sl2">${rowT.pct}%</span>
-                   </div>
+                   <span class="sl1">${rowT.pts} pts</span>
+                   <span class="sl2">${rowT.pct}%</span>
                  </td>`;
         return;
       }
 
-      const m = M[key(rowT.code, colT.code)];
-      if (!m) { html += `<td class="cell${pcls}"></td>`; return; }
-      const rmeta = roundByN[m.rd] || {};
-      const rowScore = m.h === rowT.code ? m.hs : m.as;
-      const colScore = m.h === rowT.code ? m.as : m.hs;
-      const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+      const games = M[key(rowT.code, colT.code)];
+      if (!games) { html += `<td class="cell${pcls}"></td>`; return; }
 
-      if (m.st === "live" && rowScore != null) {
-        html += `<td class="cell live${ncls}${pcls}">
-                   <div class="scblock">
+      html += `<td class="cell${pcls}">`;
+      games.forEach(m => {
+        const rowScore = m.h === rowT.code ? m.hs : m.as;
+        const colScore = m.h === rowT.code ? m.as : m.hs;
+        const rmeta = roundByN[m.rd] || {};
+        const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+        if (m.st === "live" && rowScore != null) {
+          html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
-                   </div>
-                 </td>`;
-      } else if (m.st === "done" && rowScore != null) {
-        const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
-        html += `<td class="cell ${cls}${ncls}${pcls}">
-                   <div class="scblock">
+                   </div>`;
+        } else if (m.st === "done" && rowScore != null) {
+          const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+          html += `<div class="mg ${cls}${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score">${rowScore}–${colScore}</span>
-                   </div>
-                 </td>`;
-      } else {
-        const fixCls = m.st === "live" ? " live" : "";
-        html += `<td class="cell fix${fixCls}${ncls}${pcls}">
-                   <div class="fxblock">
+                   </div>`;
+        } else {
+          const liveCls = m.st === "live" ? " live" : "";
+          html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
                      <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
-                   </div>
-                 </td>`;
-      }
+                   </div>`;
+        }
+      });
+      html += `</td>`;
     });
     html += "</tr>";
   });
