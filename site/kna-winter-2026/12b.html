@@ -105,18 +105,16 @@
   }
   td.cell {
     width: var(--col-w); min-width: var(--col-w);
-    min-height: var(--row-h);
     border-left: 1px solid var(--line-2);
     border-bottom: 1px solid var(--line-2);
     background: var(--card);
     vertical-align: top;
-    display: flex; flex-direction: column;
   }
   /* Per-game strip inside a cell */
   .mg {
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    flex: 1 0 auto; min-height: var(--row-h);
+    min-height: var(--row-h);
     gap: 1px; padding: 2px; width: 100%;
   }
   .mg + .mg { border-top: 1px solid var(--line-2); }
@@ -166,10 +164,11 @@
       repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
       var(--ink);
     overflow: hidden;
-    align-items: center; justify-content: center;
+    text-align: center; vertical-align: middle;
+    height: var(--row-h);
   }
-  td.cell.self .sl1 { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
-  td.cell.self .sl2 { font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; }
+  td.cell.self .sl1 { display: block; font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
+  td.cell.self .sl2 { display: block; font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; margin-top: 2px; }
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
@@ -249,46 +248,6 @@ const DATA = {
       "pct": "29.9",
       "W": 1,
       "L": 4,
-      "D": 0
-    },
-    {
-      "code": "Ladder Position 2",
-      "name": "Ladder Position 2",
-      "rank": 7,
-      "pts": 0,
-      "pct": "0.0",
-      "W": 0,
-      "L": 0,
-      "D": 0
-    },
-    {
-      "code": "Ladder Position 1",
-      "name": "Ladder Position 1",
-      "rank": 8,
-      "pts": 0,
-      "pct": "0.0",
-      "W": 0,
-      "L": 0,
-      "D": 0
-    },
-    {
-      "code": "Ladder Position 3",
-      "name": "Ladder Position 3",
-      "rank": 9,
-      "pts": 0,
-      "pct": "0.0",
-      "W": 0,
-      "L": 0,
-      "D": 0
-    },
-    {
-      "code": "Ladder Position 4",
-      "name": "Ladder Position 4",
-      "rank": 10,
-      "pts": 0,
-      "pct": "0.0",
-      "W": 0,
-      "L": 0,
       "D": 0
     }
   ],
@@ -769,24 +728,6 @@ const DATA = {
       "NT7",
       null,
       8,
-      "upcoming"
-    ],
-    [
-      1,
-      "Ladder Position 1",
-      null,
-      "Ladder Position 2",
-      null,
-      0,
-      "upcoming"
-    ],
-    [
-      1,
-      "Ladder Position 3",
-      null,
-      "Ladder Position 4",
-      null,
-      0,
       "upcoming"
     ]
   ]

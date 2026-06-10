@@ -1,0 +1,2161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Opens Division 3 — Cross Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #15223b;
+    --ink-2:    #51607a;
+    --muted:    #9aa4b6;
+    --line:     #dfe3ea;
+    --line-2:   #eef0f4;
+    --bg:       #f3f5f8;
+    --card:     #ffffff;
+    --accent:   #e8542f;
+    --accent-bg:#fdece5;
+    --win:      #157a47;
+    --win-bg:   #e7f3ea;
+    --loss:     #b23b2c;
+    --loss-bg:  #fbe9e6;
+    --draw-bg:  #fff3e0;
+    --col-w:    52px;
+    --name-w:   110px;
+    --row-h:    33px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .scroll {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+  table.x { border-collapse: separate; border-spacing: 0; margin: 0; }
+  table.x th, table.x td { padding: 0; margin: 0; }
+  th.corner {
+    position: sticky; left: 0; top: 0; z-index: 6;
+    width: var(--name-w); min-width: var(--name-w);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 2px solid var(--line);
+  }
+  th.corner .lbl {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    padding: 5px 6px; text-align: left; line-height: 1.3;
+  }
+  th.corner .lbl a { color: inherit; text-decoration: none; }
+  th.corner .lbl a:hover { text-decoration: underline; }
+  th.colhead {
+    position: sticky; top: 0; z-index: 4;
+    width: var(--col-w); min-width: var(--col-w);
+    background: var(--card);
+    border-bottom: 2px solid var(--line);
+    border-left: 1px solid var(--line-2);
+    vertical-align: bottom;
+    padding: 4px 3px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 10px;
+    color: var(--ink); text-align: center;
+    overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.15; vertical-align: top;
+  }
+  th.colhead .ckn {
+    display: block;
+    font-size: 8px; font-weight: 700;
+    color: var(--muted); letter-spacing: .3px;
+    line-height: 1.4;
+  }
+  th.rowhead {
+    position: sticky; left: 0; z-index: 3;
+    width: var(--name-w); min-width: var(--name-w);
+    height: var(--row-h);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: top;
+  }
+  th.rowhead .rn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 5px 3px 5px;
+  }
+  th.rowhead .rkn {
+    flex: 0 0 auto; width: 13px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); text-align: center;
+  }
+  th.rowhead .nm {
+    font-size: 10px; font-weight: 600;
+    line-height: 1.1; color: var(--ink);
+  }
+  td.cell {
+    width: var(--col-w); min-width: var(--col-w);
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    background: var(--card);
+    vertical-align: top;
+  }
+  /* Per-game strip inside a cell */
+  .mg {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: var(--row-h);
+    gap: 1px; padding: 2px; width: 100%;
+  }
+  .mg + .mg { border-top: 1px solid var(--line-2); }
+  .mg .rd {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .3px; color: var(--muted); line-height: 1;
+  }
+  .mg .score {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 13px;
+    line-height: 1; letter-spacing: -.1px;
+  }
+  .mg.win  { background: var(--win-bg); }
+  .mg.win  .score { color: var(--win); }
+  .mg.loss { background: var(--loss-bg); }
+  .mg.loss .score { color: var(--loss); }
+  .mg.draw { background: var(--draw-bg); }
+  .mg.draw .score { color: #e65100; }
+  .mg.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.live .score {
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+  }
+  .mg.live .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: pulse 1.3s infinite;
+  }
+  .mg.fix { background: #f9fafb; text-align: center; line-height: 1.1; }
+  .mg.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .mg.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  .mg.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  .mg.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.fix.live .fl1, .mg.fix.live .fl1 b { color: var(--accent); }
+  .mg.fix.live .fl2 { color: var(--accent); }
+  .mg.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  .mg.next.fix:not(.live) { background: #eef0fb; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
+  td.cell.self {
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
+      var(--ink);
+    overflow: hidden;
+    text-align: center; vertical-align: middle;
+    height: var(--row-h);
+  }
+  td.cell.self .sl1 { display: block; font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
+  td.cell.self .sl2 { display: block; font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; margin-top: 2px; }
+  tr.pinned th.rowhead { background: #fff7ec; }
+  tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  @media (max-width: 400px) {
+    :root { --col-w: 42px; --name-w: 90px; }
+  }
+
+</style>
+<style>html { zoom: 1.5; }</style>
+</head>
+<body>
+  <div class="scroll">
+    <table class="x" id="grid"></table>
+  </div>
+<script>
+const DATA = {
+  "title": "Opens Division 3",
+  "venue": "Baulkham Hills Shire Netball Association, North Kellyville",
+  "date": "Sat 6–Mon 8 Jun 2026",
+  "pin": null,
+  "menu_url": "../index.html",
+  "teams": [
+    {
+      "code": "Sapphire Coast Opens",
+      "name": "Sapphire Coast Opens",
+      "rank": 1,
+      "pts": 32,
+      "pct": "174.2",
+      "W": 15,
+      "L": 1,
+      "D": 2
+    },
+    {
+      "code": "Coolamon Comets Opens",
+      "name": "Coolamon Comets Opens",
+      "rank": 2,
+      "pts": 32,
+      "pct": "144.1",
+      "W": 16,
+      "L": 2,
+      "D": 0
+    },
+    {
+      "code": "ADF Reserves Opens (INV)",
+      "name": "ADF Reserves Opens (INV)",
+      "rank": 3,
+      "pts": 27,
+      "pct": "148.8",
+      "W": 12,
+      "L": 3,
+      "D": 3
+    },
+    {
+      "code": "Scone Opens",
+      "name": "Scone Opens",
+      "rank": 4,
+      "pts": 27,
+      "pct": "148.0",
+      "W": 13,
+      "L": 4,
+      "D": 1
+    },
+    {
+      "code": "Parkes District Opens",
+      "name": "Parkes District Opens",
+      "rank": 5,
+      "pts": 26,
+      "pct": "134.8",
+      "W": 13,
+      "L": 5,
+      "D": 0
+    },
+    {
+      "code": "Muswellbrook Opens",
+      "name": "Muswellbrook Opens",
+      "rank": 6,
+      "pts": 25,
+      "pct": "147.1",
+      "W": 12,
+      "L": 5,
+      "D": 1
+    },
+    {
+      "code": "Singleton Opens",
+      "name": "Singleton Opens",
+      "rank": 7,
+      "pts": 22,
+      "pct": "126.2",
+      "W": 11,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Yass Opens",
+      "name": "Yass Opens",
+      "rank": 8,
+      "pts": 22,
+      "pct": "125.3",
+      "W": 11,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Wollondilly Opens",
+      "name": "Wollondilly Opens",
+      "rank": 9,
+      "pts": 22,
+      "pct": "113.6",
+      "W": 10,
+      "L": 6,
+      "D": 2
+    },
+    {
+      "code": "Kurri Kurri Opens",
+      "name": "Kurri Kurri Opens",
+      "rank": 10,
+      "pts": 18,
+      "pct": "115.9",
+      "W": 8,
+      "L": 8,
+      "D": 2
+    },
+    {
+      "code": "Eurobodalla Opens",
+      "name": "Eurobodalla Opens",
+      "rank": 11,
+      "pts": 16,
+      "pct": "108.6",
+      "W": 8,
+      "L": 10,
+      "D": 0
+    },
+    {
+      "code": "Mount Druitt Opens",
+      "name": "Mount Druitt Opens",
+      "rank": 12,
+      "pts": 15,
+      "pct": "88.0",
+      "W": 7,
+      "L": 10,
+      "D": 1
+    },
+    {
+      "code": "Leeton Opens",
+      "name": "Leeton Opens",
+      "rank": 13,
+      "pts": 15,
+      "pct": "83.1",
+      "W": 7,
+      "L": 10,
+      "D": 1
+    },
+    {
+      "code": "Quirindi Opens",
+      "name": "Quirindi Opens",
+      "rank": 14,
+      "pts": 13,
+      "pct": "83.4",
+      "W": 6,
+      "L": 11,
+      "D": 1
+    },
+    {
+      "code": "Young & District Opens",
+      "name": "Young & District Opens",
+      "rank": 15,
+      "pts": 12,
+      "pct": "81.7",
+      "W": 6,
+      "L": 12,
+      "D": 0
+    },
+    {
+      "code": "Port Stephens Opens",
+      "name": "Port Stephens Opens",
+      "rank": 16,
+      "pts": 10,
+      "pct": "71.4",
+      "W": 5,
+      "L": 13,
+      "D": 0
+    },
+    {
+      "code": "Narrabri Opens",
+      "name": "Narrabri Opens",
+      "rank": 17,
+      "pts": 4,
+      "pct": "54.3",
+      "W": 2,
+      "L": 16,
+      "D": 0
+    },
+    {
+      "code": "Cowra Opens",
+      "name": "Cowra Opens",
+      "rank": 18,
+      "pts": 2,
+      "pct": "42.3",
+      "W": 1,
+      "L": 17,
+      "D": 0
+    },
+    {
+      "code": "Cootamundra Opens",
+      "name": "Cootamundra Opens",
+      "rank": 19,
+      "pts": 2,
+      "pct": "37.6",
+      "W": 1,
+      "L": 17,
+      "D": 0
+    }
+  ],
+  "rounds": [
+    {
+      "n": 1,
+      "day": "Sat",
+      "time": "09:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "day": "Sat",
+      "time": "10:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "day": "Sat",
+      "time": "11:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "day": "Sat",
+      "time": "12:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "day": "Sat",
+      "time": "13:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 6,
+      "day": "Sat",
+      "time": "14:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 7,
+      "day": "Sat",
+      "time": "15:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 8,
+      "day": "Sun",
+      "time": "09:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 9,
+      "day": "Sun",
+      "time": "10:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 10,
+      "day": "Sun",
+      "time": "11:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 11,
+      "day": "Sun",
+      "time": "12:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 12,
+      "day": "Sun",
+      "time": "13:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 13,
+      "day": "Sun",
+      "time": "14:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 14,
+      "day": "Mon",
+      "time": "09:00",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 15,
+      "day": "Mon",
+      "time": "10:00",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 16,
+      "day": "Mon",
+      "time": "11:00",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 17,
+      "day": "Mon",
+      "time": "12:00",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 18,
+      "day": "Mon",
+      "time": "13:00",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 19,
+      "day": "Mon",
+      "time": "14:00",
+      "sdate": "8/6",
+      "state": "done"
+    }
+  ],
+  "games": [
+    [
+      1,
+      "Sapphire Coast Opens",
+      29,
+      "Cowra Opens",
+      8,
+      1,
+      "done"
+    ],
+    [
+      1,
+      "Quirindi Opens",
+      17,
+      "Cootamundra Opens",
+      11,
+      2,
+      "done"
+    ],
+    [
+      1,
+      "Kurri Kurri Opens",
+      11,
+      "Muswellbrook Opens",
+      13,
+      3,
+      "done"
+    ],
+    [
+      1,
+      "Eurobodalla Opens",
+      13,
+      "Narrabri Opens",
+      15,
+      5,
+      "done"
+    ],
+    [
+      1,
+      "Leeton Opens",
+      16,
+      "Yass Opens",
+      14,
+      6,
+      "done"
+    ],
+    [
+      1,
+      "Port Stephens Opens",
+      14,
+      "Mount Druitt Opens",
+      17,
+      7,
+      "done"
+    ],
+    [
+      1,
+      "Young & District Opens",
+      10,
+      "Wollondilly Opens",
+      18,
+      8,
+      "done"
+    ],
+    [
+      1,
+      "Coolamon Comets Opens",
+      21,
+      "Singleton Opens",
+      17,
+      10,
+      "done"
+    ],
+    [
+      1,
+      "Parkes District Opens",
+      13,
+      "ADF Reserves Opens (INV)",
+      9,
+      12,
+      "done"
+    ],
+    [
+      2,
+      "Scone Opens",
+      18,
+      "Quirindi Opens",
+      16,
+      2,
+      "done"
+    ],
+    [
+      2,
+      "Cowra Opens",
+      5,
+      "Kurri Kurri Opens",
+      21,
+      1,
+      "done"
+    ],
+    [
+      2,
+      "Cootamundra Opens",
+      2,
+      "Eurobodalla Opens",
+      16,
+      3,
+      "done"
+    ],
+    [
+      2,
+      "Muswellbrook Opens",
+      29,
+      "Leeton Opens",
+      13,
+      5,
+      "done"
+    ],
+    [
+      2,
+      "Narrabri Opens",
+      11,
+      "Port Stephens Opens",
+      20,
+      6,
+      "done"
+    ],
+    [
+      2,
+      "Yass Opens",
+      20,
+      "Young & District Opens",
+      14,
+      7,
+      "done"
+    ],
+    [
+      2,
+      "Mount Druitt Opens",
+      18,
+      "Coolamon Comets Opens",
+      22,
+      8,
+      "done"
+    ],
+    [
+      2,
+      "Wollondilly Opens",
+      6,
+      "Parkes District Opens",
+      15,
+      10,
+      "done"
+    ],
+    [
+      2,
+      "Singleton Opens",
+      16,
+      "ADF Reserves Opens (INV)",
+      19,
+      12,
+      "done"
+    ],
+    [
+      3,
+      "Kurri Kurri Opens",
+      11,
+      "Sapphire Coast Opens",
+      11,
+      2,
+      "done"
+    ],
+    [
+      3,
+      "Eurobodalla Opens",
+      12,
+      "Scone Opens",
+      13,
+      1,
+      "done"
+    ],
+    [
+      3,
+      "Leeton Opens",
+      20,
+      "Cowra Opens",
+      17,
+      3,
+      "done"
+    ],
+    [
+      3,
+      "Port Stephens Opens",
+      26,
+      "Cootamundra Opens",
+      14,
+      5,
+      "done"
+    ],
+    [
+      3,
+      "Young & District Opens",
+      15,
+      "Muswellbrook Opens",
+      18,
+      6,
+      "done"
+    ],
+    [
+      3,
+      "Coolamon Comets Opens",
+      21,
+      "Narrabri Opens",
+      6,
+      7,
+      "done"
+    ],
+    [
+      3,
+      "Parkes District Opens",
+      18,
+      "Yass Opens",
+      19,
+      8,
+      "done"
+    ],
+    [
+      3,
+      "ADF Reserves Opens (INV)",
+      23,
+      "Mount Druitt Opens",
+      12,
+      10,
+      "done"
+    ],
+    [
+      3,
+      "Singleton Opens",
+      13,
+      "Wollondilly Opens",
+      16,
+      12,
+      "done"
+    ],
+    [
+      4,
+      "Quirindi Opens",
+      10,
+      "Eurobodalla Opens",
+      22,
+      1,
+      "done"
+    ],
+    [
+      4,
+      "Sapphire Coast Opens",
+      26,
+      "Leeton Opens",
+      14,
+      2,
+      "done"
+    ],
+    [
+      4,
+      "Scone Opens",
+      20,
+      "Port Stephens Opens",
+      8,
+      3,
+      "done"
+    ],
+    [
+      4,
+      "Cowra Opens",
+      10,
+      "Young & District Opens",
+      26,
+      5,
+      "done"
+    ],
+    [
+      4,
+      "Cootamundra Opens",
+      9,
+      "Coolamon Comets Opens",
+      19,
+      6,
+      "done"
+    ],
+    [
+      4,
+      "Muswellbrook Opens",
+      14,
+      "Parkes District Opens",
+      18,
+      7,
+      "done"
+    ],
+    [
+      4,
+      "Narrabri Opens",
+      6,
+      "ADF Reserves Opens (INV)",
+      22,
+      8,
+      "done"
+    ],
+    [
+      4,
+      "Yass Opens",
+      20,
+      "Singleton Opens",
+      25,
+      10,
+      "done"
+    ],
+    [
+      4,
+      "Mount Druitt Opens",
+      13,
+      "Wollondilly Opens",
+      22,
+      12,
+      "done"
+    ],
+    [
+      5,
+      "Leeton Opens",
+      14,
+      "Kurri Kurri Opens",
+      18,
+      1,
+      "done"
+    ],
+    [
+      5,
+      "Port Stephens Opens",
+      17,
+      "Quirindi Opens",
+      10,
+      3,
+      "done"
+    ],
+    [
+      5,
+      "Young & District Opens",
+      12,
+      "Sapphire Coast Opens",
+      25,
+      2,
+      "done"
+    ],
+    [
+      5,
+      "Coolamon Comets Opens",
+      17,
+      "Scone Opens",
+      25,
+      5,
+      "done"
+    ],
+    [
+      5,
+      "Parkes District Opens",
+      21,
+      "Cowra Opens",
+      5,
+      6,
+      "done"
+    ],
+    [
+      5,
+      "ADF Reserves Opens (INV)",
+      27,
+      "Cootamundra Opens",
+      2,
+      7,
+      "done"
+    ],
+    [
+      5,
+      "Singleton Opens",
+      15,
+      "Muswellbrook Opens",
+      16,
+      8,
+      "done"
+    ],
+    [
+      5,
+      "Wollondilly Opens",
+      11,
+      "Narrabri Opens",
+      7,
+      10,
+      "done"
+    ],
+    [
+      5,
+      "Mount Druitt Opens",
+      12,
+      "Yass Opens",
+      24,
+      12,
+      "done"
+    ],
+    [
+      6,
+      "Eurobodalla Opens",
+      17,
+      "Port Stephens Opens",
+      9,
+      1,
+      "done"
+    ],
+    [
+      6,
+      "Kurri Kurri Opens",
+      16,
+      "Young & District Opens",
+      9,
+      2,
+      "done"
+    ],
+    [
+      6,
+      "Quirindi Opens",
+      11,
+      "Coolamon Comets Opens",
+      21,
+      3,
+      "done"
+    ],
+    [
+      6,
+      "Sapphire Coast Opens",
+      20,
+      "Parkes District Opens",
+      12,
+      5,
+      "done"
+    ],
+    [
+      6,
+      "Scone Opens",
+      12,
+      "ADF Reserves Opens (INV)",
+      13,
+      6,
+      "done"
+    ],
+    [
+      6,
+      "Cowra Opens",
+      15,
+      "Singleton Opens",
+      22,
+      7,
+      "done"
+    ],
+    [
+      6,
+      "Cootamundra Opens",
+      8,
+      "Wollondilly Opens",
+      22,
+      8,
+      "done"
+    ],
+    [
+      6,
+      "Muswellbrook Opens",
+      27,
+      "Mount Druitt Opens",
+      2,
+      10,
+      "done"
+    ],
+    [
+      6,
+      "Narrabri Opens",
+      6,
+      "Yass Opens",
+      25,
+      12,
+      "done"
+    ],
+    [
+      7,
+      "Young & District Opens",
+      14,
+      "Leeton Opens",
+      18,
+      2,
+      "done"
+    ],
+    [
+      7,
+      "Coolamon Comets Opens",
+      24,
+      "Eurobodalla Opens",
+      16,
+      1,
+      "done"
+    ],
+    [
+      7,
+      "Parkes District Opens",
+      7,
+      "Kurri Kurri Opens",
+      16,
+      3,
+      "done"
+    ],
+    [
+      7,
+      "ADF Reserves Opens (INV)",
+      17,
+      "Quirindi Opens",
+      12,
+      5,
+      "done"
+    ],
+    [
+      7,
+      "Singleton Opens",
+      15,
+      "Sapphire Coast Opens",
+      28,
+      6,
+      "done"
+    ],
+    [
+      7,
+      "Wollondilly Opens",
+      14,
+      "Scone Opens",
+      10,
+      7,
+      "done"
+    ],
+    [
+      7,
+      "Mount Druitt Opens",
+      25,
+      "Cowra Opens",
+      5,
+      8,
+      "done"
+    ],
+    [
+      7,
+      "Yass Opens",
+      31,
+      "Cootamundra Opens",
+      13,
+      10,
+      "done"
+    ],
+    [
+      7,
+      "Narrabri Opens",
+      6,
+      "Muswellbrook Opens",
+      21,
+      12,
+      "done"
+    ],
+    [
+      8,
+      "Port Stephens Opens",
+      12,
+      "Coolamon Comets Opens",
+      28,
+      6,
+      "done"
+    ],
+    [
+      8,
+      "Leeton Opens",
+      5,
+      "Parkes District Opens",
+      20,
+      7,
+      "done"
+    ],
+    [
+      8,
+      "Eurobodalla Opens",
+      6,
+      "ADF Reserves Opens (INV)",
+      13,
+      9,
+      "done"
+    ],
+    [
+      8,
+      "Kurri Kurri Opens",
+      19,
+      "Singleton Opens",
+      21,
+      11,
+      "done"
+    ],
+    [
+      8,
+      "Quirindi Opens",
+      13,
+      "Wollondilly Opens",
+      13,
+      12,
+      "done"
+    ],
+    [
+      8,
+      "Sapphire Coast Opens",
+      23,
+      "Mount Druitt Opens",
+      18,
+      13,
+      "done"
+    ],
+    [
+      8,
+      "Scone Opens",
+      22,
+      "Yass Opens",
+      23,
+      14,
+      "done"
+    ],
+    [
+      8,
+      "Cowra Opens",
+      10,
+      "Narrabri Opens",
+      11,
+      17,
+      "done"
+    ],
+    [
+      8,
+      "Cootamundra Opens",
+      2,
+      "Muswellbrook Opens",
+      30,
+      21,
+      "done"
+    ],
+    [
+      9,
+      "Parkes District Opens",
+      24,
+      "Young & District Opens",
+      11,
+      6,
+      "done"
+    ],
+    [
+      9,
+      "ADF Reserves Opens (INV)",
+      23,
+      "Port Stephens Opens",
+      9,
+      7,
+      "done"
+    ],
+    [
+      9,
+      "Singleton Opens",
+      24,
+      "Leeton Opens",
+      13,
+      9,
+      "done"
+    ],
+    [
+      9,
+      "Wollondilly Opens",
+      10,
+      "Eurobodalla Opens",
+      13,
+      11,
+      "done"
+    ],
+    [
+      9,
+      "Mount Druitt Opens",
+      19,
+      "Kurri Kurri Opens",
+      14,
+      12,
+      "done"
+    ],
+    [
+      9,
+      "Yass Opens",
+      31,
+      "Quirindi Opens",
+      14,
+      13,
+      "done"
+    ],
+    [
+      9,
+      "Narrabri Opens",
+      11,
+      "Sapphire Coast Opens",
+      23,
+      14,
+      "done"
+    ],
+    [
+      9,
+      "Muswellbrook Opens",
+      17,
+      "Scone Opens",
+      24,
+      17,
+      "done"
+    ],
+    [
+      9,
+      "Cootamundra Opens",
+      11,
+      "Cowra Opens",
+      13,
+      21,
+      "done"
+    ],
+    [
+      10,
+      "Coolamon Comets Opens",
+      18,
+      "ADF Reserves Opens (INV)",
+      16,
+      6,
+      "done"
+    ],
+    [
+      10,
+      "Young & District Opens",
+      14,
+      "Singleton Opens",
+      23,
+      7,
+      "done"
+    ],
+    [
+      10,
+      "Port Stephens Opens",
+      8,
+      "Wollondilly Opens",
+      15,
+      9,
+      "done"
+    ],
+    [
+      10,
+      "Leeton Opens",
+      16,
+      "Mount Druitt Opens",
+      16,
+      11,
+      "done"
+    ],
+    [
+      10,
+      "Eurobodalla Opens",
+      18,
+      "Yass Opens",
+      13,
+      12,
+      "done"
+    ],
+    [
+      10,
+      "Kurri Kurri Opens",
+      20,
+      "Narrabri Opens",
+      13,
+      13,
+      "done"
+    ],
+    [
+      10,
+      "Quirindi Opens",
+      9,
+      "Muswellbrook Opens",
+      21,
+      14,
+      "done"
+    ],
+    [
+      10,
+      "Sapphire Coast Opens",
+      29,
+      "Cootamundra Opens",
+      6,
+      17,
+      "done"
+    ],
+    [
+      10,
+      "Scone Opens",
+      21,
+      "Cowra Opens",
+      6,
+      21,
+      "done"
+    ],
+    [
+      11,
+      "Singleton Opens",
+      21,
+      "Parkes District Opens",
+      11,
+      6,
+      "done"
+    ],
+    [
+      11,
+      "Wollondilly Opens",
+      12,
+      "Coolamon Comets Opens",
+      14,
+      7,
+      "done"
+    ],
+    [
+      11,
+      "Mount Druitt Opens",
+      17,
+      "Young & District Opens",
+      14,
+      9,
+      "done"
+    ],
+    [
+      11,
+      "Yass Opens",
+      25,
+      "Port Stephens Opens",
+      6,
+      11,
+      "done"
+    ],
+    [
+      11,
+      "Narrabri Opens",
+      11,
+      "Leeton Opens",
+      21,
+      12,
+      "done"
+    ],
+    [
+      11,
+      "Muswellbrook Opens",
+      17,
+      "Eurobodalla Opens",
+      14,
+      13,
+      "done"
+    ],
+    [
+      11,
+      "Cootamundra Opens",
+      5,
+      "Kurri Kurri Opens",
+      22,
+      14,
+      "done"
+    ],
+    [
+      11,
+      "Cowra Opens",
+      7,
+      "Quirindi Opens",
+      22,
+      17,
+      "done"
+    ],
+    [
+      11,
+      "Scone Opens",
+      19,
+      "Sapphire Coast Opens",
+      20,
+      21,
+      "done"
+    ],
+    [
+      12,
+      "ADF Reserves Opens (INV)",
+      9,
+      "Wollondilly Opens",
+      9,
+      7,
+      "done"
+    ],
+    [
+      12,
+      "Parkes District Opens",
+      17,
+      "Mount Druitt Opens",
+      8,
+      6,
+      "done"
+    ],
+    [
+      12,
+      "Coolamon Comets Opens",
+      28,
+      "Yass Opens",
+      15,
+      9,
+      "done"
+    ],
+    [
+      12,
+      "Young & District Opens",
+      16,
+      "Narrabri Opens",
+      15,
+      11,
+      "done"
+    ],
+    [
+      12,
+      "Port Stephens Opens",
+      12,
+      "Muswellbrook Opens",
+      22,
+      12,
+      "done"
+    ],
+    [
+      12,
+      "Leeton Opens",
+      21,
+      "Cootamundra Opens",
+      13,
+      13,
+      "done"
+    ],
+    [
+      12,
+      "Eurobodalla Opens",
+      20,
+      "Cowra Opens",
+      4,
+      14,
+      "done"
+    ],
+    [
+      12,
+      "Kurri Kurri Opens",
+      18,
+      "Scone Opens",
+      18,
+      17,
+      "done"
+    ],
+    [
+      12,
+      "Quirindi Opens",
+      11,
+      "Sapphire Coast Opens",
+      23,
+      21,
+      "done"
+    ],
+    [
+      13,
+      "Mount Druitt Opens",
+      14,
+      "Singleton Opens",
+      25,
+      6,
+      "done"
+    ],
+    [
+      13,
+      "Yass Opens",
+      13,
+      "ADF Reserves Opens (INV)",
+      14,
+      7,
+      "done"
+    ],
+    [
+      13,
+      "Narrabri Opens",
+      10,
+      "Parkes District Opens",
+      17,
+      9,
+      "done"
+    ],
+    [
+      13,
+      "Muswellbrook Opens",
+      13,
+      "Coolamon Comets Opens",
+      22,
+      11,
+      "done"
+    ],
+    [
+      13,
+      "Cootamundra Opens",
+      13,
+      "Young & District Opens",
+      19,
+      12,
+      "done"
+    ],
+    [
+      13,
+      "Cowra Opens",
+      12,
+      "Port Stephens Opens",
+      18,
+      14,
+      "done"
+    ],
+    [
+      13,
+      "Scone Opens",
+      22,
+      "Leeton Opens",
+      12,
+      17,
+      "done"
+    ],
+    [
+      13,
+      "Sapphire Coast Opens",
+      18,
+      "Eurobodalla Opens",
+      8,
+      21,
+      "done"
+    ],
+    [
+      13,
+      "Quirindi Opens",
+      20,
+      "Kurri Kurri Opens",
+      19,
+      13,
+      "done"
+    ],
+    [
+      14,
+      "Wollondilly Opens",
+      12,
+      "Yass Opens",
+      11,
+      1,
+      "done"
+    ],
+    [
+      14,
+      "Singleton Opens",
+      26,
+      "Narrabri Opens",
+      10,
+      2,
+      "done"
+    ],
+    [
+      14,
+      "ADF Reserves Opens (INV)",
+      16,
+      "Muswellbrook Opens",
+      16,
+      3,
+      "done"
+    ],
+    [
+      14,
+      "Parkes District Opens",
+      23,
+      "Cootamundra Opens",
+      3,
+      5,
+      "done"
+    ],
+    [
+      14,
+      "Coolamon Comets Opens",
+      27,
+      "Cowra Opens",
+      12,
+      6,
+      "done"
+    ],
+    [
+      14,
+      "Young & District Opens",
+      10,
+      "Scone Opens",
+      26,
+      8,
+      "done"
+    ],
+    [
+      14,
+      "Port Stephens Opens",
+      14,
+      "Sapphire Coast Opens",
+      32,
+      11,
+      "done"
+    ],
+    [
+      14,
+      "Leeton Opens",
+      11,
+      "Quirindi Opens",
+      17,
+      10,
+      "done"
+    ],
+    [
+      14,
+      "Eurobodalla Opens",
+      10,
+      "Kurri Kurri Opens",
+      14,
+      13,
+      "done"
+    ],
+    [
+      15,
+      "Narrabri Opens",
+      12,
+      "Mount Druitt Opens",
+      22,
+      1,
+      "done"
+    ],
+    [
+      15,
+      "Muswellbrook Opens",
+      16,
+      "Wollondilly Opens",
+      12,
+      2,
+      "done"
+    ],
+    [
+      15,
+      "Cootamundra Opens",
+      5,
+      "Singleton Opens",
+      27,
+      3,
+      "done"
+    ],
+    [
+      15,
+      "Cowra Opens",
+      9,
+      "ADF Reserves Opens (INV)",
+      18,
+      5,
+      "done"
+    ],
+    [
+      15,
+      "Scone Opens",
+      19,
+      "Parkes District Opens",
+      14,
+      6,
+      "done"
+    ],
+    [
+      15,
+      "Sapphire Coast Opens",
+      14,
+      "Coolamon Comets Opens",
+      18,
+      8,
+      "done"
+    ],
+    [
+      15,
+      "Quirindi Opens",
+      11,
+      "Young & District Opens",
+      15,
+      10,
+      "done"
+    ],
+    [
+      15,
+      "Kurri Kurri Opens",
+      11,
+      "Port Stephens Opens",
+      16,
+      11,
+      "done"
+    ],
+    [
+      15,
+      "Eurobodalla Opens",
+      19,
+      "Leeton Opens",
+      15,
+      13,
+      "done"
+    ],
+    [
+      16,
+      "Yass Opens",
+      19,
+      "Muswellbrook Opens",
+      18,
+      2,
+      "done"
+    ],
+    [
+      16,
+      "Mount Druitt Opens",
+      23,
+      "Cootamundra Opens",
+      14,
+      1,
+      "done"
+    ],
+    [
+      16,
+      "Wollondilly Opens",
+      14,
+      "Cowra Opens",
+      6,
+      3,
+      "done"
+    ],
+    [
+      16,
+      "Singleton Opens",
+      14,
+      "Scone Opens",
+      22,
+      5,
+      "done"
+    ],
+    [
+      16,
+      "ADF Reserves Opens (INV)",
+      18,
+      "Sapphire Coast Opens",
+      18,
+      6,
+      "done"
+    ],
+    [
+      16,
+      "Parkes District Opens",
+      13,
+      "Quirindi Opens",
+      12,
+      8,
+      "done"
+    ],
+    [
+      16,
+      "Coolamon Comets Opens",
+      15,
+      "Kurri Kurri Opens",
+      11,
+      10,
+      "done"
+    ],
+    [
+      16,
+      "Young & District Opens",
+      19,
+      "Eurobodalla Opens",
+      18,
+      11,
+      "done"
+    ],
+    [
+      16,
+      "Port Stephens Opens",
+      16,
+      "Leeton Opens",
+      20,
+      13,
+      "done"
+    ],
+    [
+      17,
+      "Cootamundra Opens",
+      20,
+      "Narrabri Opens",
+      15,
+      1,
+      "done"
+    ],
+    [
+      17,
+      "Cowra Opens",
+      8,
+      "Yass Opens",
+      21,
+      2,
+      "done"
+    ],
+    [
+      17,
+      "Scone Opens",
+      18,
+      "Mount Druitt Opens",
+      16,
+      3,
+      "done"
+    ],
+    [
+      17,
+      "Sapphire Coast Opens",
+      20,
+      "Wollondilly Opens",
+      9,
+      5,
+      "done"
+    ],
+    [
+      17,
+      "Quirindi Opens",
+      21,
+      "Singleton Opens",
+      18,
+      6,
+      "done"
+    ],
+    [
+      17,
+      "Kurri Kurri Opens",
+      11,
+      "ADF Reserves Opens (INV)",
+      16,
+      8,
+      "done"
+    ],
+    [
+      17,
+      "Eurobodalla Opens",
+      12,
+      "Parkes District Opens",
+      18,
+      10,
+      "done"
+    ],
+    [
+      17,
+      "Leeton Opens",
+      14,
+      "Coolamon Comets Opens",
+      17,
+      11,
+      "done"
+    ],
+    [
+      17,
+      "Port Stephens Opens",
+      11,
+      "Young & District Opens",
+      18,
+      13,
+      "done"
+    ],
+    [
+      18,
+      "Muswellbrook Opens",
+      29,
+      "Cowra Opens",
+      7,
+      2,
+      "done"
+    ],
+    [
+      18,
+      "Narrabri Opens",
+      8,
+      "Scone Opens",
+      15,
+      1,
+      "done"
+    ],
+    [
+      18,
+      "Yass Opens",
+      16,
+      "Sapphire Coast Opens",
+      29,
+      3,
+      "done"
+    ],
+    [
+      18,
+      "Mount Druitt Opens",
+      20,
+      "Quirindi Opens",
+      16,
+      5,
+      "done"
+    ],
+    [
+      18,
+      "Wollondilly Opens",
+      11,
+      "Kurri Kurri Opens",
+      16,
+      6,
+      "done"
+    ],
+    [
+      18,
+      "Singleton Opens",
+      16,
+      "Eurobodalla Opens",
+      12,
+      8,
+      "done"
+    ],
+    [
+      18,
+      "ADF Reserves Opens (INV)",
+      10,
+      "Leeton Opens",
+      11,
+      10,
+      "done"
+    ],
+    [
+      18,
+      "Parkes District Opens",
+      20,
+      "Port Stephens Opens",
+      15,
+      11,
+      "done"
+    ],
+    [
+      18,
+      "Coolamon Comets Opens",
+      18,
+      "Young & District Opens",
+      16,
+      13,
+      "done"
+    ],
+    [
+      19,
+      "Scone Opens",
+      37,
+      "Cootamundra Opens",
+      6,
+      2,
+      "done"
+    ],
+    [
+      19,
+      "Sapphire Coast Opens",
+      23,
+      "Muswellbrook Opens",
+      16,
+      1,
+      "done"
+    ],
+    [
+      19,
+      "Quirindi Opens",
+      14,
+      "Narrabri Opens",
+      10,
+      3,
+      "done"
+    ],
+    [
+      19,
+      "Kurri Kurri Opens",
+      16,
+      "Yass Opens",
+      22,
+      5,
+      "done"
+    ],
+    [
+      19,
+      "Eurobodalla Opens",
+      19,
+      "Mount Druitt Opens",
+      14,
+      6,
+      "done"
+    ],
+    [
+      19,
+      "Leeton Opens",
+      12,
+      "Wollondilly Opens",
+      17,
+      8,
+      "done"
+    ],
+    [
+      19,
+      "Port Stephens Opens",
+      14,
+      "Singleton Opens",
+      28,
+      10,
+      "done"
+    ],
+    [
+      19,
+      "Young & District Opens",
+      12,
+      "ADF Reserves Opens (INV)",
+      22,
+      11,
+      "done"
+    ],
+    [
+      19,
+      "Coolamon Comets Opens",
+      16,
+      "Parkes District Opens",
+      17,
+      13,
+      "done"
+    ]
+  ]
+};
+
+function render(d) {
+  const key = (a, b) => [a, b].sort().join("|");
+
+  // Build M as arrays — all games per pair, sorted by round.
+  const M = {};
+  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+    const k = key(h, a);
+    if (!M[k]) M[k] = [];
+    M[k].push({ rd, h, hs, a, as: as_, court, st });
+  });
+  Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
+
+  const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
+
+  // Per-team next round: min round where their game isn't done
+  const nextRound = {};
+  d.teams.forEach(t => {
+    let min = Infinity;
+    d.games.forEach(([rd, h, , a, , , st]) => {
+      if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
+    });
+    nextRound[t.code] = min === Infinity ? null : min;
+  });
+
+  const grid = document.getElementById("grid");
+  let html = "<thead><tr>";
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
+    : d.title;
+  html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
+  d.teams.forEach(t => {
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+
+  d.teams.forEach((rowT) => {
+    const pinnedRow = rowT.code === d.pin;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<th class="rowhead">
+               <div class="rn">
+                 <span class="rkn">${rowT.rank}</span>
+                 <span class="nm">${rowT.name}</span>
+               </div>
+             </th>`;
+
+    d.teams.forEach((colT) => {
+      const pinCol = colT.code === d.pin && !pinnedRow;
+      const pcls = pinCol ? " pincol" : "";
+
+      if (rowT.code === colT.code) {
+        html += `<td class="cell self">
+                   <span class="sl1">${rowT.pts} pts</span>
+                   <span class="sl2">${rowT.pct}%</span>
+                 </td>`;
+        return;
+      }
+
+      const games = M[key(rowT.code, colT.code)];
+      if (!games) { html += `<td class="cell${pcls}"></td>`; return; }
+
+      html += `<td class="cell${pcls}">`;
+      games.forEach(m => {
+        const rowScore = m.h === rowT.code ? m.hs : m.as;
+        const colScore = m.h === rowT.code ? m.as : m.hs;
+        const rmeta = roundByN[m.rd] || {};
+        const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+        if (m.st === "live" && rowScore != null) {
+          html += `<div class="mg live${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
+                   </div>`;
+        } else if (m.st === "done" && rowScore != null) {
+          const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">${rowScore}–${colScore}</span>
+                   </div>`;
+        } else {
+          const liveCls = m.st === "live" ? " live" : "";
+          html += `<div class="mg fix${liveCls}${ncls}">
+                     <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
+                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                   </div>`;
+        }
+      });
+      html += `</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody>";
+  grid.innerHTML = html;
+}
+render(DATA);
+
+</script>
+</body>
+</html>

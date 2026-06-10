@@ -105,97 +105,73 @@
   }
   td.cell {
     width: var(--col-w); min-width: var(--col-w);
-    height: var(--row-h);
     border-left: 1px solid var(--line-2);
     border-bottom: 1px solid var(--line-2);
-    position: relative;
     background: var(--card);
     vertical-align: top;
   }
-  td.cell .scblock {
-    position: absolute; inset: 0;
+  /* Per-game strip inside a cell */
+  .mg {
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 1px; padding: 2px;
+    min-height: var(--row-h);
+    gap: 1px; padding: 2px; width: 100%;
   }
-  td.cell .scblock .rd {
+  .mg + .mg { border-top: 1px solid var(--line-2); }
+  .mg .rd {
     font-size: 8px; font-weight: 700;
     letter-spacing: .3px; color: var(--muted); line-height: 1;
   }
-  td.cell .scblock .score {
+  .mg .score {
     font-family: 'Barlow Semi Condensed', sans-serif;
     font-weight: 700; font-size: 13px;
     line-height: 1; letter-spacing: -.1px;
   }
-  td.cell.fix { background: #f9fafb; }
-  td.cell.fix .fxblock {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 1px; padding: 2px;
-    text-align: center; line-height: 1.1;
-  }
-  td.cell.fix .fl1 {
-    font-size: 9.5px; font-weight: 600;
-    color: var(--ink-2); white-space: nowrap;
-  }
-  td.cell.fix .fl1 b { color: var(--ink); font-weight: 700; }
-  td.cell.fix .fl2 {
-    font-size: 8.5px; font-weight: 500;
-    color: var(--muted); white-space: nowrap;
-  }
-  td.cell.fix.done { background: #f5f6f8; }
-  td.cell.fix.done .fl1 { color: var(--muted); }
-  td.cell.fix.done .fl1 b { color: var(--ink-2); }
-  td.cell.fix.done .fl2 { color: #bcc4d0; }
-  td.cell.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
-  td.cell.fix.live .fl1, td.cell.fix.live .fl1 b { color: var(--accent); }
-  td.cell.fix.live .fl2 { color: var(--accent); }
-  td.cell.win  { background: var(--win-bg); }
-  td.cell.win  .score { color: var(--win); }
-  td.cell.loss { background: var(--loss-bg); }
-  td.cell.loss .score { color: var(--loss); }
-  td.cell.draw { background: var(--draw-bg); }
-  td.cell.draw .score { color: #e65100; }
-  td.cell.live {
-    background: var(--accent-bg);
-    box-shadow: inset 0 0 0 2px var(--accent);
-  }
-  td.cell.live .score {
+  .mg.win  { background: var(--win-bg); }
+  .mg.win  .score { color: var(--win); }
+  .mg.loss { background: var(--loss-bg); }
+  .mg.loss .score { color: var(--loss); }
+  .mg.draw { background: var(--draw-bg); }
+  .mg.draw .score { color: #e65100; }
+  .mg.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.live .score {
     color: var(--accent);
     display: flex; align-items: center; justify-content: center; gap: 3px;
   }
-  td.cell.live .dot {
+  .mg.live .dot {
     width: 5px; height: 5px; border-radius: 50%;
     background: var(--accent); display: inline-block;
     animation: pulse 1.3s infinite;
   }
-  td.cell.upcoming .score { color: var(--muted); font-size: 11px; }
-  td.cell.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
-  td.cell.next.fix:not(.live) { background: #eef0fb; }
+  .mg.fix { background: #f9fafb; text-align: center; line-height: 1.1; }
+  .mg.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .mg.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  .mg.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  .mg.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.fix.live .fl1, .mg.fix.live .fl1 b { color: var(--accent); }
+  .mg.fix.live .fl2 { color: var(--accent); }
+  .mg.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  .mg.next.fix:not(.live) { background: #eef0fb; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
   td.cell.self {
     background:
       repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
       var(--ink);
     overflow: hidden;
+    text-align: center; vertical-align: middle;
+    height: var(--row-h);
   }
-  td.cell.self .selfblock {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 1px; padding: 2px;
-    font-family: 'Barlow Semi Condensed', sans-serif;
-    color: #fff; text-align: center; line-height: 1.1;
-  }
-  td.cell.self .sl1 { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; }
-  td.cell.self .sl2 { font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; }
+  td.cell.self .sl1 { display: block; font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
+  td.cell.self .sl2 { display: block; font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; margin-top: 2px; }
   tr.pinned th.rowhead { background: #fff7ec; }
-  tr.pinned td.cell:not(.self) { background-color: #fffaf2; }
-  tr.pinned td.cell.win  { background-color: var(--win-bg); }
-  tr.pinned td.cell.loss { background-color: var(--loss-bg); }
-  tr.pinned td.cell.live { background-color: var(--accent-bg); }
-  td.cell.pincol:not(.self):not(.win):not(.loss):not(.live) { background-color: #fffaf2; }
+  tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   @media (max-width: 400px) {
     :root { --col-w: 42px; --name-w: 90px; }
   }
@@ -212,166 +188,166 @@ const DATA = {
   "venue": "Jamison Park Netball Complex, South Penrith",
   "date": "Sat 6–Mon 8 Jun 2026",
   "pin": null,
-  "menu_url": "index.html",
+  "menu_url": "../index.html",
   "teams": [
-    {
-      "code": "Bellingen 17U",
-      "name": "Bellingen",
-      "rank": 1,
-      "pts": 22,
-      "pct": "161.3",
-      "W": 11,
-      "L": 1,
-      "D": 0
-    },
     {
       "code": "Ballina 17U",
       "name": "Ballina",
-      "rank": 2,
-      "pts": 20,
-      "pct": "190.8",
-      "W": 10,
-      "L": 1,
+      "rank": 1,
+      "pts": 28,
+      "pct": "185.6",
+      "W": 14,
+      "L": 2,
       "D": 0
     },
     {
       "code": "Gosford 17U",
       "name": "Gosford",
-      "rank": 3,
-      "pts": 20,
-      "pct": "179.7",
-      "W": 10,
-      "L": 1,
+      "rank": 2,
+      "pts": 28,
+      "pct": "171.7",
+      "W": 14,
+      "L": 2,
       "D": 0
     },
     {
       "code": "Hastings Valley 17U",
       "name": "Hastings Valley",
-      "rank": 4,
-      "pts": 19,
-      "pct": "131.3",
-      "W": 9,
+      "rank": 3,
+      "pts": 27,
+      "pct": "146.2",
+      "W": 13,
       "L": 2,
       "D": 1
     },
     {
       "code": "Callaghan District 17U",
       "name": "Callaghan District",
+      "rank": 4,
+      "pts": 24,
+      "pct": "150.4",
+      "W": 12,
+      "L": 4,
+      "D": 0
+    },
+    {
+      "code": "Bellingen 17U",
+      "name": "Bellingen",
       "rank": 5,
-      "pts": 14,
-      "pct": "136.1",
-      "W": 7,
+      "pts": 24,
+      "pct": "139.8",
+      "W": 12,
       "L": 4,
       "D": 0
-    },
-    {
-      "code": "Dubbo 17U",
-      "name": "Dubbo",
-      "rank": 6,
-      "pts": 13,
-      "pct": "116.8",
-      "W": 6,
-      "L": 4,
-      "D": 1
-    },
-    {
-      "code": "Lismore & District 17U",
-      "name": "Lismore & District",
-      "rank": 7,
-      "pts": 13,
-      "pct": "101.5",
-      "W": 6,
-      "L": 5,
-      "D": 1
-    },
-    {
-      "code": "Coffs Harbour 17U",
-      "name": "Coffs Harbour",
-      "rank": 8,
-      "pts": 12,
-      "pct": "84.6",
-      "W": 6,
-      "L": 6,
-      "D": 0
-    },
-    {
-      "code": "Queanbeyan 17U",
-      "name": "Queanbeyan",
-      "rank": 9,
-      "pts": 11,
-      "pct": "101.4",
-      "W": 5,
-      "L": 5,
-      "D": 1
     },
     {
       "code": "Bathurst 17U",
       "name": "Bathurst",
-      "rank": 10,
-      "pts": 10,
-      "pct": "101.1",
-      "W": 4,
+      "rank": 6,
+      "pts": 19,
+      "pct": "113.8",
+      "W": 8,
       "L": 5,
+      "D": 3
+    },
+    {
+      "code": "Dubbo 17U",
+      "name": "Dubbo",
+      "rank": 7,
+      "pts": 18,
+      "pct": "122.5",
+      "W": 8,
+      "L": 6,
       "D": 2
+    },
+    {
+      "code": "Queanbeyan 17U",
+      "name": "Queanbeyan",
+      "rank": 8,
+      "pts": 16,
+      "pct": "99.5",
+      "W": 7,
+      "L": 7,
+      "D": 2
+    },
+    {
+      "code": "Hawkesbury City 17U",
+      "name": "Hawkesbury City",
+      "rank": 9,
+      "pts": 14,
+      "pct": "98.2",
+      "W": 7,
+      "L": 9,
+      "D": 0
+    },
+    {
+      "code": "Coffs Harbour 17U",
+      "name": "Coffs Harbour",
+      "rank": 10,
+      "pts": 14,
+      "pct": "79.6",
+      "W": 7,
+      "L": 9,
+      "D": 0
     },
     {
       "code": "Inner West 17U",
       "name": "Inner West",
       "rank": 11,
-      "pts": 9,
-      "pct": "90.6",
-      "W": 4,
-      "L": 6,
+      "pts": 13,
+      "pct": "92.7",
+      "W": 6,
+      "L": 9,
       "D": 1
     },
     {
-      "code": "Shoalhaven 17U",
-      "name": "Shoalhaven",
+      "code": "Lismore & District 17U",
+      "name": "Lismore & District",
       "rank": 12,
-      "pts": 8,
-      "pct": "67.2",
-      "W": 3,
-      "L": 6,
-      "D": 2
+      "pts": 13,
+      "pct": "88.4",
+      "W": 6,
+      "L": 9,
+      "D": 1
     },
     {
       "code": "Southern Highlands 17U",
       "name": "Southern Highlands",
       "rank": 13,
-      "pts": 7,
-      "pct": "77.2",
-      "W": 3,
-      "L": 8,
-      "D": 1
+      "pts": 10,
+      "pct": "78.9",
+      "W": 4,
+      "L": 10,
+      "D": 2
     },
     {
-      "code": "Hawkesbury City 17U",
-      "name": "Hawkesbury City",
+      "code": "Shoalhaven 17U",
+      "name": "Shoalhaven",
       "rank": 14,
-      "pts": 6,
-      "pct": "84.4",
-      "W": 3,
-      "L": 8,
-      "D": 0
-    },
-    {
-      "code": "Blue Mountains 17U",
-      "name": "Blue Mountains",
-      "rank": 15,
-      "pts": 5,
-      "pct": "66.8",
-      "W": 2,
-      "L": 8,
-      "D": 1
+      "pts": 10,
+      "pct": "64.4",
+      "W": 4,
+      "L": 10,
+      "D": 2
     },
     {
       "code": "St George District 17U",
       "name": "St George District",
+      "rank": 15,
+      "pts": 7,
+      "pct": "67.0",
+      "W": 3,
+      "L": 12,
+      "D": 1
+    },
+    {
+      "code": "Blue Mountains 17U",
+      "name": "Blue Mountains",
       "rank": 16,
-      "pts": 3,
-      "pct": "66.0",
-      "W": 1,
-      "L": 9,
+      "pts": 7,
+      "pct": "66.7",
+      "W": 3,
+      "L": 12,
       "D": 1
     },
     {
@@ -379,9 +355,9 @@ const DATA = {
       "name": "Singleton",
       "rank": 17,
       "pts": 0,
-      "pct": "55.6",
+      "pct": "49.4",
       "W": 0,
-      "L": 11,
+      "L": 16,
       "D": 0
     }
   ],
@@ -475,35 +451,35 @@ const DATA = {
       "day": "Mon",
       "time": "08:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 14,
       "day": "Mon",
       "time": "09:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 15,
       "day": "Mon",
       "time": "10:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 16,
       "day": "Mon",
       "time": "11:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 17,
       "day": "Mon",
       "time": "12:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     }
   ],
   "games": [
@@ -1374,385 +1350,384 @@ const DATA = {
     [
       13,
       "Bellingen 17U",
-      null,
+      11,
       "Gosford 17U",
-      null,
+      21,
       3,
-      "upcoming"
+      "done"
     ],
     [
       13,
       "Southern Highlands 17U",
-      null,
+      21,
       "Inner West 17U",
-      null,
+      19,
       4,
-      "upcoming"
+      "done"
     ],
     [
       13,
       "Lismore & District 17U",
-      null,
+      15,
       "Blue Mountains 17U",
-      null,
+      17,
       5,
-      "upcoming"
+      "done"
     ],
     [
       13,
       "Coffs Harbour 17U",
-      null,
+      12,
       "Callaghan District 17U",
-      null,
+      23,
       13,
-      "upcoming"
+      "done"
     ],
     [
       13,
       "Ballina 17U",
-      null,
+      29,
       "Singleton 17U",
-      null,
+      8,
       15,
-      "upcoming"
+      "done"
     ],
     [
       13,
       "Queanbeyan 17U",
-      null,
+      13,
       "Hawkesbury City 17U",
-      null,
+      11,
       14,
-      "upcoming"
+      "done"
     ],
     [
       13,
       "Bathurst 17U",
-      null,
+      14,
       "Dubbo 17U",
-      null,
+      14,
       21,
-      "upcoming"
+      "done"
     ],
     [
       13,
       "Shoalhaven 17U",
-      null,
+      13,
       "St George District 17U",
-      null,
+      10,
       20,
-      "upcoming"
+      "done"
     ],
     [
       14,
       "Hastings Valley 17U",
-      null,
+      25,
       "Southern Highlands 17U",
-      null,
+      12,
       3,
-      "upcoming"
+      "done"
     ],
     [
       14,
       "Gosford 17U",
-      null,
+      23,
       "Lismore & District 17U",
-      null,
+      12,
       4,
-      "upcoming"
+      "done"
     ],
     [
       14,
       "Inner West 17U",
-      null,
+      19,
       "Coffs Harbour 17U",
-      null,
+      14,
       5,
-      "upcoming"
+      "done"
     ],
     [
       14,
       "Blue Mountains 17U",
-      null,
+      7,
       "Ballina 17U",
-      null,
+      18,
       13,
-      "upcoming"
+      "done"
     ],
     [
       14,
       "Callaghan District 17U",
-      null,
-      "Queanbeyan 17U",
-      null,
       15,
-      "upcoming"
+      "Queanbeyan 17U",
+      13,
+      15,
+      "done"
     ],
     [
       14,
       "Singleton 17U",
-      null,
+      8,
       "Bathurst 17U",
-      null,
+      19,
       14,
-      "upcoming"
+      "done"
     ],
     [
       14,
       "Hawkesbury City 17U",
-      null,
-      "Shoalhaven 17U",
-      null,
       21,
-      "upcoming"
+      "Shoalhaven 17U",
+      10,
+      21,
+      "done"
     ],
     [
       14,
       "Dubbo 17U",
-      null,
+      26,
       "St George District 17U",
-      null,
+      9,
       20,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Lismore & District 17U",
-      null,
+      10,
       "Bellingen 17U",
-      null,
+      17,
       21,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Coffs Harbour 17U",
-      null,
+      10,
       "Hastings Valley 17U",
-      null,
+      23,
       20,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Ballina 17U",
-      null,
+      13,
       "Gosford 17U",
-      null,
+      16,
       14,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Queanbeyan 17U",
-      null,
+      12,
       "Inner West 17U",
-      null,
+      6,
       15,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Bathurst 17U",
-      null,
+      23,
       "Blue Mountains 17U",
-      null,
+      11,
       13,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Shoalhaven 17U",
-      null,
+      9,
       "Callaghan District 17U",
-      null,
+      22,
       5,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "St George District 17U",
-      null,
+      14,
       "Singleton 17U",
-      null,
+      7,
       4,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Dubbo 17U",
-      null,
+      12,
       "Hawkesbury City 17U",
-      null,
+      13,
       3,
-      "upcoming"
+      "done"
     ],
     [
       16,
       "Southern Highlands 17U",
-      null,
+      17,
       "Coffs Harbour 17U",
-      null,
+      18,
       3,
-      "upcoming"
+      "done"
     ],
     [
       16,
       "Bellingen 17U",
-      null,
+      19,
       "Ballina 17U",
-      null,
+      21,
       4,
-      "upcoming"
+      "done"
     ],
     [
       16,
       "Hastings Valley 17U",
-      null,
+      21,
       "Queanbeyan 17U",
-      null,
+      12,
       5,
-      "upcoming"
+      "done"
     ],
     [
       16,
       "Gosford 17U",
-      null,
+      14,
       "Bathurst 17U",
-      null,
+      18,
       13,
-      "upcoming"
+      "done"
     ],
     [
       16,
       "Inner West 17U",
-      null,
+      27,
       "Shoalhaven 17U",
-      null,
+      17,
       15,
-      "upcoming"
+      "done"
     ],
     [
       16,
       "Blue Mountains 17U",
-      null,
+      10,
       "St George District 17U",
-      null,
+      13,
       14,
-      "upcoming"
+      "done"
     ],
     [
       16,
       "Callaghan District 17U",
-      null,
+      18,
       "Dubbo 17U",
-      null,
+      16,
       21,
-      "upcoming"
+      "done"
     ],
     [
       16,
       "Singleton 17U",
-      null,
+      10,
       "Hawkesbury City 17U",
-      null,
+      18,
       20,
-      "upcoming"
+      "done"
     ],
     [
       17,
       "Ballina 17U",
-      null,
+      28,
       "Lismore & District 17U",
-      null,
+      12,
       20,
-      "upcoming"
+      "done"
     ],
     [
       17,
       "Queanbeyan 17U",
-      null,
+      14,
       "Southern Highlands 17U",
-      null,
+      14,
       21,
-      "upcoming"
+      "done"
     ],
     [
       17,
       "Bathurst 17U",
-      null,
+      16,
       "Bellingen 17U",
-      null,
+      12,
       14,
-      "upcoming"
+      "done"
     ],
     [
       17,
       "Shoalhaven 17U",
-      null,
+      12,
       "Hastings Valley 17U",
-      null,
+      25,
       15,
-      "upcoming"
+      "done"
     ],
     [
       17,
       "St George District 17U",
-      null,
+      5,
       "Gosford 17U",
-      null,
+      17,
       13,
-      "upcoming"
+      "done"
     ],
     [
       17,
       "Dubbo 17U",
-      null,
+      18,
       "Inner West 17U",
-      null,
+      9,
       3,
-      "upcoming"
+      "done"
     ],
     [
       17,
       "Hawkesbury City 17U",
-      null,
+      14,
       "Blue Mountains 17U",
-      null,
+      10,
       4,
-      "upcoming"
+      "done"
     ],
     [
       17,
       "Singleton 17U",
-      null,
+      8,
       "Callaghan District 17U",
-      null,
+      33,
       5,
-      "upcoming"
+      "done"
     ]
   ]
 };
 
 function render(d) {
   const key = (a, b) => [a, b].sort().join("|");
+
+  // Build M as arrays — all games per pair, sorted by round.
   const M = {};
   d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
     const k = key(h, a);
-    const prev = M[k];
-    // Prefer completed result over upcoming; break ties by earlier round.
-    if (!prev || (prev.st !== "done" && st === "done") || (prev.st === st && rd < prev.rd))
-      M[k] = { rd, h, hs, a, as: as_, court, st };
+    if (!M[k]) M[k] = [];
+    M[k].push({ rd, h, hs, a, as: as_, court, st });
   });
+  Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
+
   const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
 
   // Per-team next round: min round where their game isn't done
   const nextRound = {};
   d.teams.forEach(t => {
     let min = Infinity;
-    d.games.forEach(([rd,, , , , , st]) => { if (st !== "done" && rd < min) min = rd; });
-    // narrow to this team's games
-    min = Infinity;
     d.games.forEach(([rd, h, , a, , , st]) => {
       if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
     });
@@ -1770,7 +1745,7 @@ function render(d) {
   });
   html += "</tr></thead><tbody>";
 
-  d.teams.forEach((rowT, ri) => {
+  d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
     html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
     html += `<th class="rowhead">
@@ -1780,51 +1755,48 @@ function render(d) {
                </div>
              </th>`;
 
-    d.teams.forEach((colT, ci) => {
+    d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
       const pcls = pinCol ? " pincol" : "";
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
-                   <div class="selfblock">
-                     <span class="sl1">${rowT.pts} pts</span>
-                     <span class="sl2">${rowT.pct}%</span>
-                   </div>
+                   <span class="sl1">${rowT.pts} pts</span>
+                   <span class="sl2">${rowT.pct}%</span>
                  </td>`;
         return;
       }
 
-      const m = M[key(rowT.code, colT.code)];
-      if (!m) { html += `<td class="cell${pcls}"></td>`; return; }
-      const rmeta = roundByN[m.rd] || {};
-      const rowScore = m.h === rowT.code ? m.hs : m.as;
-      const colScore = m.h === rowT.code ? m.as : m.hs;
-      const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+      const games = M[key(rowT.code, colT.code)];
+      if (!games) { html += `<td class="cell${pcls}"></td>`; return; }
 
-      if (m.st === "live" && rowScore != null) {
-        html += `<td class="cell live${ncls}${pcls}">
-                   <div class="scblock">
+      html += `<td class="cell${pcls}">`;
+      games.forEach(m => {
+        const rowScore = m.h === rowT.code ? m.hs : m.as;
+        const colScore = m.h === rowT.code ? m.as : m.hs;
+        const rmeta = roundByN[m.rd] || {};
+        const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+        if (m.st === "live" && rowScore != null) {
+          html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
-                   </div>
-                 </td>`;
-      } else if (m.st === "done" && rowScore != null) {
-        const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
-        html += `<td class="cell ${cls}${ncls}${pcls}">
-                   <div class="scblock">
+                   </div>`;
+        } else if (m.st === "done" && rowScore != null) {
+          const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+          html += `<div class="mg ${cls}${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score">${rowScore}–${colScore}</span>
-                   </div>
-                 </td>`;
-      } else {
-        const fixCls = m.st === "live" ? " live" : "";
-        html += `<td class="cell fix${fixCls}${ncls}${pcls}">
-                   <div class="fxblock">
+                   </div>`;
+        } else {
+          const liveCls = m.st === "live" ? " live" : "";
+          html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
                      <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
-                   </div>
-                 </td>`;
-      }
+                   </div>`;
+        }
+      });
+      html += `</td>`;
     });
     html += "</tr>";
   });

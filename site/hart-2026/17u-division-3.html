@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>17U Division 3 — Cross Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #15223b;
+    --ink-2:    #51607a;
+    --muted:    #9aa4b6;
+    --line:     #dfe3ea;
+    --line-2:   #eef0f4;
+    --bg:       #f3f5f8;
+    --card:     #ffffff;
+    --accent:   #e8542f;
+    --accent-bg:#fdece5;
+    --win:      #157a47;
+    --win-bg:   #e7f3ea;
+    --loss:     #b23b2c;
+    --loss-bg:  #fbe9e6;
+    --draw-bg:  #fff3e0;
+    --col-w:    52px;
+    --name-w:   110px;
+    --row-h:    33px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .scroll {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+  table.x { border-collapse: separate; border-spacing: 0; margin: 0; }
+  table.x th, table.x td { padding: 0; margin: 0; }
+  th.corner {
+    position: sticky; left: 0; top: 0; z-index: 6;
+    width: var(--name-w); min-width: var(--name-w);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 2px solid var(--line);
+  }
+  th.corner .lbl {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    padding: 5px 6px; text-align: left; line-height: 1.3;
+  }
+  th.corner .lbl a { color: inherit; text-decoration: none; }
+  th.corner .lbl a:hover { text-decoration: underline; }
+  th.colhead {
+    position: sticky; top: 0; z-index: 4;
+    width: var(--col-w); min-width: var(--col-w);
+    background: var(--card);
+    border-bottom: 2px solid var(--line);
+    border-left: 1px solid var(--line-2);
+    vertical-align: bottom;
+    padding: 4px 3px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 10px;
+    color: var(--ink); text-align: center;
+    overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.15; vertical-align: top;
+  }
+  th.colhead .ckn {
+    display: block;
+    font-size: 8px; font-weight: 700;
+    color: var(--muted); letter-spacing: .3px;
+    line-height: 1.4;
+  }
+  th.rowhead {
+    position: sticky; left: 0; z-index: 3;
+    width: var(--name-w); min-width: var(--name-w);
+    height: var(--row-h);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: top;
+  }
+  th.rowhead .rn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 5px 3px 5px;
+  }
+  th.rowhead .rkn {
+    flex: 0 0 auto; width: 13px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); text-align: center;
+  }
+  th.rowhead .nm {
+    font-size: 10px; font-weight: 600;
+    line-height: 1.1; color: var(--ink);
+  }
+  td.cell {
+    width: var(--col-w); min-width: var(--col-w);
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    background: var(--card);
+    vertical-align: top;
+  }
+  /* Per-game strip inside a cell */
+  .mg {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: var(--row-h);
+    gap: 1px; padding: 2px; width: 100%;
+  }
+  .mg + .mg { border-top: 1px solid var(--line-2); }
+  .mg .rd {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .3px; color: var(--muted); line-height: 1;
+  }
+  .mg .score {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 13px;
+    line-height: 1; letter-spacing: -.1px;
+  }
+  .mg.win  { background: var(--win-bg); }
+  .mg.win  .score { color: var(--win); }
+  .mg.loss { background: var(--loss-bg); }
+  .mg.loss .score { color: var(--loss); }
+  .mg.draw { background: var(--draw-bg); }
+  .mg.draw .score { color: #e65100; }
+  .mg.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.live .score {
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+  }
+  .mg.live .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: pulse 1.3s infinite;
+  }
+  .mg.fix { background: #f9fafb; text-align: center; line-height: 1.1; }
+  .mg.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .mg.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  .mg.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  .mg.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.fix.live .fl1, .mg.fix.live .fl1 b { color: var(--accent); }
+  .mg.fix.live .fl2 { color: var(--accent); }
+  .mg.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  .mg.next.fix:not(.live) { background: #eef0fb; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
+  td.cell.self {
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
+      var(--ink);
+    overflow: hidden;
+    text-align: center; vertical-align: middle;
+    height: var(--row-h);
+  }
+  td.cell.self .sl1 { display: block; font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
+  td.cell.self .sl2 { display: block; font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; margin-top: 2px; }
+  tr.pinned th.rowhead { background: #fff7ec; }
+  tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  @media (max-width: 400px) {
+    :root { --col-w: 42px; --name-w: 90px; }
+  }
+
+</style>
+</head>
+<body>
+  <div class="scroll">
+    <table class="x" id="grid"></table>
+  </div>
+<script>
+const DATA = {
+  "title": "17U Division 3",
+  "venue": "Baulkham Hills Shire Netball Association, North Kellyville",
+  "date": "Sat 6–Mon 8 Jun 2026",
+  "pin": null,
+  "menu_url": "../index.html",
+  "teams": [
+    {
+      "code": "Sapphire Coast 17U",
+      "name": "Sapphire Coast",
+      "rank": 1,
+      "pts": 32,
+      "pct": "198.4",
+      "W": 16,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "Woolgoolga District 17U",
+      "name": "Woolgoolga District",
+      "rank": 2,
+      "pts": 30,
+      "pct": "190.0",
+      "W": 15,
+      "L": 1,
+      "D": 0
+    },
+    {
+      "code": "Griffith 17U",
+      "name": "Griffith",
+      "rank": 3,
+      "pts": 26,
+      "pct": "169.2",
+      "W": 13,
+      "L": 3,
+      "D": 0
+    },
+    {
+      "code": "Kurri Kurri 17U",
+      "name": "Kurri Kurri",
+      "rank": 4,
+      "pts": 23,
+      "pct": "122.6",
+      "W": 11,
+      "L": 4,
+      "D": 1
+    },
+    {
+      "code": "Brunswick Byron 17U",
+      "name": "Brunswick Byron",
+      "rank": 5,
+      "pts": 22,
+      "pct": "127.8",
+      "W": 11,
+      "L": 5,
+      "D": 0
+    },
+    {
+      "code": "Tamworth 17U",
+      "name": "Tamworth",
+      "rank": 6,
+      "pts": 21,
+      "pct": "103.0",
+      "W": 10,
+      "L": 5,
+      "D": 1
+    },
+    {
+      "code": "Manning Valley 17U",
+      "name": "Manning Valley",
+      "rank": 7,
+      "pts": 20,
+      "pct": "94.4",
+      "W": 10,
+      "L": 6,
+      "D": 0
+    },
+    {
+      "code": "Woy Woy Peninsula 17U",
+      "name": "Woy Woy Peninsula",
+      "rank": 8,
+      "pts": 18,
+      "pct": "112.2",
+      "W": 9,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Cessnock District 17U",
+      "name": "Cessnock District",
+      "rank": 9,
+      "pts": 15,
+      "pct": "98.8",
+      "W": 7,
+      "L": 8,
+      "D": 1
+    },
+    {
+      "code": "Mudgee District 17U",
+      "name": "Mudgee District",
+      "rank": 10,
+      "pts": 12,
+      "pct": "95.5",
+      "W": 6,
+      "L": 10,
+      "D": 0
+    },
+    {
+      "code": "Eurobodalla 17U",
+      "name": "Eurobodalla",
+      "rank": 11,
+      "pts": 11,
+      "pct": "82.1",
+      "W": 5,
+      "L": 10,
+      "D": 1
+    },
+    {
+      "code": "Great Lakes 17U",
+      "name": "Great Lakes",
+      "rank": 12,
+      "pts": 11,
+      "pct": "73.3",
+      "W": 5,
+      "L": 10,
+      "D": 1
+    },
+    {
+      "code": "Yass 17U",
+      "name": "Yass",
+      "rank": 13,
+      "pts": 8,
+      "pct": "78.0",
+      "W": 4,
+      "L": 12,
+      "D": 0
+    },
+    {
+      "code": "Westlakes District 17U",
+      "name": "Westlakes District",
+      "rank": 14,
+      "pts": 8,
+      "pct": "72.4",
+      "W": 3,
+      "L": 11,
+      "D": 2
+    },
+    {
+      "code": "Macleay 17U",
+      "name": "Macleay",
+      "rank": 15,
+      "pts": 7,
+      "pct": "82.1",
+      "W": 2,
+      "L": 11,
+      "D": 3
+    },
+    {
+      "code": "Coolamon Comets 17U",
+      "name": "Coolamon Comets",
+      "rank": 16,
+      "pts": 6,
+      "pct": "68.6",
+      "W": 3,
+      "L": 13,
+      "D": 0
+    },
+    {
+      "code": "Nambucca Valley 17U",
+      "name": "Nambucca Valley",
+      "rank": 17,
+      "pts": 2,
+      "pct": "52.1",
+      "W": 1,
+      "L": 15,
+      "D": 0
+    }
+  ],
+  "rounds": [
+    {
+      "n": 1,
+      "day": "Sat",
+      "time": "09:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "day": "Sat",
+      "time": "10:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "day": "Sat",
+      "time": "11:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "day": "Sat",
+      "time": "12:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "day": "Sat",
+      "time": "13:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 6,
+      "day": "Sat",
+      "time": "14:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 7,
+      "day": "Sun",
+      "time": "09:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 8,
+      "day": "Sun",
+      "time": "10:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 9,
+      "day": "Sun",
+      "time": "11:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 10,
+      "day": "Sun",
+      "time": "12:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 11,
+      "day": "Sun",
+      "time": "13:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 12,
+      "day": "Sun",
+      "time": "14:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 13,
+      "day": "Mon",
+      "time": "10:00",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 14,
+      "day": "Mon",
+      "time": "11:00",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 15,
+      "day": "Mon",
+      "time": "12:00",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 16,
+      "day": "Mon",
+      "time": "13:00",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 17,
+      "day": "Mon",
+      "time": "14:00",
+      "sdate": "8/6",
+      "state": "done"
+    }
+  ],
+  "games": [
+    [
+      1,
+      "Griffith 17U",
+      16,
+      "Sapphire Coast 17U",
+      20,
+      14,
+      "done"
+    ],
+    [
+      1,
+      "Coolamon Comets 17U",
+      11,
+      "Tamworth 17U",
+      13,
+      15,
+      "done"
+    ],
+    [
+      1,
+      "Woolgoolga District 17U",
+      19,
+      "Eurobodalla 17U",
+      6,
+      16,
+      "done"
+    ],
+    [
+      1,
+      "Yass 17U",
+      16,
+      "Manning Valley 17U",
+      23,
+      17,
+      "done"
+    ],
+    [
+      1,
+      "Nambucca Valley 17U",
+      16,
+      "Macleay 17U",
+      27,
+      19,
+      "done"
+    ],
+    [
+      1,
+      "Cessnock District 17U",
+      18,
+      "Mudgee District 17U",
+      13,
+      20,
+      "done"
+    ],
+    [
+      1,
+      "Westlakes District 17U",
+      9,
+      "Kurri Kurri 17U",
+      19,
+      21,
+      "done"
+    ],
+    [
+      1,
+      "Woy Woy Peninsula 17U",
+      17,
+      "Great Lakes 17U",
+      15,
+      23,
+      "done"
+    ],
+    [
+      2,
+      "Brunswick Byron 17U",
+      22,
+      "Coolamon Comets 17U",
+      8,
+      14,
+      "done"
+    ],
+    [
+      2,
+      "Sapphire Coast 17U",
+      18,
+      "Woolgoolga District 17U",
+      11,
+      15,
+      "done"
+    ],
+    [
+      2,
+      "Tamworth 17U",
+      22,
+      "Yass 17U",
+      11,
+      16,
+      "done"
+    ],
+    [
+      2,
+      "Eurobodalla 17U",
+      20,
+      "Nambucca Valley 17U",
+      10,
+      17,
+      "done"
+    ],
+    [
+      2,
+      "Manning Valley 17U",
+      22,
+      "Cessnock District 17U",
+      15,
+      19,
+      "done"
+    ],
+    [
+      2,
+      "Macleay 17U",
+      14,
+      "Westlakes District 17U",
+      14,
+      20,
+      "done"
+    ],
+    [
+      2,
+      "Mudgee District 17U",
+      12,
+      "Woy Woy Peninsula 17U",
+      15,
+      21,
+      "done"
+    ],
+    [
+      2,
+      "Kurri Kurri 17U",
+      21,
+      "Great Lakes 17U",
+      12,
+      23,
+      "done"
+    ],
+    [
+      3,
+      "Woolgoolga District 17U",
+      22,
+      "Griffith 17U",
+      12,
+      14,
+      "done"
+    ],
+    [
+      3,
+      "Yass 17U",
+      21,
+      "Brunswick Byron 17U",
+      19,
+      15,
+      "done"
+    ],
+    [
+      3,
+      "Nambucca Valley 17U",
+      8,
+      "Sapphire Coast 17U",
+      26,
+      16,
+      "done"
+    ],
+    [
+      3,
+      "Cessnock District 17U",
+      10,
+      "Tamworth 17U",
+      13,
+      17,
+      "done"
+    ],
+    [
+      3,
+      "Westlakes District 17U",
+      11,
+      "Eurobodalla 17U",
+      12,
+      19,
+      "done"
+    ],
+    [
+      3,
+      "Woy Woy Peninsula 17U",
+      19,
+      "Manning Valley 17U",
+      20,
+      20,
+      "done"
+    ],
+    [
+      3,
+      "Great Lakes 17U",
+      21,
+      "Macleay 17U",
+      11,
+      21,
+      "done"
+    ],
+    [
+      3,
+      "Kurri Kurri 17U",
+      14,
+      "Mudgee District 17U",
+      11,
+      23,
+      "done"
+    ],
+    [
+      4,
+      "Coolamon Comets 17U",
+      15,
+      "Yass 17U",
+      14,
+      14,
+      "done"
+    ],
+    [
+      4,
+      "Griffith 17U",
+      27,
+      "Nambucca Valley 17U",
+      10,
+      15,
+      "done"
+    ],
+    [
+      4,
+      "Brunswick Byron 17U",
+      19,
+      "Cessnock District 17U",
+      17,
+      16,
+      "done"
+    ],
+    [
+      4,
+      "Sapphire Coast 17U",
+      22,
+      "Westlakes District 17U",
+      9,
+      17,
+      "done"
+    ],
+    [
+      4,
+      "Tamworth 17U",
+      9,
+      "Woy Woy Peninsula 17U",
+      16,
+      19,
+      "done"
+    ],
+    [
+      4,
+      "Eurobodalla 17U",
+      5,
+      "Great Lakes 17U",
+      8,
+      20,
+      "done"
+    ],
+    [
+      4,
+      "Manning Valley 17U",
+      11,
+      "Kurri Kurri 17U",
+      18,
+      21,
+      "done"
+    ],
+    [
+      4,
+      "Macleay 17U",
+      19,
+      "Mudgee District 17U",
+      22,
+      23,
+      "done"
+    ],
+    [
+      5,
+      "Nambucca Valley 17U",
+      12,
+      "Woolgoolga District 17U",
+      29,
+      14,
+      "done"
+    ],
+    [
+      5,
+      "Cessnock District 17U",
+      21,
+      "Coolamon Comets 17U",
+      16,
+      15,
+      "done"
+    ],
+    [
+      5,
+      "Westlakes District 17U",
+      6,
+      "Griffith 17U",
+      21,
+      16,
+      "done"
+    ],
+    [
+      5,
+      "Woy Woy Peninsula 17U",
+      16,
+      "Brunswick Byron 17U",
+      19,
+      17,
+      "done"
+    ],
+    [
+      5,
+      "Great Lakes 17U",
+      7,
+      "Sapphire Coast 17U",
+      26,
+      19,
+      "done"
+    ],
+    [
+      5,
+      "Kurri Kurri 17U",
+      17,
+      "Tamworth 17U",
+      11,
+      20,
+      "done"
+    ],
+    [
+      5,
+      "Mudgee District 17U",
+      15,
+      "Eurobodalla 17U",
+      11,
+      21,
+      "done"
+    ],
+    [
+      5,
+      "Macleay 17U",
+      18,
+      "Manning Valley 17U",
+      23,
+      23,
+      "done"
+    ],
+    [
+      6,
+      "Yass 17U",
+      16,
+      "Cessnock District 17U",
+      17,
+      14,
+      "done"
+    ],
+    [
+      6,
+      "Woolgoolga District 17U",
+      17,
+      "Westlakes District 17U",
+      8,
+      15,
+      "done"
+    ],
+    [
+      6,
+      "Coolamon Comets 17U",
+      13,
+      "Woy Woy Peninsula 17U",
+      12,
+      16,
+      "done"
+    ],
+    [
+      6,
+      "Griffith 17U",
+      27,
+      "Great Lakes 17U",
+      8,
+      17,
+      "done"
+    ],
+    [
+      6,
+      "Brunswick Byron 17U",
+      12,
+      "Kurri Kurri 17U",
+      13,
+      19,
+      "done"
+    ],
+    [
+      6,
+      "Sapphire Coast 17U",
+      31,
+      "Mudgee District 17U",
+      11,
+      20,
+      "done"
+    ],
+    [
+      6,
+      "Tamworth 17U",
+      16,
+      "Macleay 17U",
+      14,
+      21,
+      "done"
+    ],
+    [
+      6,
+      "Eurobodalla 17U",
+      11,
+      "Manning Valley 17U",
+      13,
+      23,
+      "done"
+    ],
+    [
+      7,
+      "Westlakes District 17U",
+      17,
+      "Nambucca Valley 17U",
+      12,
+      24,
+      "done"
+    ],
+    [
+      7,
+      "Woy Woy Peninsula 17U",
+      19,
+      "Yass 17U",
+      16,
+      28,
+      "done"
+    ],
+    [
+      7,
+      "Great Lakes 17U",
+      9,
+      "Woolgoolga District 17U",
+      20,
+      32,
+      "done"
+    ],
+    [
+      7,
+      "Kurri Kurri 17U",
+      21,
+      "Coolamon Comets 17U",
+      14,
+      33,
+      "done"
+    ],
+    [
+      7,
+      "Mudgee District 17U",
+      10,
+      "Griffith 17U",
+      17,
+      34,
+      "done"
+    ],
+    [
+      7,
+      "Macleay 17U",
+      13,
+      "Brunswick Byron 17U",
+      22,
+      35,
+      "done"
+    ],
+    [
+      7,
+      "Manning Valley 17U",
+      15,
+      "Sapphire Coast 17U",
+      31,
+      36,
+      "done"
+    ],
+    [
+      7,
+      "Eurobodalla 17U",
+      11,
+      "Tamworth 17U",
+      12,
+      39,
+      "done"
+    ],
+    [
+      8,
+      "Cessnock District 17U",
+      11,
+      "Woy Woy Peninsula 17U",
+      13,
+      24,
+      "done"
+    ],
+    [
+      8,
+      "Nambucca Valley 17U",
+      13,
+      "Great Lakes 17U",
+      15,
+      28,
+      "done"
+    ],
+    [
+      8,
+      "Yass 17U",
+      13,
+      "Kurri Kurri 17U",
+      23,
+      32,
+      "done"
+    ],
+    [
+      8,
+      "Woolgoolga District 17U",
+      17,
+      "Mudgee District 17U",
+      10,
+      34,
+      "done"
+    ],
+    [
+      8,
+      "Coolamon Comets 17U",
+      13,
+      "Macleay 17U",
+      17,
+      33,
+      "done"
+    ],
+    [
+      8,
+      "Griffith 17U",
+      23,
+      "Manning Valley 17U",
+      8,
+      35,
+      "done"
+    ],
+    [
+      8,
+      "Brunswick Byron 17U",
+      14,
+      "Eurobodalla 17U",
+      8,
+      36,
+      "done"
+    ],
+    [
+      8,
+      "Sapphire Coast 17U",
+      20,
+      "Tamworth 17U",
+      8,
+      39,
+      "done"
+    ],
+    [
+      9,
+      "Great Lakes 17U",
+      14,
+      "Westlakes District 17U",
+      12,
+      24,
+      "done"
+    ],
+    [
+      9,
+      "Kurri Kurri 17U",
+      21,
+      "Cessnock District 17U",
+      13,
+      28,
+      "done"
+    ],
+    [
+      9,
+      "Mudgee District 17U",
+      24,
+      "Nambucca Valley 17U",
+      11,
+      32,
+      "done"
+    ],
+    [
+      9,
+      "Macleay 17U",
+      14,
+      "Yass 17U",
+      16,
+      33,
+      "done"
+    ],
+    [
+      9,
+      "Manning Valley 17U",
+      16,
+      "Woolgoolga District 17U",
+      21,
+      34,
+      "done"
+    ],
+    [
+      9,
+      "Eurobodalla 17U",
+      14,
+      "Coolamon Comets 17U",
+      9,
+      35,
+      "done"
+    ],
+    [
+      9,
+      "Tamworth 17U",
+      6,
+      "Griffith 17U",
+      20,
+      36,
+      "done"
+    ],
+    [
+      9,
+      "Sapphire Coast 17U",
+      18,
+      "Brunswick Byron 17U",
+      13,
+      39,
+      "done"
+    ],
+    [
+      10,
+      "Woy Woy Peninsula 17U",
+      9,
+      "Kurri Kurri 17U",
+      14,
+      24,
+      "done"
+    ],
+    [
+      10,
+      "Westlakes District 17U",
+      17,
+      "Mudgee District 17U",
+      19,
+      28,
+      "done"
+    ],
+    [
+      10,
+      "Cessnock District 17U",
+      14,
+      "Macleay 17U",
+      12,
+      32,
+      "done"
+    ],
+    [
+      10,
+      "Nambucca Valley 17U",
+      11,
+      "Manning Valley 17U",
+      20,
+      33,
+      "done"
+    ],
+    [
+      10,
+      "Yass 17U",
+      13,
+      "Eurobodalla 17U",
+      17,
+      35,
+      "done"
+    ],
+    [
+      10,
+      "Woolgoolga District 17U",
+      13,
+      "Tamworth 17U",
+      8,
+      34,
+      "done"
+    ],
+    [
+      10,
+      "Coolamon Comets 17U",
+      12,
+      "Sapphire Coast 17U",
+      22,
+      36,
+      "done"
+    ],
+    [
+      10,
+      "Griffith 17U",
+      14,
+      "Brunswick Byron 17U",
+      15,
+      39,
+      "done"
+    ],
+    [
+      11,
+      "Mudgee District 17U",
+      27,
+      "Great Lakes 17U",
+      9,
+      24,
+      "done"
+    ],
+    [
+      11,
+      "Macleay 17U",
+      18,
+      "Woy Woy Peninsula 17U",
+      21,
+      28,
+      "done"
+    ],
+    [
+      11,
+      "Manning Valley 17U",
+      18,
+      "Westlakes District 17U",
+      10,
+      32,
+      "done"
+    ],
+    [
+      11,
+      "Eurobodalla 17U",
+      11,
+      "Cessnock District 17U",
+      15,
+      33,
+      "done"
+    ],
+    [
+      11,
+      "Tamworth 17U",
+      20,
+      "Nambucca Valley 17U",
+      7,
+      34,
+      "done"
+    ],
+    [
+      11,
+      "Sapphire Coast 17U",
+      31,
+      "Yass 17U",
+      14,
+      35,
+      "done"
+    ],
+    [
+      11,
+      "Brunswick Byron 17U",
+      7,
+      "Woolgoolga District 17U",
+      21,
+      36,
+      "done"
+    ],
+    [
+      11,
+      "Griffith 17U",
+      23,
+      "Coolamon Comets 17U",
+      8,
+      39,
+      "done"
+    ],
+    [
+      12,
+      "Kurri Kurri 17U",
+      20,
+      "Macleay 17U",
+      20,
+      24,
+      "done"
+    ],
+    [
+      12,
+      "Great Lakes 17U",
+      15,
+      "Manning Valley 17U",
+      21,
+      28,
+      "done"
+    ],
+    [
+      12,
+      "Woy Woy Peninsula 17U",
+      15,
+      "Eurobodalla 17U",
+      10,
+      32,
+      "done"
+    ],
+    [
+      12,
+      "Westlakes District 17U",
+      10,
+      "Tamworth 17U",
+      10,
+      33,
+      "done"
+    ],
+    [
+      12,
+      "Cessnock District 17U",
+      14,
+      "Sapphire Coast 17U",
+      23,
+      34,
+      "done"
+    ],
+    [
+      12,
+      "Nambucca Valley 17U",
+      11,
+      "Brunswick Byron 17U",
+      25,
+      35,
+      "done"
+    ],
+    [
+      12,
+      "Yass 17U",
+      11,
+      "Griffith 17U",
+      20,
+      36,
+      "done"
+    ],
+    [
+      12,
+      "Woolgoolga District 17U",
+      18,
+      "Coolamon Comets 17U",
+      8,
+      39,
+      "done"
+    ],
+    [
+      13,
+      "Manning Valley 17U",
+      19,
+      "Mudgee District 17U",
+      18,
+      23,
+      "done"
+    ],
+    [
+      13,
+      "Eurobodalla 17U",
+      12,
+      "Kurri Kurri 17U",
+      11,
+      27,
+      "done"
+    ],
+    [
+      13,
+      "Tamworth 17U",
+      16,
+      "Great Lakes 17U",
+      9,
+      28,
+      "done"
+    ],
+    [
+      13,
+      "Sapphire Coast 17U",
+      20,
+      "Woy Woy Peninsula 17U",
+      17,
+      30,
+      "done"
+    ],
+    [
+      13,
+      "Brunswick Byron 17U",
+      16,
+      "Westlakes District 17U",
+      10,
+      32,
+      "done"
+    ],
+    [
+      13,
+      "Griffith 17U",
+      22,
+      "Cessnock District 17U",
+      14,
+      33,
+      "done"
+    ],
+    [
+      13,
+      "Coolamon Comets 17U",
+      16,
+      "Nambucca Valley 17U",
+      14,
+      35,
+      "done"
+    ],
+    [
+      13,
+      "Woolgoolga District 17U",
+      17,
+      "Yass 17U",
+      8,
+      36,
+      "done"
+    ],
+    [
+      14,
+      "Macleay 17U",
+      15,
+      "Eurobodalla 17U",
+      15,
+      23,
+      "done"
+    ],
+    [
+      14,
+      "Mudgee District 17U",
+      12,
+      "Tamworth 17U",
+      18,
+      27,
+      "done"
+    ],
+    [
+      14,
+      "Kurri Kurri 17U",
+      13,
+      "Sapphire Coast 17U",
+      18,
+      28,
+      "done"
+    ],
+    [
+      14,
+      "Great Lakes 17U",
+      14,
+      "Brunswick Byron 17U",
+      18,
+      30,
+      "done"
+    ],
+    [
+      14,
+      "Woy Woy Peninsula 17U",
+      9,
+      "Griffith 17U",
+      13,
+      32,
+      "done"
+    ],
+    [
+      14,
+      "Westlakes District 17U",
+      13,
+      "Coolamon Comets 17U",
+      11,
+      33,
+      "done"
+    ],
+    [
+      14,
+      "Cessnock District 17U",
+      10,
+      "Woolgoolga District 17U",
+      15,
+      35,
+      "done"
+    ],
+    [
+      14,
+      "Nambucca Valley 17U",
+      21,
+      "Yass 17U",
+      17,
+      36,
+      "done"
+    ],
+    [
+      15,
+      "Tamworth 17U",
+      16,
+      "Manning Valley 17U",
+      14,
+      23,
+      "done"
+    ],
+    [
+      15,
+      "Sapphire Coast 17U",
+      20,
+      "Macleay 17U",
+      10,
+      27,
+      "done"
+    ],
+    [
+      15,
+      "Brunswick Byron 17U",
+      21,
+      "Mudgee District 17U",
+      13,
+      28,
+      "done"
+    ],
+    [
+      15,
+      "Griffith 17U",
+      21,
+      "Kurri Kurri 17U",
+      15,
+      30,
+      "done"
+    ],
+    [
+      15,
+      "Coolamon Comets 17U",
+      10,
+      "Great Lakes 17U",
+      17,
+      32,
+      "done"
+    ],
+    [
+      15,
+      "Woolgoolga District 17U",
+      13,
+      "Woy Woy Peninsula 17U",
+      11,
+      33,
+      "done"
+    ],
+    [
+      15,
+      "Yass 17U",
+      15,
+      "Westlakes District 17U",
+      17,
+      35,
+      "done"
+    ],
+    [
+      15,
+      "Nambucca Valley 17U",
+      6,
+      "Cessnock District 17U",
+      23,
+      36,
+      "done"
+    ],
+    [
+      16,
+      "Eurobodalla 17U",
+      4,
+      "Sapphire Coast 17U",
+      15,
+      23,
+      "done"
+    ],
+    [
+      16,
+      "Manning Valley 17U",
+      8,
+      "Brunswick Byron 17U",
+      26,
+      27,
+      "done"
+    ],
+    [
+      16,
+      "Macleay 17U",
+      13,
+      "Griffith 17U",
+      15,
+      28,
+      "done"
+    ],
+    [
+      16,
+      "Mudgee District 17U",
+      25,
+      "Coolamon Comets 17U",
+      14,
+      30,
+      "done"
+    ],
+    [
+      16,
+      "Kurri Kurri 17U",
+      9,
+      "Woolgoolga District 17U",
+      23,
+      32,
+      "done"
+    ],
+    [
+      16,
+      "Great Lakes 17U",
+      16,
+      "Yass 17U",
+      20,
+      33,
+      "done"
+    ],
+    [
+      16,
+      "Woy Woy Peninsula 17U",
+      27,
+      "Nambucca Valley 17U",
+      11,
+      35,
+      "done"
+    ],
+    [
+      16,
+      "Westlakes District 17U",
+      10,
+      "Cessnock District 17U",
+      17,
+      36,
+      "done"
+    ],
+    [
+      17,
+      "Brunswick Byron 17U",
+      8,
+      "Tamworth 17U",
+      11,
+      23,
+      "done"
+    ],
+    [
+      17,
+      "Griffith 17U",
+      17,
+      "Eurobodalla 17U",
+      7,
+      27,
+      "done"
+    ],
+    [
+      17,
+      "Coolamon Comets 17U",
+      16,
+      "Manning Valley 17U",
+      17,
+      28,
+      "done"
+    ],
+    [
+      17,
+      "Woolgoolga District 17U",
+      28,
+      "Macleay 17U",
+      8,
+      30,
+      "done"
+    ],
+    [
+      17,
+      "Yass 17U",
+      16,
+      "Mudgee District 17U",
+      13,
+      32,
+      "done"
+    ],
+    [
+      17,
+      "Nambucca Valley 17U",
+      12,
+      "Kurri Kurri 17U",
+      22,
+      33,
+      "done"
+    ],
+    [
+      17,
+      "Cessnock District 17U",
+      17,
+      "Great Lakes 17U",
+      17,
+      35,
+      "done"
+    ],
+    [
+      17,
+      "Westlakes District 17U",
+      8,
+      "Woy Woy Peninsula 17U",
+      13,
+      36,
+      "done"
+    ]
+  ]
+};
+
+function render(d) {
+  const key = (a, b) => [a, b].sort().join("|");
+
+  // Build M as arrays — all games per pair, sorted by round.
+  const M = {};
+  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+    const k = key(h, a);
+    if (!M[k]) M[k] = [];
+    M[k].push({ rd, h, hs, a, as: as_, court, st });
+  });
+  Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
+
+  const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
+
+  // Per-team next round: min round where their game isn't done
+  const nextRound = {};
+  d.teams.forEach(t => {
+    let min = Infinity;
+    d.games.forEach(([rd, h, , a, , , st]) => {
+      if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
+    });
+    nextRound[t.code] = min === Infinity ? null : min;
+  });
+
+  const grid = document.getElementById("grid");
+  let html = "<thead><tr>";
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
+    : d.title;
+  html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
+  d.teams.forEach(t => {
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+
+  d.teams.forEach((rowT) => {
+    const pinnedRow = rowT.code === d.pin;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<th class="rowhead">
+               <div class="rn">
+                 <span class="rkn">${rowT.rank}</span>
+                 <span class="nm">${rowT.name}</span>
+               </div>
+             </th>`;
+
+    d.teams.forEach((colT) => {
+      const pinCol = colT.code === d.pin && !pinnedRow;
+      const pcls = pinCol ? " pincol" : "";
+
+      if (rowT.code === colT.code) {
+        html += `<td class="cell self">
+                   <span class="sl1">${rowT.pts} pts</span>
+                   <span class="sl2">${rowT.pct}%</span>
+                 </td>`;
+        return;
+      }
+
+      const games = M[key(rowT.code, colT.code)];
+      if (!games) { html += `<td class="cell${pcls}"></td>`; return; }
+
+      html += `<td class="cell${pcls}">`;
+      games.forEach(m => {
+        const rowScore = m.h === rowT.code ? m.hs : m.as;
+        const colScore = m.h === rowT.code ? m.as : m.hs;
+        const rmeta = roundByN[m.rd] || {};
+        const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+        if (m.st === "live" && rowScore != null) {
+          html += `<div class="mg live${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
+                   </div>`;
+        } else if (m.st === "done" && rowScore != null) {
+          const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">${rowScore}–${colScore}</span>
+                   </div>`;
+        } else {
+          const liveCls = m.st === "live" ? " live" : "";
+          html += `<div class="mg fix${liveCls}${ncls}">
+                     <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
+                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                   </div>`;
+        }
+      });
+      html += `</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody>";
+  grid.innerHTML = html;
+}
+render(DATA);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>15U Division 3 — Cross Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #15223b;
+    --ink-2:    #51607a;
+    --muted:    #9aa4b6;
+    --line:     #dfe3ea;
+    --line-2:   #eef0f4;
+    --bg:       #f3f5f8;
+    --card:     #ffffff;
+    --accent:   #e8542f;
+    --accent-bg:#fdece5;
+    --win:      #157a47;
+    --win-bg:   #e7f3ea;
+    --loss:     #b23b2c;
+    --loss-bg:  #fbe9e6;
+    --draw-bg:  #fff3e0;
+    --col-w:    52px;
+    --name-w:   110px;
+    --row-h:    33px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .scroll {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+  table.x { border-collapse: separate; border-spacing: 0; margin: 0; }
+  table.x th, table.x td { padding: 0; margin: 0; }
+  th.corner {
+    position: sticky; left: 0; top: 0; z-index: 6;
+    width: var(--name-w); min-width: var(--name-w);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 2px solid var(--line);
+  }
+  th.corner .lbl {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    padding: 5px 6px; text-align: left; line-height: 1.3;
+  }
+  th.corner .lbl a { color: inherit; text-decoration: none; }
+  th.corner .lbl a:hover { text-decoration: underline; }
+  th.colhead {
+    position: sticky; top: 0; z-index: 4;
+    width: var(--col-w); min-width: var(--col-w);
+    background: var(--card);
+    border-bottom: 2px solid var(--line);
+    border-left: 1px solid var(--line-2);
+    vertical-align: bottom;
+    padding: 4px 3px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 10px;
+    color: var(--ink); text-align: center;
+    overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.15; vertical-align: top;
+  }
+  th.colhead .ckn {
+    display: block;
+    font-size: 8px; font-weight: 700;
+    color: var(--muted); letter-spacing: .3px;
+    line-height: 1.4;
+  }
+  th.rowhead {
+    position: sticky; left: 0; z-index: 3;
+    width: var(--name-w); min-width: var(--name-w);
+    height: var(--row-h);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: top;
+  }
+  th.rowhead .rn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 5px 3px 5px;
+  }
+  th.rowhead .rkn {
+    flex: 0 0 auto; width: 13px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); text-align: center;
+  }
+  th.rowhead .nm {
+    font-size: 10px; font-weight: 600;
+    line-height: 1.1; color: var(--ink);
+  }
+  td.cell {
+    width: var(--col-w); min-width: var(--col-w);
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    background: var(--card);
+    vertical-align: top;
+  }
+  /* Per-game strip inside a cell */
+  .mg {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: var(--row-h);
+    gap: 1px; padding: 2px; width: 100%;
+  }
+  .mg + .mg { border-top: 1px solid var(--line-2); }
+  .mg .rd {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .3px; color: var(--muted); line-height: 1;
+  }
+  .mg .score {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 13px;
+    line-height: 1; letter-spacing: -.1px;
+  }
+  .mg.win  { background: var(--win-bg); }
+  .mg.win  .score { color: var(--win); }
+  .mg.loss { background: var(--loss-bg); }
+  .mg.loss .score { color: var(--loss); }
+  .mg.draw { background: var(--draw-bg); }
+  .mg.draw .score { color: #e65100; }
+  .mg.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.live .score {
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+  }
+  .mg.live .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: pulse 1.3s infinite;
+  }
+  .mg.fix { background: #f9fafb; text-align: center; line-height: 1.1; }
+  .mg.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .mg.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  .mg.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  .mg.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.fix.live .fl1, .mg.fix.live .fl1 b { color: var(--accent); }
+  .mg.fix.live .fl2 { color: var(--accent); }
+  .mg.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  .mg.next.fix:not(.live) { background: #eef0fb; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
+  td.cell.self {
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
+      var(--ink);
+    overflow: hidden;
+    text-align: center; vertical-align: middle;
+    height: var(--row-h);
+  }
+  td.cell.self .sl1 { display: block; font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
+  td.cell.self .sl2 { display: block; font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; margin-top: 2px; }
+  tr.pinned th.rowhead { background: #fff7ec; }
+  tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  @media (max-width: 400px) {
+    :root { --col-w: 42px; --name-w: 90px; }
+  }
+
+</style>
+</head>
+<body>
+  <div class="scroll">
+    <table class="x" id="grid"></table>
+  </div>
+<script>
+const DATA = {
+  "title": "15U Division 3",
+  "venue": "Baulkham Hills Shire Netball Association, North Kellyville",
+  "date": "Sat 6–Mon 8 Jun 2026",
+  "pin": null,
+  "menu_url": "../index.html",
+  "teams": [
+    {
+      "code": "Temora 15U",
+      "name": "Temora",
+      "rank": 1,
+      "pts": 32,
+      "pct": "175.4",
+      "W": 16,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "Kiama 15U",
+      "name": "Kiama",
+      "rank": 2,
+      "pts": 28,
+      "pct": "177.1",
+      "W": 14,
+      "L": 2,
+      "D": 0
+    },
+    {
+      "code": "Woy Woy Peninsula 15U",
+      "name": "Woy Woy Peninsula",
+      "rank": 3,
+      "pts": 28,
+      "pct": "174.9",
+      "W": 14,
+      "L": 2,
+      "D": 0
+    },
+    {
+      "code": "Southern Highlands 15U",
+      "name": "Southern Highlands",
+      "rank": 4,
+      "pts": 22,
+      "pct": "115.3",
+      "W": 11,
+      "L": 5,
+      "D": 0
+    },
+    {
+      "code": "Tamworth 15U",
+      "name": "Tamworth",
+      "rank": 5,
+      "pts": 21,
+      "pct": "114.8",
+      "W": 10,
+      "L": 5,
+      "D": 1
+    },
+    {
+      "code": "Griffith 15U",
+      "name": "Griffith",
+      "rank": 6,
+      "pts": 19,
+      "pct": "112.5",
+      "W": 9,
+      "L": 6,
+      "D": 1
+    },
+    {
+      "code": "Great Lakes 15U",
+      "name": "Great Lakes",
+      "rank": 7,
+      "pts": 18,
+      "pct": "93.9",
+      "W": 8,
+      "L": 6,
+      "D": 2
+    },
+    {
+      "code": "Cessnock District 15U",
+      "name": "Cessnock District",
+      "rank": 8,
+      "pts": 18,
+      "pct": "92.5",
+      "W": 8,
+      "L": 6,
+      "D": 2
+    },
+    {
+      "code": "Casino 15U",
+      "name": "Casino",
+      "rank": 9,
+      "pts": 15,
+      "pct": "101.7",
+      "W": 7,
+      "L": 8,
+      "D": 1
+    },
+    {
+      "code": "Nelson Bay 15U",
+      "name": "Nelson Bay",
+      "rank": 10,
+      "pts": 15,
+      "pct": "94.2",
+      "W": 7,
+      "L": 8,
+      "D": 1
+    },
+    {
+      "code": "Manning Valley 15U",
+      "name": "Manning Valley",
+      "rank": 11,
+      "pts": 14,
+      "pct": "95.7",
+      "W": 6,
+      "L": 8,
+      "D": 2
+    },
+    {
+      "code": "Blue Mountains 15U",
+      "name": "Blue Mountains",
+      "rank": 12,
+      "pts": 11,
+      "pct": "73.9",
+      "W": 5,
+      "L": 10,
+      "D": 1
+    },
+    {
+      "code": "Tumut 15U",
+      "name": "Tumut",
+      "rank": 13,
+      "pts": 10,
+      "pct": "89.2",
+      "W": 5,
+      "L": 11,
+      "D": 0
+    },
+    {
+      "code": "Dubbo 15U",
+      "name": "Dubbo",
+      "rank": 14,
+      "pts": 9,
+      "pct": "77.9",
+      "W": 4,
+      "L": 11,
+      "D": 1
+    },
+    {
+      "code": "Wollondilly 15U",
+      "name": "Wollondilly",
+      "rank": 15,
+      "pts": 8,
+      "pct": "82.6",
+      "W": 4,
+      "L": 12,
+      "D": 0
+    },
+    {
+      "code": "Port Stephens 15U",
+      "name": "Port Stephens",
+      "rank": 16,
+      "pts": 2,
+      "pct": "66.0",
+      "W": 1,
+      "L": 15,
+      "D": 0
+    },
+    {
+      "code": "Mudgee District 15U",
+      "name": "Mudgee District",
+      "rank": 17,
+      "pts": 2,
+      "pct": "43.7",
+      "W": 1,
+      "L": 15,
+      "D": 0
+    }
+  ],
+  "rounds": [
+    {
+      "n": 1,
+      "day": "Sat",
+      "time": "10:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "day": "Sat",
+      "time": "11:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "day": "Sat",
+      "time": "12:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "day": "Sat",
+      "time": "13:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "day": "Sat",
+      "time": "14:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 6,
+      "day": "Sun",
+      "time": "08:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 7,
+      "day": "Sun",
+      "time": "09:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 8,
+      "day": "Sun",
+      "time": "10:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 9,
+      "day": "Sun",
+      "time": "11:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 10,
+      "day": "Sun",
+      "time": "12:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 11,
+      "day": "Sun",
+      "time": "13:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 12,
+      "day": "Mon",
+      "time": "08:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 13,
+      "day": "Mon",
+      "time": "09:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 14,
+      "day": "Mon",
+      "time": "10:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 15,
+      "day": "Mon",
+      "time": "11:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 16,
+      "day": "Mon",
+      "time": "12:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 17,
+      "day": "Mon",
+      "time": "13:30",
+      "sdate": "8/6",
+      "state": "done"
+    }
+  ],
+  "games": [
+    [
+      1,
+      "Griffith 15U",
+      24,
+      "Tumut 15U",
+      16,
+      24,
+      "done"
+    ],
+    [
+      1,
+      "Cessnock District 15U",
+      11,
+      "Port Stephens 15U",
+      8,
+      25,
+      "done"
+    ],
+    [
+      1,
+      "Woy Woy Peninsula 15U",
+      23,
+      "Tamworth 15U",
+      12,
+      26,
+      "done"
+    ],
+    [
+      1,
+      "Great Lakes 15U",
+      17,
+      "Casino 15U",
+      18,
+      27,
+      "done"
+    ],
+    [
+      1,
+      "Kiama 15U",
+      23,
+      "Nelson Bay 15U",
+      13,
+      28,
+      "done"
+    ],
+    [
+      1,
+      "Temora 15U",
+      18,
+      "Dubbo 15U",
+      12,
+      30,
+      "done"
+    ],
+    [
+      1,
+      "Wollondilly 15U",
+      19,
+      "Manning Valley 15U",
+      16,
+      35,
+      "done"
+    ],
+    [
+      1,
+      "Mudgee District 15U",
+      6,
+      "Blue Mountains 15U",
+      21,
+      39,
+      "done"
+    ],
+    [
+      2,
+      "Southern Highlands 15U",
+      12,
+      "Cessnock District 15U",
+      7,
+      24,
+      "done"
+    ],
+    [
+      2,
+      "Tumut 15U",
+      15,
+      "Woy Woy Peninsula 15U",
+      30,
+      25,
+      "done"
+    ],
+    [
+      2,
+      "Port Stephens 15U",
+      14,
+      "Great Lakes 15U",
+      26,
+      26,
+      "done"
+    ],
+    [
+      2,
+      "Tamworth 15U",
+      16,
+      "Kiama 15U",
+      22,
+      27,
+      "done"
+    ],
+    [
+      2,
+      "Casino 15U",
+      17,
+      "Temora 15U",
+      23,
+      28,
+      "done"
+    ],
+    [
+      2,
+      "Nelson Bay 15U",
+      17,
+      "Wollondilly 15U",
+      24,
+      30,
+      "done"
+    ],
+    [
+      2,
+      "Dubbo 15U",
+      18,
+      "Mudgee District 15U",
+      16,
+      35,
+      "done"
+    ],
+    [
+      2,
+      "Manning Valley 15U",
+      13,
+      "Blue Mountains 15U",
+      14,
+      39,
+      "done"
+    ],
+    [
+      3,
+      "Woy Woy Peninsula 15U",
+      22,
+      "Griffith 15U",
+      20,
+      39,
+      "done"
+    ],
+    [
+      3,
+      "Great Lakes 15U",
+      18,
+      "Southern Highlands 15U",
+      16,
+      35,
+      "done"
+    ],
+    [
+      3,
+      "Kiama 15U",
+      26,
+      "Tumut 15U",
+      21,
+      30,
+      "done"
+    ],
+    [
+      3,
+      "Temora 15U",
+      22,
+      "Port Stephens 15U",
+      12,
+      28,
+      "done"
+    ],
+    [
+      3,
+      "Wollondilly 15U",
+      16,
+      "Tamworth 15U",
+      21,
+      27,
+      "done"
+    ],
+    [
+      3,
+      "Mudgee District 15U",
+      9,
+      "Casino 15U",
+      22,
+      26,
+      "done"
+    ],
+    [
+      3,
+      "Blue Mountains 15U",
+      18,
+      "Nelson Bay 15U",
+      16,
+      25,
+      "done"
+    ],
+    [
+      3,
+      "Manning Valley 15U",
+      24,
+      "Dubbo 15U",
+      13,
+      24,
+      "done"
+    ],
+    [
+      4,
+      "Cessnock District 15U",
+      14,
+      "Great Lakes 15U",
+      14,
+      24,
+      "done"
+    ],
+    [
+      4,
+      "Griffith 15U",
+      12,
+      "Kiama 15U",
+      22,
+      25,
+      "done"
+    ],
+    [
+      4,
+      "Southern Highlands 15U",
+      13,
+      "Temora 15U",
+      15,
+      26,
+      "done"
+    ],
+    [
+      4,
+      "Tumut 15U",
+      23,
+      "Wollondilly 15U",
+      17,
+      27,
+      "done"
+    ],
+    [
+      4,
+      "Port Stephens 15U",
+      10,
+      "Mudgee District 15U",
+      13,
+      28,
+      "done"
+    ],
+    [
+      4,
+      "Tamworth 15U",
+      13,
+      "Blue Mountains 15U",
+      11,
+      30,
+      "done"
+    ],
+    [
+      4,
+      "Casino 15U",
+      21,
+      "Manning Valley 15U",
+      16,
+      35,
+      "done"
+    ],
+    [
+      4,
+      "Nelson Bay 15U",
+      15,
+      "Dubbo 15U",
+      9,
+      39,
+      "done"
+    ],
+    [
+      5,
+      "Kiama 15U",
+      14,
+      "Woy Woy Peninsula 15U",
+      22,
+      25,
+      "done"
+    ],
+    [
+      5,
+      "Temora 15U",
+      18,
+      "Cessnock District 15U",
+      10,
+      24,
+      "done"
+    ],
+    [
+      5,
+      "Wollondilly 15U",
+      12,
+      "Griffith 15U",
+      19,
+      26,
+      "done"
+    ],
+    [
+      5,
+      "Mudgee District 15U",
+      12,
+      "Southern Highlands 15U",
+      19,
+      27,
+      "done"
+    ],
+    [
+      5,
+      "Blue Mountains 15U",
+      15,
+      "Tumut 15U",
+      21,
+      28,
+      "done"
+    ],
+    [
+      5,
+      "Manning Valley 15U",
+      15,
+      "Port Stephens 15U",
+      14,
+      30,
+      "done"
+    ],
+    [
+      5,
+      "Dubbo 15U",
+      18,
+      "Tamworth 15U",
+      20,
+      35,
+      "done"
+    ],
+    [
+      5,
+      "Nelson Bay 15U",
+      14,
+      "Casino 15U",
+      15,
+      39,
+      "done"
+    ],
+    [
+      6,
+      "Great Lakes 15U",
+      5,
+      "Temora 15U",
+      31,
+      1,
+      "done"
+    ],
+    [
+      6,
+      "Woy Woy Peninsula 15U",
+      22,
+      "Wollondilly 15U",
+      16,
+      2,
+      "done"
+    ],
+    [
+      6,
+      "Cessnock District 15U",
+      16,
+      "Mudgee District 15U",
+      6,
+      3,
+      "done"
+    ],
+    [
+      6,
+      "Griffith 15U",
+      20,
+      "Blue Mountains 15U",
+      10,
+      5,
+      "done"
+    ],
+    [
+      6,
+      "Southern Highlands 15U",
+      16,
+      "Manning Valley 15U",
+      19,
+      7,
+      "done"
+    ],
+    [
+      6,
+      "Tumut 15U",
+      20,
+      "Dubbo 15U",
+      19,
+      8,
+      "done"
+    ],
+    [
+      6,
+      "Port Stephens 15U",
+      14,
+      "Nelson Bay 15U",
+      16,
+      10,
+      "done"
+    ],
+    [
+      6,
+      "Tamworth 15U",
+      16,
+      "Casino 15U",
+      9,
+      11,
+      "done"
+    ],
+    [
+      7,
+      "Wollondilly 15U",
+      9,
+      "Kiama 15U",
+      23,
+      2,
+      "done"
+    ],
+    [
+      7,
+      "Mudgee District 15U",
+      12,
+      "Great Lakes 15U",
+      28,
+      1,
+      "done"
+    ],
+    [
+      7,
+      "Blue Mountains 15U",
+      11,
+      "Woy Woy Peninsula 15U",
+      22,
+      3,
+      "done"
+    ],
+    [
+      7,
+      "Manning Valley 15U",
+      15,
+      "Cessnock District 15U",
+      16,
+      5,
+      "done"
+    ],
+    [
+      7,
+      "Dubbo 15U",
+      10,
+      "Griffith 15U",
+      19,
+      7,
+      "done"
+    ],
+    [
+      7,
+      "Nelson Bay 15U",
+      20,
+      "Southern Highlands 15U",
+      13,
+      8,
+      "done"
+    ],
+    [
+      7,
+      "Casino 15U",
+      15,
+      "Tumut 15U",
+      9,
+      10,
+      "done"
+    ],
+    [
+      7,
+      "Tamworth 15U",
+      16,
+      "Port Stephens 15U",
+      13,
+      11,
+      "done"
+    ],
+    [
+      8,
+      "Temora 15U",
+      22,
+      "Mudgee District 15U",
+      8,
+      1,
+      "done"
+    ],
+    [
+      8,
+      "Kiama 15U",
+      28,
+      "Blue Mountains 15U",
+      7,
+      2,
+      "done"
+    ],
+    [
+      8,
+      "Great Lakes 15U",
+      23,
+      "Manning Valley 15U",
+      23,
+      3,
+      "done"
+    ],
+    [
+      8,
+      "Woy Woy Peninsula 15U",
+      23,
+      "Dubbo 15U",
+      10,
+      5,
+      "done"
+    ],
+    [
+      8,
+      "Cessnock District 15U",
+      17,
+      "Nelson Bay 15U",
+      17,
+      7,
+      "done"
+    ],
+    [
+      8,
+      "Griffith 15U",
+      17,
+      "Casino 15U",
+      17,
+      8,
+      "done"
+    ],
+    [
+      8,
+      "Southern Highlands 15U",
+      15,
+      "Tamworth 15U",
+      13,
+      10,
+      "done"
+    ],
+    [
+      8,
+      "Tumut 15U",
+      23,
+      "Port Stephens 15U",
+      17,
+      11,
+      "done"
+    ],
+    [
+      9,
+      "Blue Mountains 15U",
+      21,
+      "Wollondilly 15U",
+      13,
+      1,
+      "done"
+    ],
+    [
+      9,
+      "Manning Valley 15U",
+      13,
+      "Temora 15U",
+      28,
+      2,
+      "done"
+    ],
+    [
+      9,
+      "Dubbo 15U",
+      7,
+      "Kiama 15U",
+      20,
+      3,
+      "done"
+    ],
+    [
+      9,
+      "Nelson Bay 15U",
+      16,
+      "Great Lakes 15U",
+      17,
+      5,
+      "done"
+    ],
+    [
+      9,
+      "Casino 15U",
+      11,
+      "Woy Woy Peninsula 15U",
+      21,
+      7,
+      "done"
+    ],
+    [
+      9,
+      "Tamworth 15U",
+      17,
+      "Cessnock District 15U",
+      14,
+      8,
+      "done"
+    ],
+    [
+      9,
+      "Port Stephens 15U",
+      13,
+      "Griffith 15U",
+      23,
+      10,
+      "done"
+    ],
+    [
+      9,
+      "Tumut 15U",
+      12,
+      "Southern Highlands 15U",
+      16,
+      11,
+      "done"
+    ],
+    [
+      10,
+      "Mudgee District 15U",
+      14,
+      "Manning Valley 15U",
+      24,
+      1,
+      "done"
+    ],
+    [
+      10,
+      "Wollondilly 15U",
+      11,
+      "Dubbo 15U",
+      13,
+      2,
+      "done"
+    ],
+    [
+      10,
+      "Temora 15U",
+      27,
+      "Nelson Bay 15U",
+      12,
+      3,
+      "done"
+    ],
+    [
+      10,
+      "Kiama 15U",
+      22,
+      "Casino 15U",
+      11,
+      5,
+      "done"
+    ],
+    [
+      10,
+      "Great Lakes 15U",
+      18,
+      "Tamworth 15U",
+      30,
+      7,
+      "done"
+    ],
+    [
+      10,
+      "Woy Woy Peninsula 15U",
+      25,
+      "Port Stephens 15U",
+      10,
+      8,
+      "done"
+    ],
+    [
+      10,
+      "Cessnock District 15U",
+      15,
+      "Tumut 15U",
+      13,
+      10,
+      "done"
+    ],
+    [
+      10,
+      "Griffith 15U",
+      11,
+      "Southern Highlands 15U",
+      17,
+      11,
+      "done"
+    ],
+    [
+      11,
+      "Dubbo 15U",
+      13,
+      "Blue Mountains 15U",
+      13,
+      1,
+      "done"
+    ],
+    [
+      11,
+      "Nelson Bay 15U",
+      18,
+      "Mudgee District 15U",
+      15,
+      2,
+      "done"
+    ],
+    [
+      11,
+      "Casino 15U",
+      10,
+      "Wollondilly 15U",
+      13,
+      3,
+      "done"
+    ],
+    [
+      11,
+      "Tamworth 15U",
+      18,
+      "Temora 15U",
+      22,
+      5,
+      "done"
+    ],
+    [
+      11,
+      "Port Stephens 15U",
+      12,
+      "Kiama 15U",
+      25,
+      7,
+      "done"
+    ],
+    [
+      11,
+      "Tumut 15U",
+      21,
+      "Great Lakes 15U",
+      22,
+      8,
+      "done"
+    ],
+    [
+      11,
+      "Southern Highlands 15U",
+      18,
+      "Woy Woy Peninsula 15U",
+      17,
+      10,
+      "done"
+    ],
+    [
+      11,
+      "Griffith 15U",
+      18,
+      "Cessnock District 15U",
+      12,
+      11,
+      "done"
+    ],
+    [
+      12,
+      "Manning Valley 15U",
+      16,
+      "Nelson Bay 15U",
+      21,
+      17,
+      "done"
+    ],
+    [
+      12,
+      "Blue Mountains 15U",
+      11,
+      "Casino 15U",
+      21,
+      21,
+      "done"
+    ],
+    [
+      12,
+      "Mudgee District 15U",
+      9,
+      "Tamworth 15U",
+      24,
+      24,
+      "done"
+    ],
+    [
+      12,
+      "Wollondilly 15U",
+      14,
+      "Port Stephens 15U",
+      15,
+      28,
+      "done"
+    ],
+    [
+      12,
+      "Temora 15U",
+      24,
+      "Tumut 15U",
+      14,
+      29,
+      "done"
+    ],
+    [
+      12,
+      "Kiama 15U",
+      23,
+      "Southern Highlands 15U",
+      11,
+      32,
+      "done"
+    ],
+    [
+      12,
+      "Great Lakes 15U",
+      17,
+      "Griffith 15U",
+      18,
+      36,
+      "done"
+    ],
+    [
+      12,
+      "Woy Woy Peninsula 15U",
+      21,
+      "Cessnock District 15U",
+      9,
+      37,
+      "done"
+    ],
+    [
+      13,
+      "Casino 15U",
+      12,
+      "Dubbo 15U",
+      13,
+      37,
+      "done"
+    ],
+    [
+      13,
+      "Tamworth 15U",
+      22,
+      "Manning Valley 15U",
+      22,
+      36,
+      "done"
+    ],
+    [
+      13,
+      "Port Stephens 15U",
+      13,
+      "Blue Mountains 15U",
+      16,
+      32,
+      "done"
+    ],
+    [
+      13,
+      "Tumut 15U",
+      22,
+      "Mudgee District 15U",
+      6,
+      29,
+      "done"
+    ],
+    [
+      13,
+      "Southern Highlands 15U",
+      15,
+      "Wollondilly 15U",
+      8,
+      28,
+      "done"
+    ],
+    [
+      13,
+      "Griffith 15U",
+      13,
+      "Temora 15U",
+      17,
+      24,
+      "done"
+    ],
+    [
+      13,
+      "Cessnock District 15U",
+      10,
+      "Kiama 15U",
+      14,
+      21,
+      "done"
+    ],
+    [
+      13,
+      "Woy Woy Peninsula 15U",
+      30,
+      "Great Lakes 15U",
+      11,
+      17,
+      "done"
+    ],
+    [
+      14,
+      "Nelson Bay 15U",
+      21,
+      "Tamworth 15U",
+      18,
+      17,
+      "done"
+    ],
+    [
+      14,
+      "Dubbo 15U",
+      16,
+      "Port Stephens 15U",
+      9,
+      21,
+      "done"
+    ],
+    [
+      14,
+      "Manning Valley 15U",
+      24,
+      "Tumut 15U",
+      19,
+      24,
+      "done"
+    ],
+    [
+      14,
+      "Blue Mountains 15U",
+      6,
+      "Southern Highlands 15U",
+      19,
+      28,
+      "done"
+    ],
+    [
+      14,
+      "Mudgee District 15U",
+      10,
+      "Griffith 15U",
+      23,
+      29,
+      "done"
+    ],
+    [
+      14,
+      "Wollondilly 15U",
+      9,
+      "Cessnock District 15U",
+      11,
+      32,
+      "done"
+    ],
+    [
+      14,
+      "Temora 15U",
+      21,
+      "Woy Woy Peninsula 15U",
+      20,
+      36,
+      "done"
+    ],
+    [
+      14,
+      "Kiama 15U",
+      22,
+      "Great Lakes 15U",
+      15,
+      37,
+      "done"
+    ],
+    [
+      15,
+      "Port Stephens 15U",
+      10,
+      "Casino 15U",
+      18,
+      37,
+      "done"
+    ],
+    [
+      15,
+      "Tumut 15U",
+      18,
+      "Nelson Bay 15U",
+      23,
+      36,
+      "done"
+    ],
+    [
+      15,
+      "Southern Highlands 15U",
+      15,
+      "Dubbo 15U",
+      8,
+      32,
+      "done"
+    ],
+    [
+      15,
+      "Griffith 15U",
+      14,
+      "Manning Valley 15U",
+      19,
+      29,
+      "done"
+    ],
+    [
+      15,
+      "Cessnock District 15U",
+      12,
+      "Blue Mountains 15U",
+      10,
+      28,
+      "done"
+    ],
+    [
+      15,
+      "Woy Woy Peninsula 15U",
+      36,
+      "Mudgee District 15U",
+      8,
+      24,
+      "done"
+    ],
+    [
+      15,
+      "Great Lakes 15U",
+      22,
+      "Wollondilly 15U",
+      17,
+      21,
+      "done"
+    ],
+    [
+      15,
+      "Kiama 15U",
+      19,
+      "Temora 15U",
+      22,
+      17,
+      "done"
+    ],
+    [
+      16,
+      "Tamworth 15U",
+      23,
+      "Tumut 15U",
+      15,
+      17,
+      "done"
+    ],
+    [
+      16,
+      "Casino 15U",
+      14,
+      "Southern Highlands 15U",
+      15,
+      21,
+      "done"
+    ],
+    [
+      16,
+      "Nelson Bay 15U",
+      20,
+      "Griffith 15U",
+      23,
+      24,
+      "done"
+    ],
+    [
+      16,
+      "Dubbo 15U",
+      11,
+      "Cessnock District 15U",
+      12,
+      28,
+      "done"
+    ],
+    [
+      16,
+      "Manning Valley 15U",
+      15,
+      "Woy Woy Peninsula 15U",
+      22,
+      29,
+      "done"
+    ],
+    [
+      16,
+      "Blue Mountains 15U",
+      14,
+      "Great Lakes 15U",
+      23,
+      32,
+      "done"
+    ],
+    [
+      16,
+      "Mudgee District 15U",
+      4,
+      "Kiama 15U",
+      36,
+      36,
+      "done"
+    ],
+    [
+      16,
+      "Wollondilly 15U",
+      10,
+      "Temora 15U",
+      23,
+      37,
+      "done"
+    ],
+    [
+      17,
+      "Southern Highlands 15U",
+      18,
+      "Port Stephens 15U",
+      12,
+      24,
+      "done"
+    ],
+    [
+      17,
+      "Griffith 15U",
+      15,
+      "Tamworth 15U",
+      23,
+      28,
+      "done"
+    ],
+    [
+      17,
+      "Cessnock District 15U",
+      11,
+      "Casino 15U",
+      10,
+      29,
+      "done"
+    ],
+    [
+      17,
+      "Woy Woy Peninsula 15U",
+      27,
+      "Nelson Bay 15U",
+      18,
+      32,
+      "done"
+    ],
+    [
+      17,
+      "Great Lakes 15U",
+      16,
+      "Dubbo 15U",
+      15,
+      36,
+      "done"
+    ],
+    [
+      17,
+      "Kiama 15U",
+      24,
+      "Manning Valley 15U",
+      13,
+      37,
+      "done"
+    ],
+    [
+      17,
+      "Temora 15U",
+      30,
+      "Blue Mountains 15U",
+      11,
+      17,
+      "done"
+    ],
+    [
+      17,
+      "Wollondilly 15U",
+      25,
+      "Mudgee District 15U",
+      11,
+      21,
+      "done"
+    ]
+  ]
+};
+
+function render(d) {
+  const key = (a, b) => [a, b].sort().join("|");
+
+  // Build M as arrays — all games per pair, sorted by round.
+  const M = {};
+  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+    const k = key(h, a);
+    if (!M[k]) M[k] = [];
+    M[k].push({ rd, h, hs, a, as: as_, court, st });
+  });
+  Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
+
+  const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
+
+  // Per-team next round: min round where their game isn't done
+  const nextRound = {};
+  d.teams.forEach(t => {
+    let min = Infinity;
+    d.games.forEach(([rd, h, , a, , , st]) => {
+      if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
+    });
+    nextRound[t.code] = min === Infinity ? null : min;
+  });
+
+  const grid = document.getElementById("grid");
+  let html = "<thead><tr>";
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
+    : d.title;
+  html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
+  d.teams.forEach(t => {
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+
+  d.teams.forEach((rowT) => {
+    const pinnedRow = rowT.code === d.pin;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<th class="rowhead">
+               <div class="rn">
+                 <span class="rkn">${rowT.rank}</span>
+                 <span class="nm">${rowT.name}</span>
+               </div>
+             </th>`;
+
+    d.teams.forEach((colT) => {
+      const pinCol = colT.code === d.pin && !pinnedRow;
+      const pcls = pinCol ? " pincol" : "";
+
+      if (rowT.code === colT.code) {
+        html += `<td class="cell self">
+                   <span class="sl1">${rowT.pts} pts</span>
+                   <span class="sl2">${rowT.pct}%</span>
+                 </td>`;
+        return;
+      }
+
+      const games = M[key(rowT.code, colT.code)];
+      if (!games) { html += `<td class="cell${pcls}"></td>`; return; }
+
+      html += `<td class="cell${pcls}">`;
+      games.forEach(m => {
+        const rowScore = m.h === rowT.code ? m.hs : m.as;
+        const colScore = m.h === rowT.code ? m.as : m.hs;
+        const rmeta = roundByN[m.rd] || {};
+        const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+        if (m.st === "live" && rowScore != null) {
+          html += `<div class="mg live${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
+                   </div>`;
+        } else if (m.st === "done" && rowScore != null) {
+          const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">${rowScore}–${colScore}</span>
+                   </div>`;
+        } else {
+          const liveCls = m.st === "live" ? " live" : "";
+          html += `<div class="mg fix${liveCls}${ncls}">
+                     <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
+                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                   </div>`;
+        }
+      });
+      html += `</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody>";
+  grid.innerHTML = html;
+}
+render(DATA);
+
+</script>
+</body>
+</html>

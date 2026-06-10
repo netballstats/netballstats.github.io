@@ -1,0 +1,2546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Opens Division 2 — Cross Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #15223b;
+    --ink-2:    #51607a;
+    --muted:    #9aa4b6;
+    --line:     #dfe3ea;
+    --line-2:   #eef0f4;
+    --bg:       #f3f5f8;
+    --card:     #ffffff;
+    --accent:   #e8542f;
+    --accent-bg:#fdece5;
+    --win:      #157a47;
+    --win-bg:   #e7f3ea;
+    --loss:     #b23b2c;
+    --loss-bg:  #fbe9e6;
+    --draw-bg:  #fff3e0;
+    --col-w:    52px;
+    --name-w:   110px;
+    --row-h:    33px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .scroll {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+  table.x { border-collapse: separate; border-spacing: 0; margin: 0; }
+  table.x th, table.x td { padding: 0; margin: 0; }
+  th.corner {
+    position: sticky; left: 0; top: 0; z-index: 6;
+    width: var(--name-w); min-width: var(--name-w);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 2px solid var(--line);
+  }
+  th.corner .lbl {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    padding: 5px 6px; text-align: left; line-height: 1.3;
+  }
+  th.corner .lbl a { color: inherit; text-decoration: none; }
+  th.corner .lbl a:hover { text-decoration: underline; }
+  th.colhead {
+    position: sticky; top: 0; z-index: 4;
+    width: var(--col-w); min-width: var(--col-w);
+    background: var(--card);
+    border-bottom: 2px solid var(--line);
+    border-left: 1px solid var(--line-2);
+    vertical-align: bottom;
+    padding: 4px 3px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 10px;
+    color: var(--ink); text-align: center;
+    overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.15; vertical-align: top;
+  }
+  th.colhead .ckn {
+    display: block;
+    font-size: 8px; font-weight: 700;
+    color: var(--muted); letter-spacing: .3px;
+    line-height: 1.4;
+  }
+  th.rowhead {
+    position: sticky; left: 0; z-index: 3;
+    width: var(--name-w); min-width: var(--name-w);
+    height: var(--row-h);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: top;
+  }
+  th.rowhead .rn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 5px 3px 5px;
+  }
+  th.rowhead .rkn {
+    flex: 0 0 auto; width: 13px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); text-align: center;
+  }
+  th.rowhead .nm {
+    font-size: 10px; font-weight: 600;
+    line-height: 1.1; color: var(--ink);
+  }
+  td.cell {
+    width: var(--col-w); min-width: var(--col-w);
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    background: var(--card);
+    vertical-align: top;
+  }
+  /* Per-game strip inside a cell */
+  .mg {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: var(--row-h);
+    gap: 1px; padding: 2px; width: 100%;
+  }
+  .mg + .mg { border-top: 1px solid var(--line-2); }
+  .mg .rd {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .3px; color: var(--muted); line-height: 1;
+  }
+  .mg .score {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 13px;
+    line-height: 1; letter-spacing: -.1px;
+  }
+  .mg.win  { background: var(--win-bg); }
+  .mg.win  .score { color: var(--win); }
+  .mg.loss { background: var(--loss-bg); }
+  .mg.loss .score { color: var(--loss); }
+  .mg.draw { background: var(--draw-bg); }
+  .mg.draw .score { color: #e65100; }
+  .mg.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.live .score {
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+  }
+  .mg.live .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: pulse 1.3s infinite;
+  }
+  .mg.fix { background: #f9fafb; text-align: center; line-height: 1.1; }
+  .mg.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .mg.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  .mg.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  .mg.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.fix.live .fl1, .mg.fix.live .fl1 b { color: var(--accent); }
+  .mg.fix.live .fl2 { color: var(--accent); }
+  .mg.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  .mg.next.fix:not(.live) { background: #eef0fb; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
+  td.cell.self {
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
+      var(--ink);
+    overflow: hidden;
+    text-align: center; vertical-align: middle;
+    height: var(--row-h);
+  }
+  td.cell.self .sl1 { display: block; font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
+  td.cell.self .sl2 { display: block; font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; margin-top: 2px; }
+  tr.pinned th.rowhead { background: #fff7ec; }
+  tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  @media (max-width: 400px) {
+    :root { --col-w: 42px; --name-w: 90px; }
+  }
+
+</style>
+<style>html { zoom: 1.5; }</style>
+</head>
+<body>
+  <div class="scroll">
+    <table class="x" id="grid"></table>
+  </div>
+<script>
+const DATA = {
+  "title": "Opens Division 2",
+  "venue": "Baulkham Hills Shire Netball Association, North Kellyville",
+  "date": "Sat 6–Mon 8 Jun 2026",
+  "pin": null,
+  "menu_url": "../index.html",
+  "teams": [
+    {
+      "code": "Manning Valley Opens",
+      "name": "Manning Valley Opens",
+      "rank": 1,
+      "pts": 37,
+      "pct": "188.6",
+      "W": 18,
+      "L": 1,
+      "D": 1
+    },
+    {
+      "code": "Westlakes District Opens",
+      "name": "Westlakes District Opens",
+      "rank": 2,
+      "pts": 36,
+      "pct": "199.6",
+      "W": 18,
+      "L": 2,
+      "D": 0
+    },
+    {
+      "code": "Hawkesbury City Opens",
+      "name": "Hawkesbury City Opens",
+      "rank": 3,
+      "pts": 36,
+      "pct": "183.7",
+      "W": 18,
+      "L": 2,
+      "D": 0
+    },
+    {
+      "code": "Shoalhaven Opens",
+      "name": "Shoalhaven Opens",
+      "rank": 4,
+      "pts": 35,
+      "pct": "157.6",
+      "W": 17,
+      "L": 2,
+      "D": 1
+    },
+    {
+      "code": "ADF Opens (INV)",
+      "name": "ADF Opens (INV)",
+      "rank": 5,
+      "pts": 32,
+      "pct": "152.3",
+      "W": 16,
+      "L": 4,
+      "D": 0
+    },
+    {
+      "code": "Nambucca Valley Opens",
+      "name": "Nambucca Valley Opens",
+      "rank": 6,
+      "pts": 32,
+      "pct": "145.1",
+      "W": 16,
+      "L": 4,
+      "D": 0
+    },
+    {
+      "code": "Callaghan District Opens",
+      "name": "Callaghan District Opens",
+      "rank": 7,
+      "pts": 27,
+      "pct": "120.9",
+      "W": 13,
+      "L": 6,
+      "D": 1
+    },
+    {
+      "code": "Glen Innes Opens",
+      "name": "Glen Innes Opens",
+      "rank": 8,
+      "pts": 23,
+      "pct": "101.9",
+      "W": 11,
+      "L": 8,
+      "D": 1
+    },
+    {
+      "code": "Lismore & District Opens",
+      "name": "Lismore & District Opens",
+      "rank": 9,
+      "pts": 23,
+      "pct": "89.8",
+      "W": 11,
+      "L": 8,
+      "D": 1
+    },
+    {
+      "code": "Bellingen Opens",
+      "name": "Bellingen Opens",
+      "rank": 10,
+      "pts": 19,
+      "pct": "100.0",
+      "W": 9,
+      "L": 10,
+      "D": 1
+    },
+    {
+      "code": "Woy Woy Peninsula Opens",
+      "name": "Woy Woy Peninsula Opens",
+      "rank": 11,
+      "pts": 19,
+      "pct": "87.4",
+      "W": 8,
+      "L": 9,
+      "D": 3
+    },
+    {
+      "code": "Tamworth Opens",
+      "name": "Tamworth Opens",
+      "rank": 12,
+      "pts": 18,
+      "pct": "98.1",
+      "W": 8,
+      "L": 10,
+      "D": 2
+    },
+    {
+      "code": "Inner West Opens",
+      "name": "Inner West Opens",
+      "rank": 13,
+      "pts": 18,
+      "pct": "92.0",
+      "W": 9,
+      "L": 11,
+      "D": 0
+    },
+    {
+      "code": "Blue Mountains Opens",
+      "name": "Blue Mountains Opens",
+      "rank": 14,
+      "pts": 11,
+      "pct": "93.2",
+      "W": 5,
+      "L": 14,
+      "D": 1
+    },
+    {
+      "code": "Queanbeyan Opens",
+      "name": "Queanbeyan Opens",
+      "rank": 15,
+      "pts": 10,
+      "pct": "78.1",
+      "W": 5,
+      "L": 15,
+      "D": 0
+    },
+    {
+      "code": "Great Lakes Opens",
+      "name": "Great Lakes Opens",
+      "rank": 16,
+      "pts": 10,
+      "pct": "71.3",
+      "W": 5,
+      "L": 15,
+      "D": 0
+    },
+    {
+      "code": "Coffs Harbour Opens",
+      "name": "Coffs Harbour Opens",
+      "rank": 17,
+      "pts": 9,
+      "pct": "76.3",
+      "W": 4,
+      "L": 15,
+      "D": 1
+    },
+    {
+      "code": "Wagga Wagga Opens",
+      "name": "Wagga Wagga Opens",
+      "rank": 18,
+      "pts": 9,
+      "pct": "64.9",
+      "W": 4,
+      "L": 15,
+      "D": 1
+    },
+    {
+      "code": "Nelson Bay Opens",
+      "name": "Nelson Bay Opens",
+      "rank": 19,
+      "pts": 8,
+      "pct": "66.3",
+      "W": 3,
+      "L": 15,
+      "D": 2
+    },
+    {
+      "code": "Dubbo Opens",
+      "name": "Dubbo Opens",
+      "rank": 20,
+      "pts": 7,
+      "pct": "55.4",
+      "W": 3,
+      "L": 16,
+      "D": 1
+    },
+    {
+      "code": "Inverell Opens",
+      "name": "Inverell Opens",
+      "rank": 21,
+      "pts": 1,
+      "pct": "36.2",
+      "W": 0,
+      "L": 19,
+      "D": 1
+    }
+  ],
+  "rounds": [
+    {
+      "n": 1,
+      "day": "Sat",
+      "time": "09:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "day": "Sat",
+      "time": "10:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "day": "Sat",
+      "time": "11:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "day": "Sat",
+      "time": "12:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "day": "Sat",
+      "time": "13:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 6,
+      "day": "Sat",
+      "time": "14:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 7,
+      "day": "Sat",
+      "time": "15:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 8,
+      "day": "Sun",
+      "time": "08:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 9,
+      "day": "Sun",
+      "time": "09:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 10,
+      "day": "Sun",
+      "time": "10:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 11,
+      "day": "Sun",
+      "time": "11:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 12,
+      "day": "Sun",
+      "time": "12:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 13,
+      "day": "Sun",
+      "time": "13:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 14,
+      "day": "Sun",
+      "time": "14:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 15,
+      "day": "Mon",
+      "time": "08:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 16,
+      "day": "Mon",
+      "time": "09:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 17,
+      "day": "Mon",
+      "time": "10:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 18,
+      "day": "Mon",
+      "time": "11:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 19,
+      "day": "Mon",
+      "time": "12:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 20,
+      "day": "Mon",
+      "time": "13:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 21,
+      "day": "Mon",
+      "time": "14:30",
+      "sdate": "8/6",
+      "state": "done"
+    }
+  ],
+  "games": [
+    [
+      1,
+      "Hawkesbury City Opens",
+      21,
+      "ADF Opens (INV)",
+      12,
+      2,
+      "done"
+    ],
+    [
+      1,
+      "Bellingen Opens",
+      11,
+      "Nambucca Valley Opens",
+      23,
+      1,
+      "done"
+    ],
+    [
+      1,
+      "Dubbo Opens",
+      12,
+      "Nelson Bay Opens",
+      12,
+      3,
+      "done"
+    ],
+    [
+      1,
+      "Shoalhaven Opens",
+      15,
+      "Manning Valley Opens",
+      15,
+      5,
+      "done"
+    ],
+    [
+      1,
+      "Blue Mountains Opens",
+      16,
+      "Glen Innes Opens",
+      21,
+      6,
+      "done"
+    ],
+    [
+      1,
+      "Queanbeyan Opens",
+      14,
+      "Coffs Harbour Opens",
+      20,
+      8,
+      "done"
+    ],
+    [
+      1,
+      "Lismore & District Opens",
+      17,
+      "Inverell Opens",
+      17,
+      9,
+      "done"
+    ],
+    [
+      1,
+      "Woy Woy Peninsula Opens",
+      13,
+      "Wagga Wagga Opens",
+      13,
+      10,
+      "done"
+    ],
+    [
+      1,
+      "Tamworth Opens",
+      18,
+      "Callaghan District Opens",
+      18,
+      11,
+      "done"
+    ],
+    [
+      1,
+      "Great Lakes Opens",
+      10,
+      "Westlakes District Opens",
+      27,
+      13,
+      "done"
+    ],
+    [
+      2,
+      "Inner West Opens",
+      14,
+      "Bellingen Opens",
+      16,
+      1,
+      "done"
+    ],
+    [
+      2,
+      "ADF Opens (INV)",
+      24,
+      "Dubbo Opens",
+      6,
+      2,
+      "done"
+    ],
+    [
+      2,
+      "Nambucca Valley Opens",
+      20,
+      "Shoalhaven Opens",
+      21,
+      3,
+      "done"
+    ],
+    [
+      2,
+      "Nelson Bay Opens",
+      13,
+      "Blue Mountains Opens",
+      19,
+      5,
+      "done"
+    ],
+    [
+      2,
+      "Manning Valley Opens",
+      17,
+      "Queanbeyan Opens",
+      7,
+      6,
+      "done"
+    ],
+    [
+      2,
+      "Glen Innes Opens",
+      17,
+      "Lismore & District Opens",
+      13,
+      8,
+      "done"
+    ],
+    [
+      2,
+      "Coffs Harbour Opens",
+      10,
+      "Woy Woy Peninsula Opens",
+      13,
+      9,
+      "done"
+    ],
+    [
+      2,
+      "Inverell Opens",
+      10,
+      "Tamworth Opens",
+      26,
+      10,
+      "done"
+    ],
+    [
+      2,
+      "Wagga Wagga Opens",
+      12,
+      "Great Lakes Opens",
+      20,
+      11,
+      "done"
+    ],
+    [
+      2,
+      "Callaghan District Opens",
+      14,
+      "Westlakes District Opens",
+      30,
+      13,
+      "done"
+    ],
+    [
+      3,
+      "Dubbo Opens",
+      5,
+      "Hawkesbury City Opens",
+      28,
+      1,
+      "done"
+    ],
+    [
+      3,
+      "Shoalhaven Opens",
+      18,
+      "Inner West Opens",
+      15,
+      2,
+      "done"
+    ],
+    [
+      3,
+      "Blue Mountains Opens",
+      14,
+      "ADF Opens (INV)",
+      18,
+      3,
+      "done"
+    ],
+    [
+      3,
+      "Queanbeyan Opens",
+      13,
+      "Nambucca Valley Opens",
+      21,
+      5,
+      "done"
+    ],
+    [
+      3,
+      "Lismore & District Opens",
+      19,
+      "Nelson Bay Opens",
+      9,
+      6,
+      "done"
+    ],
+    [
+      3,
+      "Woy Woy Peninsula Opens",
+      8,
+      "Manning Valley Opens",
+      18,
+      8,
+      "done"
+    ],
+    [
+      3,
+      "Tamworth Opens",
+      18,
+      "Glen Innes Opens",
+      23,
+      9,
+      "done"
+    ],
+    [
+      3,
+      "Great Lakes Opens",
+      19,
+      "Coffs Harbour Opens",
+      16,
+      10,
+      "done"
+    ],
+    [
+      3,
+      "Westlakes District Opens",
+      28,
+      "Inverell Opens",
+      11,
+      11,
+      "done"
+    ],
+    [
+      3,
+      "Callaghan District Opens",
+      19,
+      "Wagga Wagga Opens",
+      15,
+      13,
+      "done"
+    ],
+    [
+      4,
+      "Bellingen Opens",
+      13,
+      "Shoalhaven Opens",
+      15,
+      1,
+      "done"
+    ],
+    [
+      4,
+      "Hawkesbury City Opens",
+      19,
+      "Blue Mountains Opens",
+      11,
+      3,
+      "done"
+    ],
+    [
+      4,
+      "Inner West Opens",
+      17,
+      "Queanbeyan Opens",
+      11,
+      2,
+      "done"
+    ],
+    [
+      4,
+      "ADF Opens (INV)",
+      26,
+      "Lismore & District Opens",
+      3,
+      5,
+      "done"
+    ],
+    [
+      4,
+      "Nambucca Valley Opens",
+      27,
+      "Woy Woy Peninsula Opens",
+      14,
+      6,
+      "done"
+    ],
+    [
+      4,
+      "Nelson Bay Opens",
+      11,
+      "Tamworth Opens",
+      14,
+      8,
+      "done"
+    ],
+    [
+      4,
+      "Manning Valley Opens",
+      23,
+      "Great Lakes Opens",
+      6,
+      9,
+      "done"
+    ],
+    [
+      4,
+      "Glen Innes Opens",
+      10,
+      "Westlakes District Opens",
+      23,
+      10,
+      "done"
+    ],
+    [
+      4,
+      "Coffs Harbour Opens",
+      17,
+      "Callaghan District Opens",
+      21,
+      11,
+      "done"
+    ],
+    [
+      4,
+      "Inverell Opens",
+      10,
+      "Wagga Wagga Opens",
+      15,
+      13,
+      "done"
+    ],
+    [
+      5,
+      "Blue Mountains Opens",
+      14,
+      "Dubbo Opens",
+      15,
+      1,
+      "done"
+    ],
+    [
+      5,
+      "Queanbeyan Opens",
+      11,
+      "Bellingen Opens",
+      16,
+      2,
+      "done"
+    ],
+    [
+      5,
+      "Lismore & District Opens",
+      8,
+      "Hawkesbury City Opens",
+      25,
+      3,
+      "done"
+    ],
+    [
+      5,
+      "Woy Woy Peninsula Opens",
+      17,
+      "Inner West Opens",
+      15,
+      5,
+      "done"
+    ],
+    [
+      5,
+      "Tamworth Opens",
+      17,
+      "ADF Opens (INV)",
+      20,
+      6,
+      "done"
+    ],
+    [
+      5,
+      "Great Lakes Opens",
+      15,
+      "Nambucca Valley Opens",
+      22,
+      8,
+      "done"
+    ],
+    [
+      5,
+      "Westlakes District Opens",
+      24,
+      "Nelson Bay Opens",
+      11,
+      9,
+      "done"
+    ],
+    [
+      5,
+      "Callaghan District Opens",
+      11,
+      "Manning Valley Opens",
+      21,
+      10,
+      "done"
+    ],
+    [
+      5,
+      "Wagga Wagga Opens",
+      13,
+      "Glen Innes Opens",
+      18,
+      11,
+      "done"
+    ],
+    [
+      5,
+      "Inverell Opens",
+      12,
+      "Coffs Harbour Opens",
+      26,
+      13,
+      "done"
+    ],
+    [
+      6,
+      "Shoalhaven Opens",
+      31,
+      "Queanbeyan Opens",
+      11,
+      1,
+      "done"
+    ],
+    [
+      6,
+      "Dubbo Opens",
+      6,
+      "Lismore & District Opens",
+      20,
+      2,
+      "done"
+    ],
+    [
+      6,
+      "Bellingen Opens",
+      16,
+      "Woy Woy Peninsula Opens",
+      15,
+      3,
+      "done"
+    ],
+    [
+      6,
+      "Hawkesbury City Opens",
+      25,
+      "Tamworth Opens",
+      17,
+      5,
+      "done"
+    ],
+    [
+      6,
+      "Inner West Opens",
+      17,
+      "Great Lakes Opens",
+      13,
+      6,
+      "done"
+    ],
+    [
+      6,
+      "ADF Opens (INV)",
+      14,
+      "Westlakes District Opens",
+      21,
+      8,
+      "done"
+    ],
+    [
+      6,
+      "Nambucca Valley Opens",
+      25,
+      "Callaghan District Opens",
+      14,
+      9,
+      "done"
+    ],
+    [
+      6,
+      "Nelson Bay Opens",
+      12,
+      "Wagga Wagga Opens",
+      16,
+      10,
+      "done"
+    ],
+    [
+      6,
+      "Manning Valley Opens",
+      26,
+      "Inverell Opens",
+      7,
+      11,
+      "done"
+    ],
+    [
+      6,
+      "Glen Innes Opens",
+      21,
+      "Coffs Harbour Opens",
+      23,
+      13,
+      "done"
+    ],
+    [
+      7,
+      "Lismore & District Opens",
+      18,
+      "Blue Mountains Opens",
+      13,
+      1,
+      "done"
+    ],
+    [
+      7,
+      "Woy Woy Peninsula Opens",
+      17,
+      "Shoalhaven Opens",
+      16,
+      2,
+      "done"
+    ],
+    [
+      7,
+      "Tamworth Opens",
+      17,
+      "Dubbo Opens",
+      6,
+      3,
+      "done"
+    ],
+    [
+      7,
+      "Great Lakes Opens",
+      13,
+      "Bellingen Opens",
+      17,
+      5,
+      "done"
+    ],
+    [
+      7,
+      "Westlakes District Opens",
+      21,
+      "Hawkesbury City Opens",
+      12,
+      6,
+      "done"
+    ],
+    [
+      7,
+      "Callaghan District Opens",
+      21,
+      "Inner West Opens",
+      14,
+      8,
+      "done"
+    ],
+    [
+      7,
+      "Wagga Wagga Opens",
+      8,
+      "ADF Opens (INV)",
+      17,
+      9,
+      "done"
+    ],
+    [
+      7,
+      "Inverell Opens",
+      6,
+      "Nambucca Valley Opens",
+      25,
+      10,
+      "done"
+    ],
+    [
+      7,
+      "Coffs Harbour Opens",
+      14,
+      "Nelson Bay Opens",
+      15,
+      11,
+      "done"
+    ],
+    [
+      7,
+      "Glen Innes Opens",
+      17,
+      "Manning Valley Opens",
+      22,
+      13,
+      "done"
+    ],
+    [
+      8,
+      "Queanbeyan Opens",
+      13,
+      "Woy Woy Peninsula Opens",
+      15,
+      6,
+      "done"
+    ],
+    [
+      8,
+      "Blue Mountains Opens",
+      18,
+      "Tamworth Opens",
+      21,
+      9,
+      "done"
+    ],
+    [
+      8,
+      "Shoalhaven Opens",
+      30,
+      "Great Lakes Opens",
+      19,
+      12,
+      "done"
+    ],
+    [
+      8,
+      "Dubbo Opens",
+      8,
+      "Westlakes District Opens",
+      26,
+      14,
+      "done"
+    ],
+    [
+      8,
+      "Bellingen Opens",
+      17,
+      "Callaghan District Opens",
+      18,
+      15,
+      "done"
+    ],
+    [
+      8,
+      "Hawkesbury City Opens",
+      20,
+      "Wagga Wagga Opens",
+      9,
+      16,
+      "done"
+    ],
+    [
+      8,
+      "Inner West Opens",
+      22,
+      "Inverell Opens",
+      10,
+      17,
+      "done"
+    ],
+    [
+      8,
+      "ADF Opens (INV)",
+      28,
+      "Coffs Harbour Opens",
+      15,
+      19,
+      "done"
+    ],
+    [
+      8,
+      "Nambucca Valley Opens",
+      23,
+      "Glen Innes Opens",
+      17,
+      21,
+      "done"
+    ],
+    [
+      8,
+      "Nelson Bay Opens",
+      7,
+      "Manning Valley Opens",
+      20,
+      22,
+      "done"
+    ],
+    [
+      9,
+      "Tamworth Opens",
+      14,
+      "Lismore & District Opens",
+      22,
+      6,
+      "done"
+    ],
+    [
+      9,
+      "Great Lakes Opens",
+      20,
+      "Queanbeyan Opens",
+      18,
+      9,
+      "done"
+    ],
+    [
+      9,
+      "Westlakes District Opens",
+      20,
+      "Blue Mountains Opens",
+      11,
+      12,
+      "done"
+    ],
+    [
+      9,
+      "Callaghan District Opens",
+      24,
+      "Shoalhaven Opens",
+      25,
+      14,
+      "done"
+    ],
+    [
+      9,
+      "Wagga Wagga Opens",
+      16,
+      "Dubbo Opens",
+      13,
+      15,
+      "done"
+    ],
+    [
+      9,
+      "Inverell Opens",
+      10,
+      "Bellingen Opens",
+      19,
+      16,
+      "done"
+    ],
+    [
+      9,
+      "Coffs Harbour Opens",
+      8,
+      "Hawkesbury City Opens",
+      28,
+      17,
+      "done"
+    ],
+    [
+      9,
+      "Glen Innes Opens",
+      25,
+      "Inner West Opens",
+      19,
+      19,
+      "done"
+    ],
+    [
+      9,
+      "Manning Valley Opens",
+      13,
+      "ADF Opens (INV)",
+      12,
+      21,
+      "done"
+    ],
+    [
+      9,
+      "Nelson Bay Opens",
+      9,
+      "Nambucca Valley Opens",
+      22,
+      22,
+      "done"
+    ],
+    [
+      10,
+      "Woy Woy Peninsula Opens",
+      25,
+      "Great Lakes Opens",
+      17,
+      6,
+      "done"
+    ],
+    [
+      10,
+      "Lismore & District Opens",
+      13,
+      "Westlakes District Opens",
+      24,
+      9,
+      "done"
+    ],
+    [
+      10,
+      "Queanbeyan Opens",
+      6,
+      "Callaghan District Opens",
+      22,
+      12,
+      "done"
+    ],
+    [
+      10,
+      "Blue Mountains Opens",
+      18,
+      "Wagga Wagga Opens",
+      10,
+      14,
+      "done"
+    ],
+    [
+      10,
+      "Shoalhaven Opens",
+      28,
+      "Inverell Opens",
+      4,
+      15,
+      "done"
+    ],
+    [
+      10,
+      "Dubbo Opens",
+      11,
+      "Coffs Harbour Opens",
+      15,
+      16,
+      "done"
+    ],
+    [
+      10,
+      "Bellingen Opens",
+      15,
+      "Glen Innes Opens",
+      23,
+      17,
+      "done"
+    ],
+    [
+      10,
+      "Hawkesbury City Opens",
+      12,
+      "Manning Valley Opens",
+      13,
+      19,
+      "done"
+    ],
+    [
+      10,
+      "Inner West Opens",
+      16,
+      "Nelson Bay Opens",
+      8,
+      21,
+      "done"
+    ],
+    [
+      10,
+      "ADF Opens (INV)",
+      19,
+      "Nambucca Valley Opens",
+      16,
+      22,
+      "done"
+    ],
+    [
+      11,
+      "Westlakes District Opens",
+      21,
+      "Tamworth Opens",
+      15,
+      6,
+      "done"
+    ],
+    [
+      11,
+      "Callaghan District Opens",
+      16,
+      "Woy Woy Peninsula Opens",
+      13,
+      9,
+      "done"
+    ],
+    [
+      11,
+      "Wagga Wagga Opens",
+      8,
+      "Lismore & District Opens",
+      19,
+      12,
+      "done"
+    ],
+    [
+      11,
+      "Inverell Opens",
+      10,
+      "Queanbeyan Opens",
+      21,
+      14,
+      "done"
+    ],
+    [
+      11,
+      "Coffs Harbour Opens",
+      13,
+      "Blue Mountains Opens",
+      23,
+      15,
+      "done"
+    ],
+    [
+      11,
+      "Glen Innes Opens",
+      18,
+      "Shoalhaven Opens",
+      28,
+      16,
+      "done"
+    ],
+    [
+      11,
+      "Manning Valley Opens",
+      28,
+      "Dubbo Opens",
+      8,
+      17,
+      "done"
+    ],
+    [
+      11,
+      "Nelson Bay Opens",
+      8,
+      "Bellingen Opens",
+      14,
+      19,
+      "done"
+    ],
+    [
+      11,
+      "Nambucca Valley Opens",
+      22,
+      "Hawkesbury City Opens",
+      27,
+      21,
+      "done"
+    ],
+    [
+      11,
+      "ADF Opens (INV)",
+      25,
+      "Inner West Opens",
+      17,
+      22,
+      "done"
+    ],
+    [
+      12,
+      "Great Lakes Opens",
+      11,
+      "Callaghan District Opens",
+      26,
+      6,
+      "done"
+    ],
+    [
+      12,
+      "Tamworth Opens",
+      21,
+      "Wagga Wagga Opens",
+      12,
+      9,
+      "done"
+    ],
+    [
+      12,
+      "Woy Woy Peninsula Opens",
+      23,
+      "Inverell Opens",
+      12,
+      12,
+      "done"
+    ],
+    [
+      12,
+      "Lismore & District Opens",
+      22,
+      "Coffs Harbour Opens",
+      18,
+      14,
+      "done"
+    ],
+    [
+      12,
+      "Queanbeyan Opens",
+      12,
+      "Glen Innes Opens",
+      14,
+      15,
+      "done"
+    ],
+    [
+      12,
+      "Blue Mountains Opens",
+      9,
+      "Manning Valley Opens",
+      22,
+      16,
+      "done"
+    ],
+    [
+      12,
+      "Shoalhaven Opens",
+      19,
+      "Nelson Bay Opens",
+      9,
+      17,
+      "done"
+    ],
+    [
+      12,
+      "Dubbo Opens",
+      10,
+      "Nambucca Valley Opens",
+      26,
+      19,
+      "done"
+    ],
+    [
+      12,
+      "Bellingen Opens",
+      17,
+      "ADF Opens (INV)",
+      18,
+      21,
+      "done"
+    ],
+    [
+      12,
+      "Hawkesbury City Opens",
+      28,
+      "Inner West Opens",
+      15,
+      22,
+      "done"
+    ],
+    [
+      13,
+      "Wagga Wagga Opens",
+      10,
+      "Westlakes District Opens",
+      29,
+      6,
+      "done"
+    ],
+    [
+      13,
+      "Inverell Opens",
+      7,
+      "Great Lakes Opens",
+      25,
+      9,
+      "done"
+    ],
+    [
+      13,
+      "Coffs Harbour Opens",
+      18,
+      "Tamworth Opens",
+      18,
+      12,
+      "done"
+    ],
+    [
+      13,
+      "Glen Innes Opens",
+      18,
+      "Woy Woy Peninsula Opens",
+      18,
+      14,
+      "done"
+    ],
+    [
+      13,
+      "Manning Valley Opens",
+      24,
+      "Lismore & District Opens",
+      8,
+      15,
+      "done"
+    ],
+    [
+      13,
+      "Nelson Bay Opens",
+      7,
+      "Queanbeyan Opens",
+      20,
+      16,
+      "done"
+    ],
+    [
+      13,
+      "Nambucca Valley Opens",
+      23,
+      "Blue Mountains Opens",
+      21,
+      17,
+      "done"
+    ],
+    [
+      13,
+      "ADF Opens (INV)",
+      11,
+      "Shoalhaven Opens",
+      19,
+      19,
+      "done"
+    ],
+    [
+      13,
+      "Inner West Opens",
+      18,
+      "Dubbo Opens",
+      16,
+      21,
+      "done"
+    ],
+    [
+      13,
+      "Hawkesbury City Opens",
+      18,
+      "Bellingen Opens",
+      16,
+      22,
+      "done"
+    ],
+    [
+      14,
+      "Callaghan District Opens",
+      25,
+      "Inverell Opens",
+      5,
+      6,
+      "done"
+    ],
+    [
+      14,
+      "Westlakes District Opens",
+      24,
+      "Coffs Harbour Opens",
+      9,
+      9,
+      "done"
+    ],
+    [
+      14,
+      "Great Lakes Opens",
+      14,
+      "Glen Innes Opens",
+      16,
+      12,
+      "done"
+    ],
+    [
+      14,
+      "Tamworth Opens",
+      8,
+      "Manning Valley Opens",
+      21,
+      14,
+      "done"
+    ],
+    [
+      14,
+      "Woy Woy Peninsula Opens",
+      13,
+      "Nelson Bay Opens",
+      13,
+      15,
+      "done"
+    ],
+    [
+      14,
+      "Lismore & District Opens",
+      18,
+      "Nambucca Valley Opens",
+      27,
+      16,
+      "done"
+    ],
+    [
+      14,
+      "Queanbeyan Opens",
+      7,
+      "ADF Opens (INV)",
+      12,
+      17,
+      "done"
+    ],
+    [
+      14,
+      "Blue Mountains Opens",
+      12,
+      "Inner West Opens",
+      19,
+      19,
+      "done"
+    ],
+    [
+      14,
+      "Shoalhaven Opens",
+      21,
+      "Hawkesbury City Opens",
+      25,
+      21,
+      "done"
+    ],
+    [
+      14,
+      "Dubbo Opens",
+      13,
+      "Bellingen Opens",
+      21,
+      22,
+      "done"
+    ],
+    [
+      15,
+      "Coffs Harbour Opens",
+      16,
+      "Wagga Wagga Opens",
+      20,
+      1,
+      "done"
+    ],
+    [
+      15,
+      "Glen Innes Opens",
+      15,
+      "Callaghan District Opens",
+      22,
+      2,
+      "done"
+    ],
+    [
+      15,
+      "Manning Valley Opens",
+      11,
+      "Westlakes District Opens",
+      10,
+      3,
+      "done"
+    ],
+    [
+      15,
+      "Nelson Bay Opens",
+      21,
+      "Great Lakes Opens",
+      10,
+      5,
+      "done"
+    ],
+    [
+      15,
+      "Nambucca Valley Opens",
+      23,
+      "Tamworth Opens",
+      16,
+      7,
+      "done"
+    ],
+    [
+      15,
+      "ADF Opens (INV)",
+      16,
+      "Woy Woy Peninsula Opens",
+      12,
+      8,
+      "done"
+    ],
+    [
+      15,
+      "Inner West Opens",
+      17,
+      "Lismore & District Opens",
+      19,
+      9,
+      "done"
+    ],
+    [
+      15,
+      "Hawkesbury City Opens",
+      21,
+      "Queanbeyan Opens",
+      11,
+      10,
+      "done"
+    ],
+    [
+      15,
+      "Bellingen Opens",
+      17,
+      "Blue Mountains Opens",
+      17,
+      12,
+      "done"
+    ],
+    [
+      15,
+      "Dubbo Opens",
+      11,
+      "Shoalhaven Opens",
+      24,
+      13,
+      "done"
+    ],
+    [
+      16,
+      "Inverell Opens",
+      10,
+      "Glen Innes Opens",
+      22,
+      1,
+      "done"
+    ],
+    [
+      16,
+      "Wagga Wagga Opens",
+      9,
+      "Manning Valley Opens",
+      26,
+      3,
+      "done"
+    ],
+    [
+      16,
+      "Callaghan District Opens",
+      22,
+      "Nelson Bay Opens",
+      9,
+      2,
+      "done"
+    ],
+    [
+      16,
+      "Westlakes District Opens",
+      21,
+      "Nambucca Valley Opens",
+      13,
+      5,
+      "done"
+    ],
+    [
+      16,
+      "Great Lakes Opens",
+      8,
+      "ADF Opens (INV)",
+      25,
+      7,
+      "done"
+    ],
+    [
+      16,
+      "Tamworth Opens",
+      16,
+      "Inner West Opens",
+      17,
+      8,
+      "done"
+    ],
+    [
+      16,
+      "Woy Woy Peninsula Opens",
+      14,
+      "Hawkesbury City Opens",
+      27,
+      9,
+      "done"
+    ],
+    [
+      16,
+      "Lismore & District Opens",
+      15,
+      "Bellingen Opens",
+      14,
+      10,
+      "done"
+    ],
+    [
+      16,
+      "Queanbeyan Opens",
+      10,
+      "Dubbo Opens",
+      12,
+      12,
+      "done"
+    ],
+    [
+      16,
+      "Blue Mountains Opens",
+      16,
+      "Shoalhaven Opens",
+      26,
+      13,
+      "done"
+    ],
+    [
+      17,
+      "Manning Valley Opens",
+      27,
+      "Coffs Harbour Opens",
+      14,
+      2,
+      "done"
+    ],
+    [
+      17,
+      "Nelson Bay Opens",
+      19,
+      "Inverell Opens",
+      5,
+      1,
+      "done"
+    ],
+    [
+      17,
+      "Nambucca Valley Opens",
+      24,
+      "Wagga Wagga Opens",
+      9,
+      3,
+      "done"
+    ],
+    [
+      17,
+      "ADF Opens (INV)",
+      24,
+      "Callaghan District Opens",
+      15,
+      5,
+      "done"
+    ],
+    [
+      17,
+      "Inner West Opens",
+      13,
+      "Westlakes District Opens",
+      28,
+      7,
+      "done"
+    ],
+    [
+      17,
+      "Hawkesbury City Opens",
+      25,
+      "Great Lakes Opens",
+      12,
+      8,
+      "done"
+    ],
+    [
+      17,
+      "Bellingen Opens",
+      17,
+      "Tamworth Opens",
+      22,
+      9,
+      "done"
+    ],
+    [
+      17,
+      "Dubbo Opens",
+      14,
+      "Woy Woy Peninsula Opens",
+      16,
+      10,
+      "done"
+    ],
+    [
+      17,
+      "Shoalhaven Opens",
+      21,
+      "Lismore & District Opens",
+      14,
+      12,
+      "done"
+    ],
+    [
+      17,
+      "Blue Mountains Opens",
+      10,
+      "Queanbeyan Opens",
+      11,
+      13,
+      "done"
+    ],
+    [
+      18,
+      "Glen Innes Opens",
+      16,
+      "Nelson Bay Opens",
+      12,
+      1,
+      "done"
+    ],
+    [
+      18,
+      "Coffs Harbour Opens",
+      18,
+      "Nambucca Valley Opens",
+      25,
+      2,
+      "done"
+    ],
+    [
+      18,
+      "Inverell Opens",
+      4,
+      "ADF Opens (INV)",
+      33,
+      3,
+      "done"
+    ],
+    [
+      18,
+      "Wagga Wagga Opens",
+      15,
+      "Inner West Opens",
+      17,
+      5,
+      "done"
+    ],
+    [
+      18,
+      "Callaghan District Opens",
+      13,
+      "Hawkesbury City Opens",
+      25,
+      7,
+      "done"
+    ],
+    [
+      18,
+      "Westlakes District Opens",
+      18,
+      "Bellingen Opens",
+      5,
+      8,
+      "done"
+    ],
+    [
+      18,
+      "Great Lakes Opens",
+      18,
+      "Dubbo Opens",
+      17,
+      9,
+      "done"
+    ],
+    [
+      18,
+      "Tamworth Opens",
+      11,
+      "Shoalhaven Opens",
+      31,
+      10,
+      "done"
+    ],
+    [
+      18,
+      "Woy Woy Peninsula Opens",
+      15,
+      "Blue Mountains Opens",
+      13,
+      12,
+      "done"
+    ],
+    [
+      18,
+      "Lismore & District Opens",
+      20,
+      "Queanbeyan Opens",
+      17,
+      13,
+      "done"
+    ],
+    [
+      19,
+      "Nambucca Valley Opens",
+      20,
+      "Manning Valley Opens",
+      16,
+      1,
+      "done"
+    ],
+    [
+      19,
+      "ADF Opens (INV)",
+      22,
+      "Glen Innes Opens",
+      18,
+      2,
+      "done"
+    ],
+    [
+      19,
+      "Inner West Opens",
+      18,
+      "Coffs Harbour Opens",
+      14,
+      3,
+      "done"
+    ],
+    [
+      19,
+      "Hawkesbury City Opens",
+      42,
+      "Inverell Opens",
+      5,
+      5,
+      "done"
+    ],
+    [
+      19,
+      "Bellingen Opens",
+      24,
+      "Wagga Wagga Opens",
+      13,
+      7,
+      "done"
+    ],
+    [
+      19,
+      "Dubbo Opens",
+      5,
+      "Callaghan District Opens",
+      23,
+      8,
+      "done"
+    ],
+    [
+      19,
+      "Shoalhaven Opens",
+      20,
+      "Westlakes District Opens",
+      18,
+      9,
+      "done"
+    ],
+    [
+      19,
+      "Blue Mountains Opens",
+      26,
+      "Great Lakes Opens",
+      19,
+      10,
+      "done"
+    ],
+    [
+      19,
+      "Queanbeyan Opens",
+      19,
+      "Tamworth Opens",
+      15,
+      12,
+      "done"
+    ],
+    [
+      19,
+      "Lismore & District Opens",
+      17,
+      "Woy Woy Peninsula Opens",
+      14,
+      13,
+      "done"
+    ],
+    [
+      20,
+      "Nelson Bay Opens",
+      5,
+      "ADF Opens (INV)",
+      14,
+      2,
+      "done"
+    ],
+    [
+      20,
+      "Manning Valley Opens",
+      19,
+      "Inner West Opens",
+      10,
+      1,
+      "done"
+    ],
+    [
+      20,
+      "Glen Innes Opens",
+      16,
+      "Hawkesbury City Opens",
+      24,
+      3,
+      "done"
+    ],
+    [
+      20,
+      "Coffs Harbour Opens",
+      20,
+      "Bellingen Opens",
+      21,
+      5,
+      "done"
+    ],
+    [
+      20,
+      "Inverell Opens",
+      13,
+      "Dubbo Opens",
+      15,
+      7,
+      "done"
+    ],
+    [
+      20,
+      "Wagga Wagga Opens",
+      15,
+      "Shoalhaven Opens",
+      27,
+      8,
+      "done"
+    ],
+    [
+      20,
+      "Callaghan District Opens",
+      24,
+      "Blue Mountains Opens",
+      20,
+      9,
+      "done"
+    ],
+    [
+      20,
+      "Westlakes District Opens",
+      26,
+      "Queanbeyan Opens",
+      13,
+      10,
+      "done"
+    ],
+    [
+      20,
+      "Great Lakes Opens",
+      15,
+      "Lismore & District Opens",
+      20,
+      12,
+      "done"
+    ],
+    [
+      20,
+      "Tamworth Opens",
+      24,
+      "Woy Woy Peninsula Opens",
+      16,
+      13,
+      "done"
+    ],
+    [
+      21,
+      "Inner West Opens",
+      13,
+      "Nambucca Valley Opens",
+      20,
+      1,
+      "done"
+    ],
+    [
+      21,
+      "Hawkesbury City Opens",
+      20,
+      "Nelson Bay Opens",
+      8,
+      3,
+      "done"
+    ],
+    [
+      21,
+      "Bellingen Opens",
+      12,
+      "Manning Valley Opens",
+      14,
+      2,
+      "done"
+    ],
+    [
+      21,
+      "Dubbo Opens",
+      14,
+      "Glen Innes Opens",
+      23,
+      5,
+      "done"
+    ],
+    [
+      21,
+      "Shoalhaven Opens",
+      30,
+      "Coffs Harbour Opens",
+      9,
+      7,
+      "done"
+    ],
+    [
+      21,
+      "Blue Mountains Opens",
+      26,
+      "Inverell Opens",
+      7,
+      8,
+      "done"
+    ],
+    [
+      21,
+      "Queanbeyan Opens",
+      16,
+      "Wagga Wagga Opens",
+      8,
+      9,
+      "done"
+    ],
+    [
+      21,
+      "Lismore & District Opens",
+      11,
+      "Callaghan District Opens",
+      26,
+      10,
+      "done"
+    ],
+    [
+      21,
+      "Woy Woy Peninsula Opens",
+      14,
+      "Westlakes District Opens",
+      34,
+      13,
+      "done"
+    ],
+    [
+      21,
+      "Tamworth Opens",
+      24,
+      "Great Lakes Opens",
+      11,
+      12,
+      "done"
+    ]
+  ]
+};
+
+function render(d) {
+  const key = (a, b) => [a, b].sort().join("|");
+
+  // Build M as arrays — all games per pair, sorted by round.
+  const M = {};
+  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+    const k = key(h, a);
+    if (!M[k]) M[k] = [];
+    M[k].push({ rd, h, hs, a, as: as_, court, st });
+  });
+  Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
+
+  const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
+
+  // Per-team next round: min round where their game isn't done
+  const nextRound = {};
+  d.teams.forEach(t => {
+    let min = Infinity;
+    d.games.forEach(([rd, h, , a, , , st]) => {
+      if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
+    });
+    nextRound[t.code] = min === Infinity ? null : min;
+  });
+
+  const grid = document.getElementById("grid");
+  let html = "<thead><tr>";
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
+    : d.title;
+  html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
+  d.teams.forEach(t => {
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+
+  d.teams.forEach((rowT) => {
+    const pinnedRow = rowT.code === d.pin;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<th class="rowhead">
+               <div class="rn">
+                 <span class="rkn">${rowT.rank}</span>
+                 <span class="nm">${rowT.name}</span>
+               </div>
+             </th>`;
+
+    d.teams.forEach((colT) => {
+      const pinCol = colT.code === d.pin && !pinnedRow;
+      const pcls = pinCol ? " pincol" : "";
+
+      if (rowT.code === colT.code) {
+        html += `<td class="cell self">
+                   <span class="sl1">${rowT.pts} pts</span>
+                   <span class="sl2">${rowT.pct}%</span>
+                 </td>`;
+        return;
+      }
+
+      const games = M[key(rowT.code, colT.code)];
+      if (!games) { html += `<td class="cell${pcls}"></td>`; return; }
+
+      html += `<td class="cell${pcls}">`;
+      games.forEach(m => {
+        const rowScore = m.h === rowT.code ? m.hs : m.as;
+        const colScore = m.h === rowT.code ? m.as : m.hs;
+        const rmeta = roundByN[m.rd] || {};
+        const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+        if (m.st === "live" && rowScore != null) {
+          html += `<div class="mg live${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
+                   </div>`;
+        } else if (m.st === "done" && rowScore != null) {
+          const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">${rowScore}–${colScore}</span>
+                   </div>`;
+        } else {
+          const liveCls = m.st === "live" ? " live" : "";
+          html += `<div class="mg fix${liveCls}${ncls}">
+                     <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
+                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                   </div>`;
+        }
+      });
+      html += `</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody>";
+  grid.innerHTML = html;
+}
+render(DATA);
+
+</script>
+</body>
+</html>

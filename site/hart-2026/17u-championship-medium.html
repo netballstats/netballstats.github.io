@@ -105,97 +105,73 @@
   }
   td.cell {
     width: var(--col-w); min-width: var(--col-w);
-    height: var(--row-h);
     border-left: 1px solid var(--line-2);
     border-bottom: 1px solid var(--line-2);
-    position: relative;
     background: var(--card);
     vertical-align: top;
   }
-  td.cell .scblock {
-    position: absolute; inset: 0;
+  /* Per-game strip inside a cell */
+  .mg {
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 1px; padding: 2px;
+    min-height: var(--row-h);
+    gap: 1px; padding: 2px; width: 100%;
   }
-  td.cell .scblock .rd {
+  .mg + .mg { border-top: 1px solid var(--line-2); }
+  .mg .rd {
     font-size: 8px; font-weight: 700;
     letter-spacing: .3px; color: var(--muted); line-height: 1;
   }
-  td.cell .scblock .score {
+  .mg .score {
     font-family: 'Barlow Semi Condensed', sans-serif;
     font-weight: 700; font-size: 13px;
     line-height: 1; letter-spacing: -.1px;
   }
-  td.cell.fix { background: #f9fafb; }
-  td.cell.fix .fxblock {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 1px; padding: 2px;
-    text-align: center; line-height: 1.1;
-  }
-  td.cell.fix .fl1 {
-    font-size: 9.5px; font-weight: 600;
-    color: var(--ink-2); white-space: nowrap;
-  }
-  td.cell.fix .fl1 b { color: var(--ink); font-weight: 700; }
-  td.cell.fix .fl2 {
-    font-size: 8.5px; font-weight: 500;
-    color: var(--muted); white-space: nowrap;
-  }
-  td.cell.fix.done { background: #f5f6f8; }
-  td.cell.fix.done .fl1 { color: var(--muted); }
-  td.cell.fix.done .fl1 b { color: var(--ink-2); }
-  td.cell.fix.done .fl2 { color: #bcc4d0; }
-  td.cell.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
-  td.cell.fix.live .fl1, td.cell.fix.live .fl1 b { color: var(--accent); }
-  td.cell.fix.live .fl2 { color: var(--accent); }
-  td.cell.win  { background: var(--win-bg); }
-  td.cell.win  .score { color: var(--win); }
-  td.cell.loss { background: var(--loss-bg); }
-  td.cell.loss .score { color: var(--loss); }
-  td.cell.draw { background: var(--draw-bg); }
-  td.cell.draw .score { color: #e65100; }
-  td.cell.live {
-    background: var(--accent-bg);
-    box-shadow: inset 0 0 0 2px var(--accent);
-  }
-  td.cell.live .score {
+  .mg.win  { background: var(--win-bg); }
+  .mg.win  .score { color: var(--win); }
+  .mg.loss { background: var(--loss-bg); }
+  .mg.loss .score { color: var(--loss); }
+  .mg.draw { background: var(--draw-bg); }
+  .mg.draw .score { color: #e65100; }
+  .mg.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.live .score {
     color: var(--accent);
     display: flex; align-items: center; justify-content: center; gap: 3px;
   }
-  td.cell.live .dot {
+  .mg.live .dot {
     width: 5px; height: 5px; border-radius: 50%;
     background: var(--accent); display: inline-block;
     animation: pulse 1.3s infinite;
   }
-  td.cell.upcoming .score { color: var(--muted); font-size: 11px; }
-  td.cell.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
-  td.cell.next.fix:not(.live) { background: #eef0fb; }
+  .mg.fix { background: #f9fafb; text-align: center; line-height: 1.1; }
+  .mg.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .mg.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  .mg.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  .mg.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.fix.live .fl1, .mg.fix.live .fl1 b { color: var(--accent); }
+  .mg.fix.live .fl2 { color: var(--accent); }
+  .mg.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  .mg.next.fix:not(.live) { background: #eef0fb; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
   td.cell.self {
     background:
       repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
       var(--ink);
     overflow: hidden;
+    text-align: center; vertical-align: middle;
+    height: var(--row-h);
   }
-  td.cell.self .selfblock {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 1px; padding: 2px;
-    font-family: 'Barlow Semi Condensed', sans-serif;
-    color: #fff; text-align: center; line-height: 1.1;
-  }
-  td.cell.self .sl1 { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; }
-  td.cell.self .sl2 { font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; }
+  td.cell.self .sl1 { display: block; font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
+  td.cell.self .sl2 { display: block; font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; margin-top: 2px; }
   tr.pinned th.rowhead { background: #fff7ec; }
-  tr.pinned td.cell:not(.self) { background-color: #fffaf2; }
-  tr.pinned td.cell.win  { background-color: var(--win-bg); }
-  tr.pinned td.cell.loss { background-color: var(--loss-bg); }
-  tr.pinned td.cell.live { background-color: var(--accent-bg); }
-  td.cell.pincol:not(.self):not(.win):not(.loss):not(.live) { background-color: #fffaf2; }
+  tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   @media (max-width: 400px) {
     :root { --col-w: 42px; --name-w: 90px; }
   }
@@ -213,226 +189,226 @@ const DATA = {
   "venue": "Jamison Park Netball Complex, South Penrith",
   "date": "Sat 6–Mon 8 Jun 2026",
   "pin": null,
-  "menu_url": "index.html",
+  "menu_url": "../index.html",
   "teams": [
     {
       "code": "Lakeside 17U",
       "name": "Lakeside",
       "rank": 1,
-      "pts": 28,
-      "pct": "195.8",
-      "W": 14,
-      "L": 0,
+      "pts": 40,
+      "pct": "178.5",
+      "W": 20,
+      "L": 1,
       "D": 0
     },
     {
       "code": "Sutherland Shire 17U",
       "name": "Sutherland Shire",
       "rank": 2,
-      "pts": 23,
-      "pct": "140.9",
-      "W": 11,
-      "L": 2,
+      "pts": 35,
+      "pct": "147.4",
+      "W": 17,
+      "L": 3,
       "D": 1
     },
     {
       "code": "Wyong District 17U",
       "name": "Wyong District",
       "rank": 3,
-      "pts": 23,
-      "pct": "118.9",
-      "W": 11,
-      "L": 2,
-      "D": 1
-    },
-    {
-      "code": "Randwick 17U",
-      "name": "Randwick",
-      "rank": 4,
-      "pts": 23,
-      "pct": "117.9",
-      "W": 11,
-      "L": 2,
+      "pts": 35,
+      "pct": "130.5",
+      "W": 17,
+      "L": 3,
       "D": 1
     },
     {
       "code": "Baulkham Hills Shire 17U",
       "name": "Baulkham Hills Shire",
-      "rank": 5,
-      "pts": 22,
-      "pct": "117.1",
-      "W": 10,
-      "L": 2,
-      "D": 2
-    },
-    {
-      "code": "Charlestown 17U",
-      "name": "Charlestown",
-      "rank": 6,
-      "pts": 18,
-      "pct": "112.1",
-      "W": 8,
+      "rank": 4,
+      "pts": 32,
+      "pct": "125.6",
+      "W": 15,
       "L": 4,
       "D": 2
     },
     {
+      "code": "Randwick 17U",
+      "name": "Randwick",
+      "rank": 5,
+      "pts": 31,
+      "pct": "118.5",
+      "W": 15,
+      "L": 5,
+      "D": 1
+    },
+    {
       "code": "Maitland 17U",
       "name": "Maitland",
+      "rank": 6,
+      "pts": 29,
+      "pct": "112.7",
+      "W": 14,
+      "L": 6,
+      "D": 1
+    },
+    {
+      "code": "Charlestown 17U",
+      "name": "Charlestown",
       "rank": 7,
-      "pts": 17,
-      "pct": "101.3",
-      "W": 8,
-      "L": 5,
+      "pts": 26,
+      "pct": "110.6",
+      "W": 12,
+      "L": 7,
+      "D": 2
+    },
+    {
+      "code": "Barellan & District 17U",
+      "name": "Barellan & District",
+      "rank": 8,
+      "pts": 25,
+      "pct": "114.1",
+      "W": 11,
+      "L": 7,
+      "D": 3
+    },
+    {
+      "code": "Northern Suburbs 17U",
+      "name": "Northern Suburbs",
+      "rank": 9,
+      "pts": 25,
+      "pct": "102.8",
+      "W": 12,
+      "L": 8,
       "D": 1
     },
     {
       "code": "Bankstown City 17U",
       "name": "Bankstown City",
-      "rank": 8,
-      "pts": 16,
-      "pct": "105.1",
-      "W": 8,
-      "L": 6,
-      "D": 0
-    },
-    {
-      "code": "Manly Warringah 17U",
-      "name": "Manly Warringah",
-      "rank": 9,
-      "pts": 16,
-      "pct": "105.0",
-      "W": 8,
-      "L": 6,
+      "rank": 10,
+      "pts": 22,
+      "pct": "104.6",
+      "W": 11,
+      "L": 10,
       "D": 0
     },
     {
       "code": "Penrith District 17U",
       "name": "Penrith District",
-      "rank": 10,
-      "pts": 15,
-      "pct": "98.7",
-      "W": 7,
-      "L": 6,
-      "D": 1
-    },
-    {
-      "code": "Barellan & District 17U",
-      "name": "Barellan & District",
       "rank": 11,
-      "pts": 14,
-      "pct": "110.2",
-      "W": 6,
-      "L": 6,
-      "D": 2
-    },
-    {
-      "code": "Blacktown City 17U",
-      "name": "Blacktown City",
-      "rank": 12,
-      "pts": 14,
-      "pct": "104.3",
-      "W": 7,
-      "L": 7,
-      "D": 0
-    },
-    {
-      "code": "Northern Suburbs 17U",
-      "name": "Northern Suburbs",
-      "rank": 13,
-      "pts": 13,
-      "pct": "98.8",
-      "W": 6,
-      "L": 7,
+      "pts": 21,
+      "pct": "91.4",
+      "W": 10,
+      "L": 10,
       "D": 1
     },
     {
       "code": "Eastwood Ryde 17U",
       "name": "Eastwood Ryde",
-      "rank": 14,
-      "pts": 11,
-      "pct": "100.9",
-      "W": 5,
-      "L": 8,
-      "D": 1
+      "rank": 12,
+      "pts": 20,
+      "pct": "108.7",
+      "W": 9,
+      "L": 10,
+      "D": 2
     },
     {
-      "code": "Hills District 17U",
-      "name": "Hills District",
-      "rank": 15,
-      "pts": 11,
-      "pct": "81.5",
-      "W": 5,
-      "L": 8,
-      "D": 1
-    },
-    {
-      "code": "Wagga Wagga 17U",
-      "name": "Wagga Wagga",
-      "rank": 16,
-      "pts": 10,
-      "pct": "93.8",
-      "W": 5,
-      "L": 9,
-      "D": 0
-    },
-    {
-      "code": "Orange 17U",
-      "name": "Orange",
-      "rank": 17,
-      "pts": 10,
-      "pct": "90.2",
-      "W": 5,
-      "L": 9,
+      "code": "Manly Warringah 17U",
+      "name": "Manly Warringah",
+      "rank": 13,
+      "pts": 20,
+      "pct": "101.1",
+      "W": 10,
+      "L": 11,
       "D": 0
     },
     {
       "code": "Ku-ring-gai 17U",
       "name": "Ku-ring-gai",
+      "rank": 14,
+      "pts": 15,
+      "pct": "85.6",
+      "W": 7,
+      "L": 13,
+      "D": 1
+    },
+    {
+      "code": "Orange 17U",
+      "name": "Orange",
+      "rank": 15,
+      "pts": 14,
+      "pct": "88.1",
+      "W": 7,
+      "L": 14,
+      "D": 0
+    },
+    {
+      "code": "Blacktown City 17U",
+      "name": "Blacktown City",
+      "rank": 16,
+      "pts": 14,
+      "pct": "86.4",
+      "W": 7,
+      "L": 14,
+      "D": 0
+    },
+    {
+      "code": "Wagga Wagga 17U",
+      "name": "Wagga Wagga",
+      "rank": 17,
+      "pts": 13,
+      "pct": "91.2",
+      "W": 6,
+      "L": 14,
+      "D": 1
+    },
+    {
+      "code": "Camden & District 17U",
+      "name": "Camden & District",
       "rank": 18,
-      "pts": 7,
-      "pct": "85.7",
-      "W": 3,
-      "L": 10,
+      "pts": 13,
+      "pct": "82.7",
+      "W": 6,
+      "L": 14,
+      "D": 1
+    },
+    {
+      "code": "Hills District 17U",
+      "name": "Hills District",
+      "rank": 19,
+      "pts": 11,
+      "pct": "74.3",
+      "W": 5,
+      "L": 15,
       "D": 1
     },
     {
       "code": "Liverpool City 17U",
       "name": "Liverpool City",
-      "rank": 19,
-      "pts": 6,
-      "pct": "62.7",
-      "W": 3,
-      "L": 11,
-      "D": 0
-    },
-    {
-      "code": "Camden & District 17U",
-      "name": "Camden & District",
       "rank": 20,
-      "pts": 5,
-      "pct": "77.0",
-      "W": 2,
-      "L": 11,
-      "D": 1
+      "pts": 8,
+      "pct": "61.4",
+      "W": 4,
+      "L": 17,
+      "D": 0
     },
     {
       "code": "Illawarra District 17U",
       "name": "Illawarra District",
       "rank": 21,
-      "pts": 4,
-      "pct": "73.4",
-      "W": 2,
-      "L": 12,
-      "D": 0
+      "pts": 7,
+      "pct": "76.7",
+      "W": 3,
+      "L": 17,
+      "D": 1
     },
     {
       "code": "Newcastle 17U",
       "name": "Newcastle",
       "rank": 22,
-      "pts": 2,
-      "pct": "66.5",
-      "W": 1,
-      "L": 13,
+      "pts": 6,
+      "pct": "64.4",
+      "W": 3,
+      "L": 18,
       "D": 0
     }
   ],
@@ -540,49 +516,49 @@ const DATA = {
       "day": "Mon",
       "time": "08:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 16,
       "day": "Mon",
       "time": "09:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 17,
       "day": "Mon",
       "time": "10:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 18,
       "day": "Mon",
       "time": "11:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 19,
       "day": "Mon",
       "time": "12:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 20,
       "day": "Mon",
       "time": "13:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     },
     {
       "n": 21,
       "day": "Mon",
       "time": "14:30",
       "sdate": "8/6",
-      "state": "upcoming"
+      "state": "done"
     }
   ],
   "games": [
@@ -1975,718 +1951,717 @@ const DATA = {
     [
       15,
       "Northern Suburbs 17U",
-      null,
+      15,
       "Orange 17U",
-      null,
+      14,
       6,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Wagga Wagga 17U",
-      null,
+      18,
       "Maitland 17U",
-      null,
+      22,
       7,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Eastwood Ryde 17U",
-      null,
+      17,
       "Bankstown City 17U",
-      null,
+      11,
       9,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Ku-ring-gai 17U",
-      null,
+      16,
       "Hills District 17U",
-      null,
+      15,
       10,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Illawarra District 17U",
-      null,
+      19,
       "Newcastle 17U",
-      null,
+      20,
       12,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Manly Warringah 17U",
-      null,
+      17,
       "Liverpool City 17U",
-      null,
+      11,
       23,
-      "upcoming"
+      "done"
     ],
     [
       15,
       "Barellan & District 17U",
-      null,
-      "Camden & District 17U",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      15,
-      "Baulkham Hills Shire 17U",
-      null,
-      "Lakeside 17U",
-      null,
-      24,
-      "upcoming"
-    ],
-    [
-      15,
-      "Wyong District 17U",
-      null,
-      "Penrith District 17U",
-      null,
-      25,
-      "upcoming"
-    ],
-    [
-      15,
-      "Sutherland Shire 17U",
-      null,
-      "Charlestown 17U",
-      null,
-      26,
-      "upcoming"
-    ],
-    [
-      15,
-      "Randwick 17U",
-      null,
-      "Blacktown City 17U",
-      null,
-      27,
-      "upcoming"
-    ],
-    [
-      16,
-      "Liverpool City 17U",
-      null,
-      "Northern Suburbs 17U",
-      null,
-      27,
-      "upcoming"
-    ],
-    [
-      16,
-      "Charlestown 17U",
-      null,
-      "Randwick 17U",
-      null,
-      26,
-      "upcoming"
-    ],
-    [
-      16,
-      "Penrith District 17U",
-      null,
-      "Sutherland Shire 17U",
-      null,
-      25,
-      "upcoming"
-    ],
-    [
-      16,
-      "Lakeside 17U",
-      null,
-      "Wyong District 17U",
-      null,
-      24,
-      "upcoming"
-    ],
-    [
-      16,
-      "Orange 17U",
-      null,
-      "Baulkham Hills Shire 17U",
-      null,
-      23,
-      "upcoming"
-    ],
-    [
-      16,
-      "Blacktown City 17U",
-      null,
-      "Barellan & District 17U",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      16,
-      "Newcastle 17U",
-      null,
-      "Manly Warringah 17U",
-      null,
-      12,
-      "upcoming"
-    ],
-    [
-      16,
-      "Hills District 17U",
-      null,
-      "Illawarra District 17U",
-      null,
-      10,
-      "upcoming"
-    ],
-    [
-      16,
-      "Bankstown City 17U",
-      null,
-      "Ku-ring-gai 17U",
-      null,
-      9,
-      "upcoming"
-    ],
-    [
-      16,
-      "Maitland 17U",
-      null,
-      "Eastwood Ryde 17U",
-      null,
-      7,
-      "upcoming"
-    ],
-    [
-      16,
-      "Camden & District 17U",
-      null,
-      "Wagga Wagga 17U",
-      null,
-      6,
-      "upcoming"
-    ],
-    [
-      17,
-      "Manly Warringah 17U",
-      null,
-      "Hills District 17U",
-      null,
-      6,
-      "upcoming"
-    ],
-    [
-      17,
-      "Eastwood Ryde 17U",
-      null,
-      "Camden & District 17U",
-      null,
-      7,
-      "upcoming"
-    ],
-    [
-      17,
-      "Ku-ring-gai 17U",
-      null,
-      "Maitland 17U",
-      null,
-      9,
-      "upcoming"
-    ],
-    [
-      17,
-      "Illawarra District 17U",
-      null,
-      "Bankstown City 17U",
-      null,
-      10,
-      "upcoming"
-    ],
-    [
-      17,
-      "Barellan & District 17U",
-      null,
-      "Wagga Wagga 17U",
-      null,
-      12,
-      "upcoming"
-    ],
-    [
-      17,
-      "Northern Suburbs 17U",
-      null,
-      "Newcastle 17U",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      17,
-      "Baulkham Hills Shire 17U",
-      null,
-      "Liverpool City 17U",
-      null,
-      23,
-      "upcoming"
-    ],
-    [
-      17,
-      "Wyong District 17U",
-      null,
-      "Orange 17U",
-      null,
-      24,
-      "upcoming"
-    ],
-    [
-      17,
-      "Sutherland Shire 17U",
-      null,
-      "Lakeside 17U",
-      null,
-      25,
-      "upcoming"
-    ],
-    [
-      17,
-      "Randwick 17U",
-      null,
-      "Penrith District 17U",
-      null,
-      26,
-      "upcoming"
-    ],
-    [
-      17,
-      "Blacktown City 17U",
-      null,
-      "Charlestown 17U",
-      null,
-      27,
-      "upcoming"
-    ],
-    [
-      18,
-      "Orange 17U",
-      null,
-      "Sutherland Shire 17U",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      18,
-      "Penrith District 17U",
-      null,
-      "Blacktown City 17U",
-      null,
-      23,
-      "upcoming"
-    ],
-    [
-      18,
-      "Lakeside 17U",
-      null,
-      "Randwick 17U",
-      null,
-      24,
-      "upcoming"
-    ],
-    [
-      18,
-      "Charlestown 17U",
-      null,
-      "Barellan & District 17U",
-      null,
-      25,
-      "upcoming"
-    ],
-    [
-      18,
-      "Liverpool City 17U",
-      null,
-      "Wyong District 17U",
-      null,
-      26,
-      "upcoming"
-    ],
-    [
-      18,
-      "Newcastle 17U",
-      null,
-      "Baulkham Hills Shire 17U",
-      null,
-      27,
-      "upcoming"
-    ],
-    [
-      18,
-      "Hills District 17U",
-      null,
-      "Northern Suburbs 17U",
-      null,
-      6,
-      "upcoming"
-    ],
-    [
-      18,
-      "Bankstown City 17U",
-      null,
-      "Manly Warringah 17U",
-      null,
-      7,
-      "upcoming"
-    ],
-    [
-      18,
-      "Maitland 17U",
-      null,
-      "Illawarra District 17U",
-      null,
-      9,
-      "upcoming"
-    ],
-    [
-      18,
-      "Camden & District 17U",
-      null,
-      "Ku-ring-gai 17U",
-      null,
-      10,
-      "upcoming"
-    ],
-    [
-      18,
-      "Wagga Wagga 17U",
-      null,
-      "Eastwood Ryde 17U",
-      null,
-      12,
-      "upcoming"
-    ],
-    [
-      19,
-      "Illawarra District 17U",
-      null,
-      "Camden & District 17U",
-      null,
-      6,
-      "upcoming"
-    ],
-    [
-      19,
-      "Ku-ring-gai 17U",
-      null,
-      "Wagga Wagga 17U",
-      null,
-      7,
-      "upcoming"
-    ],
-    [
-      19,
-      "Barellan & District 17U",
-      null,
-      "Eastwood Ryde 17U",
-      null,
-      9,
-      "upcoming"
-    ],
-    [
-      19,
-      "Manly Warringah 17U",
-      null,
-      "Maitland 17U",
-      null,
-      10,
-      "upcoming"
-    ],
-    [
-      19,
-      "Northern Suburbs 17U",
-      null,
-      "Bankstown City 17U",
-      null,
-      12,
-      "upcoming"
-    ],
-    [
-      19,
-      "Baulkham Hills Shire 17U",
-      null,
-      "Hills District 17U",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      19,
-      "Wyong District 17U",
-      null,
-      "Newcastle 17U",
-      null,
-      23,
-      "upcoming"
-    ],
-    [
-      19,
-      "Sutherland Shire 17U",
-      null,
-      "Liverpool City 17U",
-      null,
-      24,
-      "upcoming"
-    ],
-    [
-      19,
-      "Randwick 17U",
-      null,
-      "Orange 17U",
-      null,
-      25,
-      "upcoming"
-    ],
-    [
-      19,
-      "Blacktown City 17U",
-      null,
-      "Lakeside 17U",
-      null,
-      26,
-      "upcoming"
-    ],
-    [
-      19,
-      "Charlestown 17U",
-      null,
-      "Penrith District 17U",
-      null,
-      27,
-      "upcoming"
-    ],
-    [
-      20,
-      "Lakeside 17U",
-      null,
-      "Charlestown 17U",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      20,
-      "Penrith District 17U",
-      null,
-      "Barellan & District 17U",
-      null,
-      23,
-      "upcoming"
-    ],
-    [
-      20,
-      "Orange 17U",
-      null,
-      "Blacktown City 17U",
-      null,
-      24,
-      "upcoming"
-    ],
-    [
-      20,
-      "Liverpool City 17U",
-      null,
-      "Randwick 17U",
-      null,
-      25,
-      "upcoming"
-    ],
-    [
-      20,
-      "Newcastle 17U",
-      null,
-      "Sutherland Shire 17U",
-      null,
-      26,
-      "upcoming"
-    ],
-    [
-      20,
-      "Hills District 17U",
-      null,
-      "Wyong District 17U",
-      null,
-      27,
-      "upcoming"
-    ],
-    [
-      20,
-      "Bankstown City 17U",
-      null,
-      "Baulkham Hills Shire 17U",
-      null,
-      6,
-      "upcoming"
-    ],
-    [
-      20,
-      "Maitland 17U",
-      null,
-      "Northern Suburbs 17U",
-      null,
-      7,
-      "upcoming"
-    ],
-    [
-      20,
-      "Camden & District 17U",
-      null,
-      "Manly Warringah 17U",
-      null,
-      9,
-      "upcoming"
-    ],
-    [
-      20,
-      "Wagga Wagga 17U",
-      null,
-      "Illawarra District 17U",
-      null,
-      10,
-      "upcoming"
-    ],
-    [
-      20,
-      "Eastwood Ryde 17U",
-      null,
-      "Ku-ring-gai 17U",
-      null,
-      12,
-      "upcoming"
-    ],
-    [
       21,
-      "Barellan & District 17U",
-      null,
-      "Ku-ring-gai 17U",
-      null,
-      6,
-      "upcoming"
+      "Camden & District 17U",
+      13,
+      22,
+      "done"
     ],
     [
-      21,
-      "Illawarra District 17U",
-      null,
-      "Eastwood Ryde 17U",
-      null,
-      7,
-      "upcoming"
+      15,
+      "Baulkham Hills Shire 17U",
+      20,
+      "Lakeside 17U",
+      18,
+      24,
+      "done"
     ],
     [
-      21,
-      "Manly Warringah 17U",
-      null,
-      "Wagga Wagga 17U",
-      null,
+      15,
+      "Wyong District 17U",
+      18,
+      "Penrith District 17U",
       9,
-      "upcoming"
+      25,
+      "done"
     ],
     [
+      15,
+      "Sutherland Shire 17U",
+      26,
+      "Charlestown 17U",
+      13,
+      26,
+      "done"
+    ],
+    [
+      15,
+      "Randwick 17U",
+      26,
+      "Blacktown City 17U",
+      13,
+      27,
+      "done"
+    ],
+    [
+      16,
+      "Liverpool City 17U",
+      10,
+      "Northern Suburbs 17U",
+      17,
+      27,
+      "done"
+    ],
+    [
+      16,
+      "Charlestown 17U",
+      25,
+      "Randwick 17U",
+      15,
+      26,
+      "done"
+    ],
+    [
+      16,
+      "Penrith District 17U",
+      18,
+      "Sutherland Shire 17U",
+      22,
+      25,
+      "done"
+    ],
+    [
+      16,
+      "Lakeside 17U",
+      23,
+      "Wyong District 17U",
+      15,
+      24,
+      "done"
+    ],
+    [
+      16,
+      "Orange 17U",
+      22,
+      "Baulkham Hills Shire 17U",
+      21,
+      23,
+      "done"
+    ],
+    [
+      16,
+      "Blacktown City 17U",
+      15,
+      "Barellan & District 17U",
+      25,
+      22,
+      "done"
+    ],
+    [
+      16,
+      "Newcastle 17U",
+      17,
+      "Manly Warringah 17U",
+      15,
+      12,
+      "done"
+    ],
+    [
+      16,
+      "Hills District 17U",
+      14,
+      "Illawarra District 17U",
+      25,
+      10,
+      "done"
+    ],
+    [
+      16,
+      "Bankstown City 17U",
+      23,
+      "Ku-ring-gai 17U",
+      11,
+      9,
+      "done"
+    ],
+    [
+      16,
+      "Maitland 17U",
+      27,
+      "Eastwood Ryde 17U",
+      19,
+      7,
+      "done"
+    ],
+    [
+      16,
+      "Camden & District 17U",
+      16,
+      "Wagga Wagga 17U",
+      15,
+      6,
+      "done"
+    ],
+    [
+      17,
+      "Manly Warringah 17U",
+      16,
+      "Hills District 17U",
+      8,
+      6,
+      "done"
+    ],
+    [
+      17,
+      "Eastwood Ryde 17U",
+      15,
+      "Camden & District 17U",
+      16,
+      7,
+      "done"
+    ],
+    [
+      17,
+      "Ku-ring-gai 17U",
+      18,
+      "Maitland 17U",
+      17,
+      9,
+      "done"
+    ],
+    [
+      17,
+      "Illawarra District 17U",
+      18,
+      "Bankstown City 17U",
+      24,
+      10,
+      "done"
+    ],
+    [
+      17,
+      "Barellan & District 17U",
+      22,
+      "Wagga Wagga 17U",
+      15,
+      12,
+      "done"
+    ],
+    [
+      17,
+      "Northern Suburbs 17U",
+      16,
+      "Newcastle 17U",
+      12,
+      22,
+      "done"
+    ],
+    [
+      17,
+      "Baulkham Hills Shire 17U",
+      22,
+      "Liverpool City 17U",
+      8,
+      23,
+      "done"
+    ],
+    [
+      17,
+      "Wyong District 17U",
+      25,
+      "Orange 17U",
+      12,
+      24,
+      "done"
+    ],
+    [
+      17,
+      "Sutherland Shire 17U",
+      19,
+      "Lakeside 17U",
+      23,
+      25,
+      "done"
+    ],
+    [
+      17,
+      "Randwick 17U",
+      17,
+      "Penrith District 17U",
+      18,
+      26,
+      "done"
+    ],
+    [
+      17,
+      "Blacktown City 17U",
+      18,
+      "Charlestown 17U",
+      28,
+      27,
+      "done"
+    ],
+    [
+      18,
+      "Orange 17U",
+      17,
+      "Sutherland Shire 17U",
+      27,
+      22,
+      "done"
+    ],
+    [
+      18,
+      "Penrith District 17U",
+      18,
+      "Blacktown City 17U",
+      15,
+      23,
+      "done"
+    ],
+    [
+      18,
+      "Lakeside 17U",
+      16,
+      "Randwick 17U",
+      15,
+      24,
+      "done"
+    ],
+    [
+      18,
+      "Charlestown 17U",
+      16,
+      "Barellan & District 17U",
+      18,
+      25,
+      "done"
+    ],
+    [
+      18,
+      "Liverpool City 17U",
+      5,
+      "Wyong District 17U",
+      22,
+      26,
+      "done"
+    ],
+    [
+      18,
+      "Newcastle 17U",
+      8,
+      "Baulkham Hills Shire 17U",
+      24,
+      27,
+      "done"
+    ],
+    [
+      18,
+      "Hills District 17U",
+      15,
+      "Northern Suburbs 17U",
+      18,
+      6,
+      "done"
+    ],
+    [
+      18,
+      "Bankstown City 17U",
+      19,
+      "Manly Warringah 17U",
+      12,
+      7,
+      "done"
+    ],
+    [
+      18,
+      "Maitland 17U",
+      26,
+      "Illawarra District 17U",
+      13,
+      9,
+      "done"
+    ],
+    [
+      18,
+      "Camden & District 17U",
+      21,
+      "Ku-ring-gai 17U",
+      22,
+      10,
+      "done"
+    ],
+    [
+      18,
+      "Wagga Wagga 17U",
+      11,
+      "Eastwood Ryde 17U",
+      17,
+      12,
+      "done"
+    ],
+    [
+      19,
+      "Illawarra District 17U",
+      13,
+      "Camden & District 17U",
+      16,
+      6,
+      "done"
+    ],
+    [
+      19,
+      "Ku-ring-gai 17U",
+      19,
+      "Wagga Wagga 17U",
+      15,
+      7,
+      "done"
+    ],
+    [
+      19,
+      "Barellan & District 17U",
+      20,
+      "Eastwood Ryde 17U",
+      20,
+      9,
+      "done"
+    ],
+    [
+      19,
+      "Manly Warringah 17U",
+      14,
+      "Maitland 17U",
+      22,
+      10,
+      "done"
+    ],
+    [
+      19,
+      "Northern Suburbs 17U",
+      17,
+      "Bankstown City 17U",
+      15,
+      12,
+      "done"
+    ],
+    [
+      19,
+      "Baulkham Hills Shire 17U",
+      19,
+      "Hills District 17U",
+      12,
+      22,
+      "done"
+    ],
+    [
+      19,
+      "Wyong District 17U",
+      21,
+      "Newcastle 17U",
+      14,
+      23,
+      "done"
+    ],
+    [
+      19,
+      "Sutherland Shire 17U",
+      23,
+      "Liverpool City 17U",
+      15,
+      24,
+      "done"
+    ],
+    [
+      19,
+      "Randwick 17U",
+      21,
+      "Orange 17U",
+      18,
+      25,
+      "done"
+    ],
+    [
+      19,
+      "Blacktown City 17U",
+      11,
+      "Lakeside 17U",
+      28,
+      26,
+      "done"
+    ],
+    [
+      19,
+      "Charlestown 17U",
+      23,
+      "Penrith District 17U",
+      16,
+      27,
+      "done"
+    ],
+    [
+      20,
+      "Lakeside 17U",
+      25,
+      "Charlestown 17U",
+      17,
+      22,
+      "done"
+    ],
+    [
+      20,
+      "Penrith District 17U",
+      20,
+      "Barellan & District 17U",
+      17,
+      23,
+      "done"
+    ],
+    [
+      20,
+      "Orange 17U",
+      23,
+      "Blacktown City 17U",
+      13,
+      24,
+      "done"
+    ],
+    [
+      20,
+      "Liverpool City 17U",
+      15,
+      "Randwick 17U",
+      20,
+      25,
+      "done"
+    ],
+    [
+      20,
+      "Newcastle 17U",
+      8,
+      "Sutherland Shire 17U",
+      28,
+      26,
+      "done"
+    ],
+    [
+      20,
+      "Hills District 17U",
+      10,
+      "Wyong District 17U",
+      20,
+      27,
+      "done"
+    ],
+    [
+      20,
+      "Bankstown City 17U",
+      11,
+      "Baulkham Hills Shire 17U",
+      19,
+      6,
+      "done"
+    ],
+    [
+      20,
+      "Maitland 17U",
       21,
       "Northern Suburbs 17U",
-      null,
+      15,
+      7,
+      "done"
+    ],
+    [
+      20,
       "Camden & District 17U",
-      null,
+      15,
+      "Manly Warringah 17U",
+      14,
+      9,
+      "done"
+    ],
+    [
+      20,
+      "Wagga Wagga 17U",
+      21,
+      "Illawarra District 17U",
+      21,
       10,
-      "upcoming"
+      "done"
+    ],
+    [
+      20,
+      "Eastwood Ryde 17U",
+      27,
+      "Ku-ring-gai 17U",
+      14,
+      12,
+      "done"
+    ],
+    [
+      21,
+      "Barellan & District 17U",
+      20,
+      "Ku-ring-gai 17U",
+      18,
+      6,
+      "done"
+    ],
+    [
+      21,
+      "Illawarra District 17U",
+      10,
+      "Eastwood Ryde 17U",
+      21,
+      7,
+      "done"
+    ],
+    [
+      21,
+      "Manly Warringah 17U",
+      15,
+      "Wagga Wagga 17U",
+      19,
+      9,
+      "done"
+    ],
+    [
+      21,
+      "Northern Suburbs 17U",
+      19,
+      "Camden & District 17U",
+      17,
+      10,
+      "done"
     ],
     [
       21,
       "Baulkham Hills Shire 17U",
-      null,
+      16,
       "Maitland 17U",
-      null,
+      19,
       12,
-      "upcoming"
+      "done"
     ],
     [
       21,
       "Wyong District 17U",
-      null,
+      19,
       "Bankstown City 17U",
-      null,
+      14,
       22,
-      "upcoming"
+      "done"
     ],
     [
       21,
       "Sutherland Shire 17U",
-      null,
+      24,
       "Hills District 17U",
-      null,
+      12,
       23,
-      "upcoming"
+      "done"
     ],
     [
       21,
       "Randwick 17U",
-      null,
+      20,
       "Newcastle 17U",
-      null,
+      7,
       25,
-      "upcoming"
+      "done"
     ],
     [
       21,
       "Blacktown City 17U",
-      null,
+      15,
       "Liverpool City 17U",
-      null,
+      16,
       24,
-      "upcoming"
+      "done"
     ],
     [
       21,
       "Charlestown 17U",
-      null,
+      19,
       "Orange 17U",
-      null,
+      13,
       26,
-      "upcoming"
+      "done"
     ],
     [
       21,
       "Penrith District 17U",
-      null,
+      11,
       "Lakeside 17U",
-      null,
       27,
-      "upcoming"
+      27,
+      "done"
     ]
   ]
 };
 
 function render(d) {
   const key = (a, b) => [a, b].sort().join("|");
+
+  // Build M as arrays — all games per pair, sorted by round.
   const M = {};
   d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
     const k = key(h, a);
-    const prev = M[k];
-    // Prefer completed result over upcoming; break ties by earlier round.
-    if (!prev || (prev.st !== "done" && st === "done") || (prev.st === st && rd < prev.rd))
-      M[k] = { rd, h, hs, a, as: as_, court, st };
+    if (!M[k]) M[k] = [];
+    M[k].push({ rd, h, hs, a, as: as_, court, st });
   });
+  Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
+
   const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
 
   // Per-team next round: min round where their game isn't done
   const nextRound = {};
   d.teams.forEach(t => {
     let min = Infinity;
-    d.games.forEach(([rd,, , , , , st]) => { if (st !== "done" && rd < min) min = rd; });
-    // narrow to this team's games
-    min = Infinity;
     d.games.forEach(([rd, h, , a, , , st]) => {
       if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
     });
@@ -2704,7 +2679,7 @@ function render(d) {
   });
   html += "</tr></thead><tbody>";
 
-  d.teams.forEach((rowT, ri) => {
+  d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
     html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
     html += `<th class="rowhead">
@@ -2714,51 +2689,48 @@ function render(d) {
                </div>
              </th>`;
 
-    d.teams.forEach((colT, ci) => {
+    d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
       const pcls = pinCol ? " pincol" : "";
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
-                   <div class="selfblock">
-                     <span class="sl1">${rowT.pts} pts</span>
-                     <span class="sl2">${rowT.pct}%</span>
-                   </div>
+                   <span class="sl1">${rowT.pts} pts</span>
+                   <span class="sl2">${rowT.pct}%</span>
                  </td>`;
         return;
       }
 
-      const m = M[key(rowT.code, colT.code)];
-      if (!m) { html += `<td class="cell${pcls}"></td>`; return; }
-      const rmeta = roundByN[m.rd] || {};
-      const rowScore = m.h === rowT.code ? m.hs : m.as;
-      const colScore = m.h === rowT.code ? m.as : m.hs;
-      const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+      const games = M[key(rowT.code, colT.code)];
+      if (!games) { html += `<td class="cell${pcls}"></td>`; return; }
 
-      if (m.st === "live" && rowScore != null) {
-        html += `<td class="cell live${ncls}${pcls}">
-                   <div class="scblock">
+      html += `<td class="cell${pcls}">`;
+      games.forEach(m => {
+        const rowScore = m.h === rowT.code ? m.hs : m.as;
+        const colScore = m.h === rowT.code ? m.as : m.hs;
+        const rmeta = roundByN[m.rd] || {};
+        const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+        if (m.st === "live" && rowScore != null) {
+          html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
-                   </div>
-                 </td>`;
-      } else if (m.st === "done" && rowScore != null) {
-        const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
-        html += `<td class="cell ${cls}${ncls}${pcls}">
-                   <div class="scblock">
+                   </div>`;
+        } else if (m.st === "done" && rowScore != null) {
+          const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+          html += `<div class="mg ${cls}${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score">${rowScore}–${colScore}</span>
-                   </div>
-                 </td>`;
-      } else {
-        const fixCls = m.st === "live" ? " live" : "";
-        html += `<td class="cell fix${fixCls}${ncls}${pcls}">
-                   <div class="fxblock">
+                   </div>`;
+        } else {
+          const liveCls = m.st === "live" ? " live" : "";
+          html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
                      <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
-                   </div>
-                 </td>`;
-      }
+                   </div>`;
+        }
+      });
+      html += `</td>`;
     });
     html += "</tr>";
   });

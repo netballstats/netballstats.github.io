@@ -560,30 +560,46 @@ def _generate_one(grade_id, title, variants, pin=None, max_round=None,
         _write_html(generate_html(data, font_scale=font_scale), output)
 
 
+def _grade_group_key(title):
+    """Extract the age/division prefix used to group grades on the same row."""
+    m = re.match(r'^(\d+U?|\d+|[A-Za-z]+)', title or "")
+    return m.group(1) if m else title
+
+
 def _generate_menu(competitions, output="site/index.html"):
     sections = ""
     for comp in competitions:
         active = comp.get("active", True)
         comp_cls = "" if active else " inactive"
         comp_dir = comp.get("dir") or _slugify(comp["title"]).replace(".html", "")
-        rows = ""
+
+        # Group grades by age/type prefix, preserving order
+        groups = []
+        group_map = {}
         for g in comp.get("grades", []):
-            grade_active = active and g.get("active", True)
-            slug = g.get("output") or _slugify(g.get("title", "cross-table"))
-            medium_slug = slug.replace(".html", "-medium.html")
-            grade_cls = "" if grade_active else " inactive"
-            rows += (
-                f'      <li class="grade{grade_cls}">'
-                f'<span class="gtitle">{g.get("title", "")}</span>'
-                f'<span class="links">'
-                f'<a href="{comp_dir}/{slug}">Small</a>'
-                f'<a href="{comp_dir}/{medium_slug}">Medium</a>'
-                f'</span></li>\n'
-            )
+            key = _grade_group_key(g.get("title", ""))
+            if key not in group_map:
+                group_map[key] = []
+                groups.append(group_map[key])
+            group_map[key].append(g)
+
+        rows = ""
+        for group in groups:
+            btns = ""
+            for g in group:
+                grade_active = active and g.get("active", True)
+                slug = g.get("output") or _slugify(g.get("title", "cross-table"))
+                inactive_cls = "" if grade_active else " inactive"
+                btns += (
+                    f'<a class="gbtn{inactive_cls}" href="{comp_dir}/{slug}">'
+                    f'{g.get("title", "")}</a>'
+                )
+            rows += f'      <div class="grow">{btns}</div>\n'
+
         sections += (
             f'    <section class="comp{comp_cls}">\n'
             f'      <h2>{comp["title"]}</h2>\n'
-            f'      <ul>\n{rows}      </ul>\n'
+            f'{rows}'
             f'    </section>\n'
         )
 
@@ -605,7 +621,7 @@ def _generate_menu(competitions, output="site/index.html"):
   * {{ box-sizing: border-box; }}
   html, body {{ margin: 0; background: var(--bg); color: var(--ink);
     font-family: 'Barlow', system-ui, sans-serif; }}
-  .wrap {{ max-width: 520px; margin: 0 auto; padding: 28px 20px; }}
+  .wrap {{ max-width: 640px; margin: 0 auto; padding: 28px 20px; }}
   h1 {{ font-family: 'Barlow Semi Condensed', sans-serif;
        font-size: 22px; font-weight: 700; color: var(--accent); margin: 0 0 20px; }}
   .comp {{ margin-bottom: 24px; }}
@@ -615,19 +631,17 @@ def _generate_menu(competitions, output="site/index.html"):
               margin: 0 0 8px; padding-bottom: 5px;
               border-bottom: 1px solid var(--line); }}
   .comp.inactive h2 {{ color: var(--muted); }}
-  ul {{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }}
-  li.grade {{ background: var(--card); border: 1px solid var(--line); border-radius: 7px;
-       padding: 11px 14px; display: flex; align-items: center; justify-content: space-between; }}
-  li.grade.inactive {{ opacity: 0.45; }}
-  .gtitle {{ font-weight: 600; font-size: 14px; }}
-  .links {{ display: flex; gap: 6px; }}
-  .links a {{
-    font-size: 12px; font-weight: 600; padding: 4px 12px;
-    border-radius: 5px; text-decoration: none;
-    background: var(--bg); color: var(--ink-2); border: 1px solid var(--line);
+  .grow {{ display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }}
+  .gbtn {{
+    font-size: 13px; font-weight: 600; padding: 6px 14px;
+    border-radius: 6px; text-decoration: none;
+    background: var(--card); color: var(--ink); border: 1px solid var(--line);
+    white-space: nowrap;
   }}
-  .links a:hover {{ background: var(--accent); color: #fff; border-color: var(--accent); }}
-  .comp.inactive .links a:hover {{ background: var(--ink-2); border-color: var(--ink-2); }}
+  .gbtn:hover {{ background: var(--accent); color: #fff; border-color: var(--accent); }}
+  .gbtn.inactive {{ opacity: 0.45; pointer-events: none; }}
+  .comp.inactive .gbtn {{ opacity: 0.45; }}
+  .comp.inactive .gbtn:hover {{ background: var(--card); color: var(--ink); border-color: var(--line); }}
 </style>
 </head>
 <body>

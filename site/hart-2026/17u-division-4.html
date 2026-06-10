@@ -1,0 +1,1974 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>17U Division 4 — Cross Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #15223b;
+    --ink-2:    #51607a;
+    --muted:    #9aa4b6;
+    --line:     #dfe3ea;
+    --line-2:   #eef0f4;
+    --bg:       #f3f5f8;
+    --card:     #ffffff;
+    --accent:   #e8542f;
+    --accent-bg:#fdece5;
+    --win:      #157a47;
+    --win-bg:   #e7f3ea;
+    --loss:     #b23b2c;
+    --loss-bg:  #fbe9e6;
+    --draw-bg:  #fff3e0;
+    --col-w:    52px;
+    --name-w:   110px;
+    --row-h:    33px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .scroll {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+  table.x { border-collapse: separate; border-spacing: 0; margin: 0; }
+  table.x th, table.x td { padding: 0; margin: 0; }
+  th.corner {
+    position: sticky; left: 0; top: 0; z-index: 6;
+    width: var(--name-w); min-width: var(--name-w);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 2px solid var(--line);
+  }
+  th.corner .lbl {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    padding: 5px 6px; text-align: left; line-height: 1.3;
+  }
+  th.corner .lbl a { color: inherit; text-decoration: none; }
+  th.corner .lbl a:hover { text-decoration: underline; }
+  th.colhead {
+    position: sticky; top: 0; z-index: 4;
+    width: var(--col-w); min-width: var(--col-w);
+    background: var(--card);
+    border-bottom: 2px solid var(--line);
+    border-left: 1px solid var(--line-2);
+    vertical-align: bottom;
+    padding: 4px 3px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 10px;
+    color: var(--ink); text-align: center;
+    overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.15; vertical-align: top;
+  }
+  th.colhead .ckn {
+    display: block;
+    font-size: 8px; font-weight: 700;
+    color: var(--muted); letter-spacing: .3px;
+    line-height: 1.4;
+  }
+  th.rowhead {
+    position: sticky; left: 0; z-index: 3;
+    width: var(--name-w); min-width: var(--name-w);
+    height: var(--row-h);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: top;
+  }
+  th.rowhead .rn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 5px 3px 5px;
+  }
+  th.rowhead .rkn {
+    flex: 0 0 auto; width: 13px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); text-align: center;
+  }
+  th.rowhead .nm {
+    font-size: 10px; font-weight: 600;
+    line-height: 1.1; color: var(--ink);
+  }
+  td.cell {
+    width: var(--col-w); min-width: var(--col-w);
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    background: var(--card);
+    vertical-align: top;
+  }
+  /* Per-game strip inside a cell */
+  .mg {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: var(--row-h);
+    gap: 1px; padding: 2px; width: 100%;
+  }
+  .mg + .mg { border-top: 1px solid var(--line-2); }
+  .mg .rd {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .3px; color: var(--muted); line-height: 1;
+  }
+  .mg .score {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 13px;
+    line-height: 1; letter-spacing: -.1px;
+  }
+  .mg.win  { background: var(--win-bg); }
+  .mg.win  .score { color: var(--win); }
+  .mg.loss { background: var(--loss-bg); }
+  .mg.loss .score { color: var(--loss); }
+  .mg.draw { background: var(--draw-bg); }
+  .mg.draw .score { color: #e65100; }
+  .mg.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.live .score {
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+  }
+  .mg.live .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: pulse 1.3s infinite;
+  }
+  .mg.fix { background: #f9fafb; text-align: center; line-height: 1.1; }
+  .mg.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .mg.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  .mg.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  .mg.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  .mg.fix.live .fl1, .mg.fix.live .fl1 b { color: var(--accent); }
+  .mg.fix.live .fl2 { color: var(--accent); }
+  .mg.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  .mg.next.fix:not(.live) { background: #eef0fb; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
+  td.cell.self {
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
+      var(--ink);
+    overflow: hidden;
+    text-align: center; vertical-align: middle;
+    height: var(--row-h);
+  }
+  td.cell.self .sl1 { display: block; font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; color: #fff; }
+  td.cell.self .sl2 { display: block; font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; margin-top: 2px; }
+  tr.pinned th.rowhead { background: #fff7ec; }
+  tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  @media (max-width: 400px) {
+    :root { --col-w: 42px; --name-w: 90px; }
+  }
+
+</style>
+</head>
+<body>
+  <div class="scroll">
+    <table class="x" id="grid"></table>
+  </div>
+<script>
+const DATA = {
+  "title": "17U Division 4",
+  "venue": "Baulkham Hills Shire Netball Association, North Kellyville",
+  "date": "Sat 6–Mon 8 Jun 2026",
+  "pin": null,
+  "menu_url": "../index.html",
+  "teams": [
+    {
+      "code": "Blayney 17U",
+      "name": "Blayney",
+      "rank": 1,
+      "pts": 31,
+      "pct": "238.4",
+      "W": 15,
+      "L": 1,
+      "D": 1
+    },
+    {
+      "code": "Port Stephens 17U",
+      "name": "Port Stephens",
+      "rank": 2,
+      "pts": 30,
+      "pct": "209.6",
+      "W": 15,
+      "L": 2,
+      "D": 0
+    },
+    {
+      "code": "Temora 17U",
+      "name": "Temora",
+      "rank": 3,
+      "pts": 30,
+      "pct": "172.2",
+      "W": 15,
+      "L": 2,
+      "D": 0
+    },
+    {
+      "code": "Nelson Bay 17U",
+      "name": "Nelson Bay",
+      "rank": 4,
+      "pts": 27,
+      "pct": "157.8",
+      "W": 13,
+      "L": 3,
+      "D": 1
+    },
+    {
+      "code": "Dungog 17U",
+      "name": "Dungog",
+      "rank": 5,
+      "pts": 24,
+      "pct": "152.7",
+      "W": 12,
+      "L": 5,
+      "D": 0
+    },
+    {
+      "code": "Lower Clarence 17U",
+      "name": "Lower Clarence",
+      "rank": 6,
+      "pts": 24,
+      "pct": "142.0",
+      "W": 12,
+      "L": 5,
+      "D": 0
+    },
+    {
+      "code": "Glen Innes 17U",
+      "name": "Glen Innes",
+      "rank": 7,
+      "pts": 20,
+      "pct": "128.6",
+      "W": 10,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Armidale District 17U",
+      "name": "Armidale District",
+      "rank": 8,
+      "pts": 20,
+      "pct": "127.1",
+      "W": 10,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Parkes District 17U",
+      "name": "Parkes District",
+      "rank": 9,
+      "pts": 18,
+      "pct": "111.4",
+      "W": 9,
+      "L": 8,
+      "D": 0
+    },
+    {
+      "code": "South Canberra 17U (INV)",
+      "name": "South Canberra 17U (INV)",
+      "rank": 10,
+      "pts": 16,
+      "pct": "116.9",
+      "W": 8,
+      "L": 9,
+      "D": 0
+    },
+    {
+      "code": "Wollondilly 17U",
+      "name": "Wollondilly",
+      "rank": 11,
+      "pts": 16,
+      "pct": "107.8",
+      "W": 8,
+      "L": 9,
+      "D": 0
+    },
+    {
+      "code": "Cowra 17U",
+      "name": "Cowra",
+      "rank": 12,
+      "pts": 12,
+      "pct": "84.1",
+      "W": 6,
+      "L": 11,
+      "D": 0
+    },
+    {
+      "code": "Gloucester 17U",
+      "name": "Gloucester",
+      "rank": 13,
+      "pts": 12,
+      "pct": "70.3",
+      "W": 6,
+      "L": 11,
+      "D": 0
+    },
+    {
+      "code": "Tumut 17U",
+      "name": "Tumut",
+      "rank": 14,
+      "pts": 10,
+      "pct": "66.7",
+      "W": 5,
+      "L": 12,
+      "D": 0
+    },
+    {
+      "code": "Gunnedah 17U",
+      "name": "Gunnedah",
+      "rank": 15,
+      "pts": 6,
+      "pct": "55.8",
+      "W": 3,
+      "L": 14,
+      "D": 0
+    },
+    {
+      "code": "Scone 17U",
+      "name": "Scone",
+      "rank": 16,
+      "pts": 5,
+      "pct": "65.3",
+      "W": 2,
+      "L": 14,
+      "D": 1
+    },
+    {
+      "code": "Goulburn & District 17U",
+      "name": "Goulburn & District",
+      "rank": 17,
+      "pts": 5,
+      "pct": "51.8",
+      "W": 2,
+      "L": 14,
+      "D": 1
+    },
+    {
+      "code": "Young & District 17U",
+      "name": "Young & District",
+      "rank": 18,
+      "pts": 0,
+      "pct": "12.5",
+      "W": 0,
+      "L": 17,
+      "D": 0
+    }
+  ],
+  "rounds": [
+    {
+      "n": 1,
+      "day": "Sat",
+      "time": "10:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "day": "Sat",
+      "time": "11:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "day": "Sat",
+      "time": "12:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "day": "Sat",
+      "time": "13:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "day": "Sat",
+      "time": "14:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 6,
+      "day": "Sat",
+      "time": "15:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 7,
+      "day": "Sun",
+      "time": "09:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 8,
+      "day": "Sun",
+      "time": "10:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 9,
+      "day": "Sun",
+      "time": "11:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 10,
+      "day": "Sun",
+      "time": "12:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 11,
+      "day": "Sun",
+      "time": "13:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 12,
+      "day": "Mon",
+      "time": "08:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 13,
+      "day": "Mon",
+      "time": "09:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 14,
+      "day": "Mon",
+      "time": "10:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 15,
+      "day": "Mon",
+      "time": "11:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 16,
+      "day": "Mon",
+      "time": "12:30",
+      "sdate": "8/6",
+      "state": "done"
+    },
+    {
+      "n": 17,
+      "day": "Mon",
+      "time": "13:30",
+      "sdate": "8/6",
+      "state": "done"
+    }
+  ],
+  "games": [
+    [
+      1,
+      "Gloucester 17U",
+      14,
+      "Armidale District 17U",
+      12,
+      13,
+      "done"
+    ],
+    [
+      1,
+      "Goulburn & District 17U",
+      6,
+      "Dungog 17U",
+      25,
+      14,
+      "done"
+    ],
+    [
+      1,
+      "Wollondilly 17U",
+      13,
+      "Nelson Bay 17U",
+      16,
+      16,
+      "done"
+    ],
+    [
+      1,
+      "Temora 17U",
+      10,
+      "Blayney 17U",
+      29,
+      17,
+      "done"
+    ],
+    [
+      1,
+      "Cowra 17U",
+      12,
+      "Parkes District 17U",
+      15,
+      18,
+      "done"
+    ],
+    [
+      1,
+      "Glen Innes 17U",
+      21,
+      "Scone 17U",
+      11,
+      19,
+      "done"
+    ],
+    [
+      1,
+      "South Canberra 17U (INV)",
+      10,
+      "Port Stephens 17U",
+      19,
+      21,
+      "done"
+    ],
+    [
+      1,
+      "Gunnedah 17U",
+      14,
+      "Tumut 17U",
+      21,
+      23,
+      "done"
+    ],
+    [
+      1,
+      "Lower Clarence 17U",
+      25,
+      "Young & District 17U",
+      2,
+      22,
+      "done"
+    ],
+    [
+      2,
+      "Port Stephens 17U",
+      32,
+      "Gunnedah 17U",
+      10,
+      13,
+      "done"
+    ],
+    [
+      2,
+      "Tumut 17U",
+      9,
+      "Lower Clarence 17U",
+      17,
+      14,
+      "done"
+    ],
+    [
+      2,
+      "Young & District 17U",
+      4,
+      "Goulburn & District 17U",
+      22,
+      16,
+      "done"
+    ],
+    [
+      2,
+      "Scone 17U",
+      14,
+      "South Canberra 17U (INV)",
+      22,
+      17,
+      "done"
+    ],
+    [
+      2,
+      "Parkes District 17U",
+      11,
+      "Glen Innes 17U",
+      14,
+      19,
+      "done"
+    ],
+    [
+      2,
+      "Blayney 17U",
+      19,
+      "Cowra 17U",
+      8,
+      18,
+      "done"
+    ],
+    [
+      2,
+      "Nelson Bay 17U",
+      16,
+      "Temora 17U",
+      17,
+      21,
+      "done"
+    ],
+    [
+      2,
+      "Armidale District 17U",
+      11,
+      "Wollondilly 17U",
+      14,
+      22,
+      "done"
+    ],
+    [
+      2,
+      "Dungog 17U",
+      18,
+      "Gloucester 17U",
+      10,
+      23,
+      "done"
+    ],
+    [
+      3,
+      "Cowra 17U",
+      12,
+      "Nelson Bay 17U",
+      26,
+      13,
+      "done"
+    ],
+    [
+      3,
+      "Wollondilly 17U",
+      7,
+      "Dungog 17U",
+      26,
+      14,
+      "done"
+    ],
+    [
+      3,
+      "Temora 17U",
+      15,
+      "Armidale District 17U",
+      10,
+      17,
+      "done"
+    ],
+    [
+      3,
+      "Goulburn & District 17U",
+      10,
+      "Gloucester 17U",
+      18,
+      16,
+      "done"
+    ],
+    [
+      3,
+      "Glen Innes 17U",
+      12,
+      "Blayney 17U",
+      22,
+      18,
+      "done"
+    ],
+    [
+      3,
+      "South Canberra 17U (INV)",
+      16,
+      "Parkes District 17U",
+      6,
+      19,
+      "done"
+    ],
+    [
+      3,
+      "Gunnedah 17U",
+      15,
+      "Scone 17U",
+      13,
+      21,
+      "done"
+    ],
+    [
+      3,
+      "Lower Clarence 17U",
+      15,
+      "Port Stephens 17U",
+      17,
+      22,
+      "done"
+    ],
+    [
+      3,
+      "Young & District 17U",
+      8,
+      "Tumut 17U",
+      23,
+      23,
+      "done"
+    ],
+    [
+      4,
+      "Blayney 17U",
+      15,
+      "South Canberra 17U (INV)",
+      9,
+      13,
+      "done"
+    ],
+    [
+      4,
+      "Port Stephens 17U",
+      38,
+      "Young & District 17U",
+      5,
+      14,
+      "done"
+    ],
+    [
+      4,
+      "Scone 17U",
+      5,
+      "Lower Clarence 17U",
+      17,
+      16,
+      "done"
+    ],
+    [
+      4,
+      "Parkes District 17U",
+      15,
+      "Gunnedah 17U",
+      6,
+      17,
+      "done"
+    ],
+    [
+      4,
+      "Tumut 17U",
+      19,
+      "Goulburn & District 17U",
+      8,
+      18,
+      "done"
+    ],
+    [
+      4,
+      "Nelson Bay 17U",
+      18,
+      "Glen Innes 17U",
+      12,
+      19,
+      "done"
+    ],
+    [
+      4,
+      "Armidale District 17U",
+      19,
+      "Cowra 17U",
+      5,
+      21,
+      "done"
+    ],
+    [
+      4,
+      "Dungog 17U",
+      20,
+      "Temora 17U",
+      9,
+      22,
+      "done"
+    ],
+    [
+      4,
+      "Gloucester 17U",
+      13,
+      "Wollondilly 17U",
+      19,
+      23,
+      "done"
+    ],
+    [
+      5,
+      "Gunnedah 17U",
+      6,
+      "Blayney 17U",
+      31,
+      13,
+      "done"
+    ],
+    [
+      5,
+      "Temora 17U",
+      25,
+      "Gloucester 17U",
+      16,
+      14,
+      "done"
+    ],
+    [
+      5,
+      "Cowra 17U",
+      9,
+      "Dungog 17U",
+      20,
+      16,
+      "done"
+    ],
+    [
+      5,
+      "Glen Innes 17U",
+      13,
+      "Armidale District 17U",
+      15,
+      17,
+      "done"
+    ],
+    [
+      5,
+      "South Canberra 17U (INV)",
+      14,
+      "Nelson Bay 17U",
+      18,
+      18,
+      "done"
+    ],
+    [
+      5,
+      "Goulburn & District 17U",
+      17,
+      "Wollondilly 17U",
+      14,
+      19,
+      "done"
+    ],
+    [
+      5,
+      "Lower Clarence 17U",
+      15,
+      "Parkes District 17U",
+      6,
+      22,
+      "done"
+    ],
+    [
+      5,
+      "Young & District 17U",
+      5,
+      "Scone 17U",
+      26,
+      21,
+      "done"
+    ],
+    [
+      5,
+      "Tumut 17U",
+      14,
+      "Port Stephens 17U",
+      27,
+      23,
+      "done"
+    ],
+    [
+      6,
+      "Dungog 17U",
+      19,
+      "Glen Innes 17U",
+      9,
+      13,
+      "done"
+    ],
+    [
+      6,
+      "Scone 17U",
+      19,
+      "Tumut 17U",
+      12,
+      14,
+      "done"
+    ],
+    [
+      6,
+      "Parkes District 17U",
+      36,
+      "Young & District 17U",
+      3,
+      16,
+      "done"
+    ],
+    [
+      6,
+      "Blayney 17U",
+      24,
+      "Lower Clarence 17U",
+      13,
+      17,
+      "done"
+    ],
+    [
+      6,
+      "Nelson Bay 17U",
+      19,
+      "Gunnedah 17U",
+      9,
+      18,
+      "done"
+    ],
+    [
+      6,
+      "Armidale District 17U",
+      18,
+      "South Canberra 17U (INV)",
+      6,
+      19,
+      "done"
+    ],
+    [
+      6,
+      "Port Stephens 17U",
+      26,
+      "Goulburn & District 17U",
+      7,
+      21,
+      "done"
+    ],
+    [
+      6,
+      "Gloucester 17U",
+      11,
+      "Cowra 17U",
+      22,
+      23,
+      "done"
+    ],
+    [
+      6,
+      "Wollondilly 17U",
+      14,
+      "Temora 17U",
+      19,
+      22,
+      "done"
+    ],
+    [
+      7,
+      "Tumut 17U",
+      17,
+      "Parkes District 17U",
+      12,
+      23,
+      "done"
+    ],
+    [
+      7,
+      "Cowra 17U",
+      11,
+      "Wollondilly 17U",
+      18,
+      24,
+      "done"
+    ],
+    [
+      7,
+      "Glen Innes 17U",
+      20,
+      "Gloucester 17U",
+      11,
+      26,
+      "done"
+    ],
+    [
+      7,
+      "South Canberra 17U (INV)",
+      19,
+      "Dungog 17U",
+      25,
+      28,
+      "done"
+    ],
+    [
+      7,
+      "Gunnedah 17U",
+      3,
+      "Armidale District 17U",
+      16,
+      29,
+      "done"
+    ],
+    [
+      7,
+      "Lower Clarence 17U",
+      15,
+      "Nelson Bay 17U",
+      14,
+      31,
+      "done"
+    ],
+    [
+      7,
+      "Young & District 17U",
+      0,
+      "Blayney 17U",
+      34,
+      33,
+      "done"
+    ],
+    [
+      7,
+      "Goulburn & District 17U",
+      8,
+      "Temora 17U",
+      28,
+      34,
+      "done"
+    ],
+    [
+      7,
+      "Port Stephens 17U",
+      27,
+      "Scone 17U",
+      10,
+      36,
+      "done"
+    ],
+    [
+      8,
+      "Temora 17U",
+      26,
+      "Cowra 17U",
+      11,
+      23,
+      "done"
+    ],
+    [
+      8,
+      "Parkes District 17U",
+      7,
+      "Port Stephens 17U",
+      15,
+      24,
+      "done"
+    ],
+    [
+      8,
+      "Blayney 17U",
+      30,
+      "Tumut 17U",
+      8,
+      26,
+      "done"
+    ],
+    [
+      8,
+      "Nelson Bay 17U",
+      32,
+      "Young & District 17U",
+      1,
+      28,
+      "done"
+    ],
+    [
+      8,
+      "Armidale District 17U",
+      7,
+      "Lower Clarence 17U",
+      8,
+      29,
+      "done"
+    ],
+    [
+      8,
+      "Dungog 17U",
+      26,
+      "Gunnedah 17U",
+      14,
+      31,
+      "done"
+    ],
+    [
+      8,
+      "Gloucester 17U",
+      12,
+      "South Canberra 17U (INV)",
+      11,
+      34,
+      "done"
+    ],
+    [
+      8,
+      "Wollondilly 17U",
+      14,
+      "Glen Innes 17U",
+      16,
+      33,
+      "done"
+    ],
+    [
+      8,
+      "Scone 17U",
+      14,
+      "Goulburn & District 17U",
+      14,
+      36,
+      "done"
+    ],
+    [
+      9,
+      "Scone 17U",
+      10,
+      "Parkes District 17U",
+      20,
+      23,
+      "done"
+    ],
+    [
+      9,
+      "Glen Innes 17U",
+      7,
+      "Temora 17U",
+      16,
+      24,
+      "done"
+    ],
+    [
+      9,
+      "South Canberra 17U (INV)",
+      8,
+      "Wollondilly 17U",
+      16,
+      26,
+      "done"
+    ],
+    [
+      9,
+      "Gunnedah 17U",
+      18,
+      "Gloucester 17U",
+      20,
+      28,
+      "done"
+    ],
+    [
+      9,
+      "Lower Clarence 17U",
+      14,
+      "Dungog 17U",
+      21,
+      29,
+      "done"
+    ],
+    [
+      9,
+      "Young & District 17U",
+      5,
+      "Armidale District 17U",
+      23,
+      31,
+      "done"
+    ],
+    [
+      9,
+      "Tumut 17U",
+      11,
+      "Nelson Bay 17U",
+      21,
+      33,
+      "done"
+    ],
+    [
+      9,
+      "Port Stephens 17U",
+      11,
+      "Blayney 17U",
+      18,
+      34,
+      "done"
+    ],
+    [
+      9,
+      "Goulburn & District 17U",
+      11,
+      "Cowra 17U",
+      22,
+      36,
+      "done"
+    ],
+    [
+      10,
+      "Temora 17U",
+      15,
+      "South Canberra 17U (INV)",
+      13,
+      23,
+      "done"
+    ],
+    [
+      10,
+      "Blayney 17U",
+      23,
+      "Scone 17U",
+      11,
+      24,
+      "done"
+    ],
+    [
+      10,
+      "Nelson Bay 17U",
+      11,
+      "Port Stephens 17U",
+      18,
+      26,
+      "done"
+    ],
+    [
+      10,
+      "Armidale District 17U",
+      17,
+      "Tumut 17U",
+      13,
+      28,
+      "done"
+    ],
+    [
+      10,
+      "Dungog 17U",
+      19,
+      "Young & District 17U",
+      4,
+      29,
+      "done"
+    ],
+    [
+      10,
+      "Gloucester 17U",
+      11,
+      "Lower Clarence 17U",
+      30,
+      31,
+      "done"
+    ],
+    [
+      10,
+      "Wollondilly 17U",
+      21,
+      "Gunnedah 17U",
+      9,
+      33,
+      "done"
+    ],
+    [
+      10,
+      "Parkes District 17U",
+      17,
+      "Goulburn & District 17U",
+      5,
+      34,
+      "done"
+    ],
+    [
+      10,
+      "Cowra 17U",
+      11,
+      "Glen Innes 17U",
+      14,
+      36,
+      "done"
+    ],
+    [
+      11,
+      "Port Stephens 17U",
+      14,
+      "Armidale District 17U",
+      6,
+      23,
+      "done"
+    ],
+    [
+      11,
+      "South Canberra 17U (INV)",
+      19,
+      "Cowra 17U",
+      6,
+      24,
+      "done"
+    ],
+    [
+      11,
+      "Gunnedah 17U",
+      9,
+      "Temora 17U",
+      25,
+      26,
+      "done"
+    ],
+    [
+      11,
+      "Lower Clarence 17U",
+      17,
+      "Wollondilly 17U",
+      14,
+      28,
+      "done"
+    ],
+    [
+      11,
+      "Young & District 17U",
+      6,
+      "Gloucester 17U",
+      23,
+      29,
+      "done"
+    ],
+    [
+      11,
+      "Tumut 17U",
+      6,
+      "Dungog 17U",
+      27,
+      31,
+      "done"
+    ],
+    [
+      11,
+      "Goulburn & District 17U",
+      10,
+      "Glen Innes 17U",
+      18,
+      33,
+      "done"
+    ],
+    [
+      11,
+      "Scone 17U",
+      10,
+      "Nelson Bay 17U",
+      16,
+      34,
+      "done"
+    ],
+    [
+      11,
+      "Parkes District 17U",
+      12,
+      "Blayney 17U",
+      11,
+      36,
+      "done"
+    ],
+    [
+      12,
+      "Wollondilly 17U",
+      28,
+      "Young & District 17U",
+      4,
+      14,
+      "done"
+    ],
+    [
+      12,
+      "Nelson Bay 17U",
+      17,
+      "Parkes District 17U",
+      10,
+      16,
+      "done"
+    ],
+    [
+      12,
+      "Armidale District 17U",
+      14,
+      "Scone 17U",
+      7,
+      18,
+      "done"
+    ],
+    [
+      12,
+      "Dungog 17U",
+      6,
+      "Port Stephens 17U",
+      21,
+      22,
+      "done"
+    ],
+    [
+      12,
+      "Gloucester 17U",
+      11,
+      "Tumut 17U",
+      16,
+      23,
+      "done"
+    ],
+    [
+      12,
+      "Blayney 17U",
+      34,
+      "Goulburn & District 17U",
+      6,
+      26,
+      "done"
+    ],
+    [
+      12,
+      "Temora 17U",
+      19,
+      "Lower Clarence 17U",
+      15,
+      30,
+      "done"
+    ],
+    [
+      12,
+      "Cowra 17U",
+      13,
+      "Gunnedah 17U",
+      10,
+      35,
+      "done"
+    ],
+    [
+      12,
+      "Glen Innes 17U",
+      13,
+      "South Canberra 17U (INV)",
+      15,
+      34,
+      "done"
+    ],
+    [
+      13,
+      "Tumut 17U",
+      9,
+      "Wollondilly 17U",
+      22,
+      14,
+      "done"
+    ],
+    [
+      13,
+      "Gunnedah 17U",
+      5,
+      "Glen Innes 17U",
+      28,
+      16,
+      "done"
+    ],
+    [
+      13,
+      "Lower Clarence 17U",
+      20,
+      "Cowra 17U",
+      14,
+      18,
+      "done"
+    ],
+    [
+      13,
+      "Young & District 17U",
+      1,
+      "Temora 17U",
+      40,
+      22,
+      "done"
+    ],
+    [
+      13,
+      "Goulburn & District 17U",
+      7,
+      "South Canberra 17U (INV)",
+      18,
+      23,
+      "done"
+    ],
+    [
+      13,
+      "Port Stephens 17U",
+      37,
+      "Gloucester 17U",
+      7,
+      26,
+      "done"
+    ],
+    [
+      13,
+      "Scone 17U",
+      12,
+      "Dungog 17U",
+      29,
+      30,
+      "done"
+    ],
+    [
+      13,
+      "Parkes District 17U",
+      12,
+      "Armidale District 17U",
+      14,
+      35,
+      "done"
+    ],
+    [
+      13,
+      "Blayney 17U",
+      15,
+      "Nelson Bay 17U",
+      15,
+      34,
+      "done"
+    ],
+    [
+      14,
+      "Gloucester 17U",
+      18,
+      "Scone 17U",
+      12,
+      14,
+      "done"
+    ],
+    [
+      14,
+      "Armidale District 17U",
+      14,
+      "Blayney 17U",
+      22,
+      16,
+      "done"
+    ],
+    [
+      14,
+      "Dungog 17U",
+      15,
+      "Parkes District 17U",
+      16,
+      18,
+      "done"
+    ],
+    [
+      14,
+      "Nelson Bay 17U",
+      24,
+      "Goulburn & District 17U",
+      6,
+      22,
+      "done"
+    ],
+    [
+      14,
+      "Wollondilly 17U",
+      10,
+      "Port Stephens 17U",
+      19,
+      23,
+      "done"
+    ],
+    [
+      14,
+      "Temora 17U",
+      27,
+      "Tumut 17U",
+      6,
+      26,
+      "done"
+    ],
+    [
+      14,
+      "Cowra 17U",
+      32,
+      "Young & District 17U",
+      1,
+      30,
+      "done"
+    ],
+    [
+      14,
+      "Glen Innes 17U",
+      18,
+      "Lower Clarence 17U",
+      14,
+      35,
+      "done"
+    ],
+    [
+      14,
+      "South Canberra 17U (INV)",
+      22,
+      "Gunnedah 17U",
+      6,
+      34,
+      "done"
+    ],
+    [
+      15,
+      "Young & District 17U",
+      3,
+      "Glen Innes 17U",
+      26,
+      14,
+      "done"
+    ],
+    [
+      15,
+      "Lower Clarence 17U",
+      19,
+      "South Canberra 17U (INV)",
+      9,
+      16,
+      "done"
+    ],
+    [
+      15,
+      "Goulburn & District 17U",
+      17,
+      "Gunnedah 17U",
+      20,
+      18,
+      "done"
+    ],
+    [
+      15,
+      "Tumut 17U",
+      10,
+      "Cowra 17U",
+      12,
+      22,
+      "done"
+    ],
+    [
+      15,
+      "Port Stephens 17U",
+      15,
+      "Temora 17U",
+      18,
+      23,
+      "done"
+    ],
+    [
+      15,
+      "Scone 17U",
+      12,
+      "Wollondilly 17U",
+      15,
+      26,
+      "done"
+    ],
+    [
+      15,
+      "Parkes District 17U",
+      18,
+      "Gloucester 17U",
+      10,
+      30,
+      "done"
+    ],
+    [
+      15,
+      "Blayney 17U",
+      26,
+      "Dungog 17U",
+      14,
+      35,
+      "done"
+    ],
+    [
+      15,
+      "Nelson Bay 17U",
+      15,
+      "Armidale District 17U",
+      10,
+      34,
+      "done"
+    ],
+    [
+      16,
+      "Dungog 17U",
+      16,
+      "Nelson Bay 17U",
+      22,
+      14,
+      "done"
+    ],
+    [
+      16,
+      "Armidale District 17U",
+      17,
+      "Goulburn & District 17U",
+      12,
+      16,
+      "done"
+    ],
+    [
+      16,
+      "Gloucester 17U",
+      12,
+      "Blayney 17U",
+      34,
+      18,
+      "done"
+    ],
+    [
+      16,
+      "Wollondilly 17U",
+      13,
+      "Parkes District 17U",
+      14,
+      22,
+      "done"
+    ],
+    [
+      16,
+      "Temora 17U",
+      33,
+      "Scone 17U",
+      11,
+      23,
+      "done"
+    ],
+    [
+      16,
+      "Cowra 17U",
+      12,
+      "Port Stephens 17U",
+      22,
+      26,
+      "done"
+    ],
+    [
+      16,
+      "Glen Innes 17U",
+      30,
+      "Tumut 17U",
+      10,
+      30,
+      "done"
+    ],
+    [
+      16,
+      "South Canberra 17U (INV)",
+      32,
+      "Young & District 17U",
+      4,
+      35,
+      "done"
+    ],
+    [
+      16,
+      "Gunnedah 17U",
+      5,
+      "Lower Clarence 17U",
+      15,
+      34,
+      "done"
+    ],
+    [
+      17,
+      "Goulburn & District 17U",
+      10,
+      "Lower Clarence 17U",
+      22,
+      14,
+      "done"
+    ],
+    [
+      17,
+      "Young & District 17U",
+      5,
+      "Gunnedah 17U",
+      30,
+      16,
+      "done"
+    ],
+    [
+      17,
+      "Tumut 17U",
+      6,
+      "South Canberra 17U (INV)",
+      13,
+      18,
+      "done"
+    ],
+    [
+      17,
+      "Port Stephens 17U",
+      15,
+      "Glen Innes 17U",
+      12,
+      22,
+      "done"
+    ],
+    [
+      17,
+      "Scone 17U",
+      10,
+      "Cowra 17U",
+      16,
+      23,
+      "done"
+    ],
+    [
+      17,
+      "Parkes District 17U",
+      8,
+      "Temora 17U",
+      18,
+      26,
+      "done"
+    ],
+    [
+      17,
+      "Blayney 17U",
+      23,
+      "Wollondilly 17U",
+      11,
+      30,
+      "done"
+    ],
+    [
+      17,
+      "Nelson Bay 17U",
+      22,
+      "Gloucester 17U",
+      15,
+      35,
+      "done"
+    ],
+    [
+      17,
+      "Armidale District 17U",
+      16,
+      "Dungog 17U",
+      10,
+      34,
+      "done"
+    ]
+  ]
+};
+
+function render(d) {
+  const key = (a, b) => [a, b].sort().join("|");
+
+  // Build M as arrays — all games per pair, sorted by round.
+  const M = {};
+  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+    const k = key(h, a);
+    if (!M[k]) M[k] = [];
+    M[k].push({ rd, h, hs, a, as: as_, court, st });
+  });
+  Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
+
+  const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
+
+  // Per-team next round: min round where their game isn't done
+  const nextRound = {};
+  d.teams.forEach(t => {
+    let min = Infinity;
+    d.games.forEach(([rd, h, , a, , , st]) => {
+      if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
+    });
+    nextRound[t.code] = min === Infinity ? null : min;
+  });
+
+  const grid = document.getElementById("grid");
+  let html = "<thead><tr>";
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
+    : d.title;
+  html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
+  d.teams.forEach(t => {
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+
+  d.teams.forEach((rowT) => {
+    const pinnedRow = rowT.code === d.pin;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<th class="rowhead">
+               <div class="rn">
+                 <span class="rkn">${rowT.rank}</span>
+                 <span class="nm">${rowT.name}</span>
+               </div>
+             </th>`;
+
+    d.teams.forEach((colT) => {
+      const pinCol = colT.code === d.pin && !pinnedRow;
+      const pcls = pinCol ? " pincol" : "";
+
+      if (rowT.code === colT.code) {
+        html += `<td class="cell self">
+                   <span class="sl1">${rowT.pts} pts</span>
+                   <span class="sl2">${rowT.pct}%</span>
+                 </td>`;
+        return;
+      }
+
+      const games = M[key(rowT.code, colT.code)];
+      if (!games) { html += `<td class="cell${pcls}"></td>`; return; }
+
+      html += `<td class="cell${pcls}">`;
+      games.forEach(m => {
+        const rowScore = m.h === rowT.code ? m.hs : m.as;
+        const colScore = m.h === rowT.code ? m.as : m.hs;
+        const rmeta = roundByN[m.rd] || {};
+        const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+        if (m.st === "live" && rowScore != null) {
+          html += `<div class="mg live${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
+                   </div>`;
+        } else if (m.st === "done" && rowScore != null) {
+          const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">${rowScore}–${colScore}</span>
+                   </div>`;
+        } else {
+          const liveCls = m.st === "live" ? " live" : "";
+          html += `<div class="mg fix${liveCls}${ncls}">
+                     <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
+                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                   </div>`;
+        }
+      });
+      html += `</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody>";
+  grid.innerHTML = html;
+}
+render(DATA);
+
+</script>
+</body>
+</html>
