@@ -63,7 +63,7 @@ def sanity_check(fixtures, grade_label=""):
     team_rounds = defaultdict(dict)  # team -> {round_n: opponent}
     errors = []
     for f in fixtures:
-        if f.away_team in ("BYE", "TBC Team") or f.home_team == "TBC Team":
+        if _skip_fixture(f) or f.away_team == "TBC Team" or f.home_team == "TBC Team":
             continue
         rn = _parse_round_n(f.round_name)
         if not rn:
@@ -111,8 +111,17 @@ def _slugify(title):
     return f"{slug}.html"
 
 
+_PLACEHOLDER_PREFIXES = ("Ladder position ", "Loser Game ", "Winner Game ")
+
+def _is_placeholder(name):
+    return any(name.startswith(p) for p in _PLACEHOLDER_PREFIXES)
+
+def _skip_fixture(f):
+    return f.away_team == "BYE" or _is_placeholder(f.home_team) or _is_placeholder(f.away_team or "")
+
+
 def build_data(fixtures, title="Cross Table", pin=None,
-               max_round=None, next_url=None):
+               max_round=None):
     """Return the DATA dict for the HTML template.
 
     max_round: if set, treat any game in a later round as 'upcoming' and
@@ -120,14 +129,15 @@ def build_data(fixtures, title="Cross Table", pin=None,
     """
     teams_seen = set()
     for f in fixtures:
+        if _skip_fixture(f):
+            continue
         if f.home_team:
             teams_seen.add(f.home_team)
-        if f.away_team and f.away_team != "BYE":
-            teams_seen.add(f.away_team)
+        teams_seen.add(f.away_team)
 
     stats = {t: {"W": 0, "L": 0, "D": 0, "PF": 0, "PA": 0} for t in teams_seen}
     for f in fixtures:
-        if f.away_team == "BYE" or f.status not in ("completed", "live") or f.home_score is None:
+        if _skip_fixture(f) or f.status not in ("completed", "live") or f.home_score is None:
             continue
         rn = _parse_round_n(f.round_name)
         if max_round is not None and rn > max_round:
@@ -181,7 +191,7 @@ def build_data(fixtures, title="Cross Table", pin=None,
 
     games_js = []
     for f in fixtures:
-        if f.away_team == "BYE":
+        if _skip_fixture(f):
             continue
         rn = _parse_round_n(f.round_name)
         hc = f.home_team
