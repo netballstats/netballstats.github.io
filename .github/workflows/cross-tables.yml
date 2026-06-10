@@ -1,8 +1,6 @@
 name: Generate Cross Tables
 
 on:
-  schedule:
-    - cron: '36,43,49,56 8-14 8 6 *'
   workflow_dispatch:
 
 permissions:
