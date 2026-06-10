@@ -561,9 +561,12 @@ def _generate_one(grade_id, title, variants, pin=None, max_round=None,
 
 
 def _grade_group_key(title):
-    """Extract the age/division prefix used to group grades on the same row."""
-    m = re.match(r'^(\d+U?|\d+|[A-Za-z]+)', title or "")
-    return m.group(1) if m else title
+    """Extract the age/division prefix used to group grades on the same row.
+    Includes 'Male' when present so male grades are grouped separately."""
+    m = re.match(r'^(\d+U?|\d+|[A-Za-z]+)(\s+Male)?', title or "")
+    if not m:
+        return title
+    return (m.group(1) + (m.group(2) or "")).strip()
 
 
 def _generate_menu(competitions, output="site/index.html"):
