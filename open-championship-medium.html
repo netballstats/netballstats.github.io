@@ -1,0 +1,2370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Open Championship — Cross Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #15223b;
+    --ink-2:    #51607a;
+    --muted:    #9aa4b6;
+    --line:     #dfe3ea;
+    --line-2:   #eef0f4;
+    --bg:       #f3f5f8;
+    --card:     #ffffff;
+    --accent:   #e8542f;
+    --accent-bg:#fdece5;
+    --win:      #157a47;
+    --win-bg:   #e7f3ea;
+    --loss:     #b23b2c;
+    --loss-bg:  #fbe9e6;
+    --draw-bg:  #fff3e0;
+    --col-w:    52px;
+    --name-w:   110px;
+    --row-h:    33px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .scroll {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+  table.x { border-collapse: separate; border-spacing: 0; margin: 0; }
+  table.x th, table.x td { padding: 0; margin: 0; }
+  th.corner {
+    position: sticky; left: 0; top: 0; z-index: 6;
+    width: var(--name-w); min-width: var(--name-w);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 2px solid var(--line);
+  }
+  th.corner .lbl {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    padding: 5px 6px; text-align: left; line-height: 1.3;
+  }
+  th.corner .lbl a { color: inherit; text-decoration: none; }
+  th.corner .lbl a:hover { text-decoration: underline; }
+  th.colhead {
+    position: sticky; top: 0; z-index: 4;
+    width: var(--col-w); min-width: var(--col-w);
+    background: var(--card);
+    border-bottom: 2px solid var(--line);
+    border-left: 1px solid var(--line-2);
+    vertical-align: bottom;
+    padding: 4px 3px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 10px;
+    color: var(--ink); text-align: center;
+    overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.15; vertical-align: top;
+  }
+  th.colhead .ckn {
+    display: block;
+    font-size: 8px; font-weight: 700;
+    color: var(--muted); letter-spacing: .3px;
+    line-height: 1.4;
+  }
+  th.rowhead {
+    position: sticky; left: 0; z-index: 3;
+    width: var(--name-w); min-width: var(--name-w);
+    height: var(--row-h);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: top;
+  }
+  th.rowhead .rn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 5px 3px 5px;
+  }
+  th.rowhead .rkn {
+    flex: 0 0 auto; width: 13px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); text-align: center;
+  }
+  th.rowhead .nm {
+    font-size: 10px; font-weight: 600;
+    line-height: 1.1; color: var(--ink);
+  }
+  td.cell {
+    width: var(--col-w); min-width: var(--col-w);
+    height: var(--row-h);
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    position: relative;
+    background: var(--card);
+    vertical-align: top;
+  }
+  td.cell .scblock {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px; padding: 2px;
+  }
+  td.cell .scblock .rd {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .3px; color: var(--muted); line-height: 1;
+  }
+  td.cell .scblock .score {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 13px;
+    line-height: 1; letter-spacing: -.1px;
+  }
+  td.cell.fix { background: #f9fafb; }
+  td.cell.fix .fxblock {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px; padding: 2px;
+    text-align: center; line-height: 1.1;
+  }
+  td.cell.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  td.cell.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  td.cell.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  td.cell.fix.done { background: #f5f6f8; }
+  td.cell.fix.done .fl1 { color: var(--muted); }
+  td.cell.fix.done .fl1 b { color: var(--ink-2); }
+  td.cell.fix.done .fl2 { color: #bcc4d0; }
+  td.cell.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  td.cell.fix.live .fl1, td.cell.fix.live .fl1 b { color: var(--accent); }
+  td.cell.fix.live .fl2 { color: var(--accent); }
+  td.cell.win  { background: var(--win-bg); }
+  td.cell.win  .score { color: var(--win); }
+  td.cell.loss { background: var(--loss-bg); }
+  td.cell.loss .score { color: var(--loss); }
+  td.cell.draw { background: var(--draw-bg); }
+  td.cell.draw .score { color: #e65100; }
+  td.cell.live {
+    background: var(--accent-bg);
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+  td.cell.live .score {
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+  }
+  td.cell.live .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: pulse 1.3s infinite;
+  }
+  td.cell.upcoming .score { color: var(--muted); font-size: 11px; }
+  td.cell.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  td.cell.next.fix:not(.live) { background: #eef0fb; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
+  td.cell.self {
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
+      var(--ink);
+    overflow: hidden;
+  }
+  td.cell.self .selfblock {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px; padding: 2px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    color: #fff; text-align: center; line-height: 1.1;
+  }
+  td.cell.self .sl1 { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; }
+  td.cell.self .sl2 { font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; }
+  tr.pinned th.rowhead { background: #fff7ec; }
+  tr.pinned td.cell:not(.self) { background-color: #fffaf2; }
+  tr.pinned td.cell.win  { background-color: var(--win-bg); }
+  tr.pinned td.cell.loss { background-color: var(--loss-bg); }
+  tr.pinned td.cell.live { background-color: var(--accent-bg); }
+  td.cell.pincol:not(.self):not(.win):not(.loss):not(.live) { background-color: #fffaf2; }
+  @media (max-width: 400px) {
+    :root { --col-w: 42px; --name-w: 90px; }
+  }
+
+</style>
+<style>html { zoom: 1.5; }</style>
+</head>
+<body>
+  <div class="scroll">
+    <table class="x" id="grid"></table>
+  </div>
+<script>
+const DATA = {
+  "title": "Open Championship",
+  "venue": "Jamison Park Netball Complex, South Penrith",
+  "date": "Sat 6–Mon 8 Jun 2026",
+  "pin": null,
+  "menu_url": "index.html",
+  "teams": [
+    {
+      "code": "Maitland Opens",
+      "name": "Maitland Opens",
+      "rank": 1,
+      "pts": 26,
+      "pct": "179.6",
+      "W": 13,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "Manly Warringah Opens",
+      "name": "Manly Warringah Opens",
+      "rank": 2,
+      "pts": 26,
+      "pct": "164.8",
+      "W": 13,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "Hills District Opens",
+      "name": "Hills District Opens",
+      "rank": 3,
+      "pts": 24,
+      "pct": "187.0",
+      "W": 12,
+      "L": 1,
+      "D": 0
+    },
+    {
+      "code": "Gosford Opens",
+      "name": "Gosford Opens",
+      "rank": 4,
+      "pts": 18,
+      "pct": "125.2",
+      "W": 9,
+      "L": 4,
+      "D": 0
+    },
+    {
+      "code": "Randwick Opens",
+      "name": "Randwick Opens",
+      "rank": 5,
+      "pts": 18,
+      "pct": "116.1",
+      "W": 9,
+      "L": 4,
+      "D": 0
+    },
+    {
+      "code": "Lakeside Opens",
+      "name": "Lakeside Opens",
+      "rank": 6,
+      "pts": 15,
+      "pct": "104.1",
+      "W": 7,
+      "L": 5,
+      "D": 1
+    },
+    {
+      "code": "Blacktown City Opens",
+      "name": "Blacktown City Opens",
+      "rank": 7,
+      "pts": 15,
+      "pct": "88.2",
+      "W": 7,
+      "L": 5,
+      "D": 1
+    },
+    {
+      "code": "Ku-ring-gai Opens",
+      "name": "Ku-ring-gai Opens",
+      "rank": 8,
+      "pts": 14,
+      "pct": "113.4",
+      "W": 7,
+      "L": 6,
+      "D": 0
+    },
+    {
+      "code": "Charlestown Opens",
+      "name": "Charlestown Opens",
+      "rank": 9,
+      "pts": 13,
+      "pct": "103.8",
+      "W": 6,
+      "L": 6,
+      "D": 1
+    },
+    {
+      "code": "Sutherland Shire Opens",
+      "name": "Sutherland Shire Opens",
+      "rank": 10,
+      "pts": 12,
+      "pct": "108.7",
+      "W": 6,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Woolgoolga District Opens",
+      "name": "Woolgoolga District Opens",
+      "rank": 11,
+      "pts": 12,
+      "pct": "98.9",
+      "W": 6,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Penrith District Opens",
+      "name": "Penrith District Opens",
+      "rank": 12,
+      "pts": 12,
+      "pct": "92.8",
+      "W": 6,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Wyong District Opens",
+      "name": "Wyong District Opens",
+      "rank": 13,
+      "pts": 12,
+      "pct": "84.9",
+      "W": 6,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Illawarra District Opens",
+      "name": "Illawarra District Opens",
+      "rank": 14,
+      "pts": 10,
+      "pct": "93.4",
+      "W": 5,
+      "L": 8,
+      "D": 0
+    },
+    {
+      "code": "Hastings Valley Opens",
+      "name": "Hastings Valley Opens",
+      "rank": 15,
+      "pts": 10,
+      "pct": "90.0",
+      "W": 4,
+      "L": 7,
+      "D": 2
+    },
+    {
+      "code": "Newcastle Opens",
+      "name": "Newcastle Opens",
+      "rank": 16,
+      "pts": 8,
+      "pct": "76.1",
+      "W": 4,
+      "L": 9,
+      "D": 0
+    },
+    {
+      "code": "Baulkham Hills Shire Opens",
+      "name": "Baulkham Hills Shire Opens",
+      "rank": 17,
+      "pts": 8,
+      "pct": "68.9",
+      "W": 4,
+      "L": 9,
+      "D": 0
+    },
+    {
+      "code": "Orange Opens",
+      "name": "Orange Opens",
+      "rank": 18,
+      "pts": 4,
+      "pct": "71.1",
+      "W": 2,
+      "L": 11,
+      "D": 0
+    },
+    {
+      "code": "Eastwood Ryde Opens",
+      "name": "Eastwood Ryde Opens",
+      "rank": 19,
+      "pts": 3,
+      "pct": "62.2",
+      "W": 1,
+      "L": 11,
+      "D": 1
+    },
+    {
+      "code": "Camden & District Opens",
+      "name": "Camden & District Opens",
+      "rank": 20,
+      "pts": 0,
+      "pct": "58.9",
+      "W": 0,
+      "L": 13,
+      "D": 0
+    }
+  ],
+  "rounds": [
+    {
+      "n": 1,
+      "day": "Sat",
+      "time": "09:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "day": "Sat",
+      "time": "10:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "day": "Sat",
+      "time": "11:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "day": "Sat",
+      "time": "12:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "day": "Sat",
+      "time": "13:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 6,
+      "day": "Sat",
+      "time": "14:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 7,
+      "day": "Sat",
+      "time": "15:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 8,
+      "day": "Sun",
+      "time": "09:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 9,
+      "day": "Sun",
+      "time": "10:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 10,
+      "day": "Sun",
+      "time": "11:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 11,
+      "day": "Sun",
+      "time": "12:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 12,
+      "day": "Sun",
+      "time": "13:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 13,
+      "day": "Sun",
+      "time": "14:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 14,
+      "day": "Mon",
+      "time": "09:00",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 15,
+      "day": "Mon",
+      "time": "10:00",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 16,
+      "day": "Mon",
+      "time": "11:00",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 17,
+      "day": "Mon",
+      "time": "12:00",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 18,
+      "day": "Mon",
+      "time": "13:00",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 19,
+      "day": "Mon",
+      "time": "14:00",
+      "sdate": "8/6",
+      "state": "upcoming"
+    }
+  ],
+  "games": [
+    [
+      1,
+      "Orange Opens",
+      9,
+      "Hills District Opens",
+      25,
+      27,
+      "done"
+    ],
+    [
+      1,
+      "Woolgoolga District Opens",
+      16,
+      "Charlestown Opens",
+      14,
+      28,
+      "done"
+    ],
+    [
+      1,
+      "Hastings Valley Opens",
+      17,
+      "Manly Warringah Opens",
+      22,
+      29,
+      "done"
+    ],
+    [
+      1,
+      "Gosford Opens",
+      19,
+      "Maitland Opens",
+      21,
+      30,
+      "done"
+    ],
+    [
+      1,
+      "Camden & District Opens",
+      18,
+      "Randwick Opens",
+      23,
+      31,
+      "done"
+    ],
+    [
+      1,
+      "Penrith District Opens",
+      20,
+      "Wyong District Opens",
+      11,
+      32,
+      "done"
+    ],
+    [
+      1,
+      "Blacktown City Opens",
+      18,
+      "Lakeside Opens",
+      17,
+      41,
+      "done"
+    ],
+    [
+      1,
+      "Newcastle Opens",
+      8,
+      "Sutherland Shire Opens",
+      25,
+      36,
+      "done"
+    ],
+    [
+      1,
+      "Ku-ring-gai Opens",
+      18,
+      "Baulkham Hills Shire Opens",
+      16,
+      34,
+      "done"
+    ],
+    [
+      1,
+      "Illawarra District Opens",
+      22,
+      "Eastwood Ryde Opens",
+      16,
+      37,
+      "done"
+    ],
+    [
+      2,
+      "Sutherland Shire Opens",
+      15,
+      "Ku-ring-gai Opens",
+      14,
+      27,
+      "done"
+    ],
+    [
+      2,
+      "Baulkham Hills Shire Opens",
+      18,
+      "Illawarra District Opens",
+      8,
+      28,
+      "done"
+    ],
+    [
+      2,
+      "Eastwood Ryde Opens",
+      12,
+      "Woolgoolga District Opens",
+      24,
+      29,
+      "done"
+    ],
+    [
+      2,
+      "Lakeside Opens",
+      24,
+      "Newcastle Opens",
+      13,
+      30,
+      "done"
+    ],
+    [
+      2,
+      "Wyong District Opens",
+      18,
+      "Blacktown City Opens",
+      13,
+      31,
+      "done"
+    ],
+    [
+      2,
+      "Randwick Opens",
+      23,
+      "Penrith District Opens",
+      20,
+      32,
+      "done"
+    ],
+    [
+      2,
+      "Maitland Opens",
+      25,
+      "Camden & District Opens",
+      8,
+      34,
+      "done"
+    ],
+    [
+      2,
+      "Manly Warringah Opens",
+      24,
+      "Gosford Opens",
+      22,
+      36,
+      "done"
+    ],
+    [
+      2,
+      "Hills District Opens",
+      19,
+      "Hastings Valley Opens",
+      13,
+      37,
+      "done"
+    ],
+    [
+      2,
+      "Charlestown Opens",
+      17,
+      "Orange Opens",
+      10,
+      41,
+      "done"
+    ],
+    [
+      3,
+      "Camden & District Opens",
+      13,
+      "Manly Warringah Opens",
+      24,
+      27,
+      "done"
+    ],
+    [
+      3,
+      "Hastings Valley Opens",
+      14,
+      "Charlestown Opens",
+      14,
+      28,
+      "done"
+    ],
+    [
+      3,
+      "Gosford Opens",
+      18,
+      "Hills District Opens",
+      14,
+      29,
+      "done"
+    ],
+    [
+      3,
+      "Woolgoolga District Opens",
+      15,
+      "Orange Opens",
+      13,
+      30,
+      "done"
+    ],
+    [
+      3,
+      "Penrith District Opens",
+      13,
+      "Maitland Opens",
+      23,
+      31,
+      "done"
+    ],
+    [
+      3,
+      "Blacktown City Opens",
+      21,
+      "Randwick Opens",
+      17,
+      32,
+      "done"
+    ],
+    [
+      3,
+      "Newcastle Opens",
+      17,
+      "Wyong District Opens",
+      19,
+      34,
+      "done"
+    ],
+    [
+      3,
+      "Ku-ring-gai Opens",
+      12,
+      "Lakeside Opens",
+      24,
+      36,
+      "done"
+    ],
+    [
+      3,
+      "Illawarra District Opens",
+      18,
+      "Sutherland Shire Opens",
+      21,
+      37,
+      "done"
+    ],
+    [
+      3,
+      "Eastwood Ryde Opens",
+      12,
+      "Baulkham Hills Shire Opens",
+      15,
+      41,
+      "done"
+    ],
+    [
+      4,
+      "Randwick Opens",
+      22,
+      "Newcastle Opens",
+      16,
+      27,
+      "done"
+    ],
+    [
+      4,
+      "Sutherland Shire Opens",
+      23,
+      "Eastwood Ryde Opens",
+      12,
+      28,
+      "done"
+    ],
+    [
+      4,
+      "Lakeside Opens",
+      14,
+      "Illawarra District Opens",
+      13,
+      29,
+      "done"
+    ],
+    [
+      4,
+      "Wyong District Opens",
+      11,
+      "Ku-ring-gai Opens",
+      22,
+      30,
+      "done"
+    ],
+    [
+      4,
+      "Baulkham Hills Shire Opens",
+      12,
+      "Woolgoolga District Opens",
+      19,
+      31,
+      "done"
+    ],
+    [
+      4,
+      "Maitland Opens",
+      23,
+      "Blacktown City Opens",
+      10,
+      32,
+      "done"
+    ],
+    [
+      4,
+      "Manly Warringah Opens",
+      22,
+      "Penrith District Opens",
+      9,
+      34,
+      "done"
+    ],
+    [
+      4,
+      "Hills District Opens",
+      20,
+      "Camden & District Opens",
+      5,
+      36,
+      "done"
+    ],
+    [
+      4,
+      "Charlestown Opens",
+      12,
+      "Gosford Opens",
+      22,
+      37,
+      "done"
+    ],
+    [
+      4,
+      "Orange Opens",
+      10,
+      "Hastings Valley Opens",
+      14,
+      41,
+      "done"
+    ],
+    [
+      5,
+      "Newcastle Opens",
+      18,
+      "Maitland Opens",
+      29,
+      27,
+      "done"
+    ],
+    [
+      5,
+      "Gosford Opens",
+      19,
+      "Orange Opens",
+      14,
+      28,
+      "done"
+    ],
+    [
+      5,
+      "Camden & District Opens",
+      12,
+      "Charlestown Opens",
+      24,
+      29,
+      "done"
+    ],
+    [
+      5,
+      "Penrith District Opens",
+      15,
+      "Hills District Opens",
+      17,
+      30,
+      "done"
+    ],
+    [
+      5,
+      "Blacktown City Opens",
+      10,
+      "Manly Warringah Opens",
+      31,
+      31,
+      "done"
+    ],
+    [
+      5,
+      "Woolgoolga District Opens",
+      7,
+      "Hastings Valley Opens",
+      14,
+      32,
+      "done"
+    ],
+    [
+      5,
+      "Ku-ring-gai Opens",
+      21,
+      "Randwick Opens",
+      15,
+      34,
+      "done"
+    ],
+    [
+      5,
+      "Illawarra District Opens",
+      22,
+      "Wyong District Opens",
+      18,
+      36,
+      "done"
+    ],
+    [
+      5,
+      "Eastwood Ryde Opens",
+      19,
+      "Lakeside Opens",
+      19,
+      37,
+      "done"
+    ],
+    [
+      5,
+      "Baulkham Hills Shire Opens",
+      10,
+      "Sutherland Shire Opens",
+      24,
+      41,
+      "done"
+    ],
+    [
+      6,
+      "Hills District Opens",
+      19,
+      "Blacktown City Opens",
+      11,
+      27,
+      "done"
+    ],
+    [
+      6,
+      "Lakeside Opens",
+      14,
+      "Baulkham Hills Shire Opens",
+      18,
+      28,
+      "done"
+    ],
+    [
+      6,
+      "Wyong District Opens",
+      15,
+      "Eastwood Ryde Opens",
+      13,
+      29,
+      "done"
+    ],
+    [
+      6,
+      "Randwick Opens",
+      19,
+      "Illawarra District Opens",
+      15,
+      30,
+      "done"
+    ],
+    [
+      6,
+      "Maitland Opens",
+      20,
+      "Ku-ring-gai Opens",
+      18,
+      31,
+      "done"
+    ],
+    [
+      6,
+      "Manly Warringah Opens",
+      25,
+      "Newcastle Opens",
+      17,
+      32,
+      "done"
+    ],
+    [
+      6,
+      "Sutherland Shire Opens",
+      13,
+      "Woolgoolga District Opens",
+      14,
+      34,
+      "done"
+    ],
+    [
+      6,
+      "Charlestown Opens",
+      15,
+      "Penrith District Opens",
+      16,
+      36,
+      "done"
+    ],
+    [
+      6,
+      "Orange Opens",
+      18,
+      "Camden & District Opens",
+      11,
+      37,
+      "done"
+    ],
+    [
+      6,
+      "Hastings Valley Opens",
+      15,
+      "Gosford Opens",
+      23,
+      41,
+      "done"
+    ],
+    [
+      7,
+      "Eastwood Ryde Opens",
+      13,
+      "Randwick Opens",
+      22,
+      27,
+      "done"
+    ],
+    [
+      7,
+      "Camden & District Opens",
+      11,
+      "Hastings Valley Opens",
+      23,
+      28,
+      "done"
+    ],
+    [
+      7,
+      "Penrith District Opens",
+      24,
+      "Orange Opens",
+      14,
+      29,
+      "done"
+    ],
+    [
+      7,
+      "Blacktown City Opens",
+      14,
+      "Charlestown Opens",
+      19,
+      30,
+      "done"
+    ],
+    [
+      7,
+      "Newcastle Opens",
+      14,
+      "Hills District Opens",
+      28,
+      31,
+      "done"
+    ],
+    [
+      7,
+      "Ku-ring-gai Opens",
+      21,
+      "Manly Warringah Opens",
+      23,
+      32,
+      "done"
+    ],
+    [
+      7,
+      "Illawarra District Opens",
+      12,
+      "Maitland Opens",
+      26,
+      34,
+      "done"
+    ],
+    [
+      7,
+      "Woolgoolga District Opens",
+      18,
+      "Gosford Opens",
+      22,
+      36,
+      "done"
+    ],
+    [
+      7,
+      "Baulkham Hills Shire Opens",
+      10,
+      "Wyong District Opens",
+      20,
+      37,
+      "done"
+    ],
+    [
+      7,
+      "Sutherland Shire Opens",
+      16,
+      "Lakeside Opens",
+      22,
+      41,
+      "done"
+    ],
+    [
+      8,
+      "Hastings Valley Opens",
+      13,
+      "Penrith District Opens",
+      14,
+      3,
+      "done"
+    ],
+    [
+      8,
+      "Wyong District Opens",
+      12,
+      "Sutherland Shire Opens",
+      11,
+      5,
+      "done"
+    ],
+    [
+      8,
+      "Randwick Opens",
+      30,
+      "Baulkham Hills Shire Opens",
+      12,
+      13,
+      "done"
+    ],
+    [
+      8,
+      "Maitland Opens",
+      32,
+      "Eastwood Ryde Opens",
+      13,
+      14,
+      "done"
+    ],
+    [
+      8,
+      "Manly Warringah Opens",
+      20,
+      "Illawarra District Opens",
+      18,
+      15,
+      "done"
+    ],
+    [
+      8,
+      "Hills District Opens",
+      24,
+      "Ku-ring-gai Opens",
+      13,
+      12,
+      "done"
+    ],
+    [
+      8,
+      "Charlestown Opens",
+      17,
+      "Newcastle Opens",
+      16,
+      20,
+      "done"
+    ],
+    [
+      8,
+      "Orange Opens",
+      18,
+      "Blacktown City Opens",
+      19,
+      21,
+      "done"
+    ],
+    [
+      8,
+      "Lakeside Opens",
+      17,
+      "Woolgoolga District Opens",
+      9,
+      22,
+      "done"
+    ],
+    [
+      8,
+      "Gosford Opens",
+      22,
+      "Camden & District Opens",
+      16,
+      23,
+      "done"
+    ],
+    [
+      9,
+      "Lakeside Opens",
+      23,
+      "Wyong District Opens",
+      20,
+      3,
+      "done"
+    ],
+    [
+      9,
+      "Penrith District Opens",
+      16,
+      "Gosford Opens",
+      21,
+      5,
+      "done"
+    ],
+    [
+      9,
+      "Blacktown City Opens",
+      13,
+      "Hastings Valley Opens",
+      13,
+      13,
+      "done"
+    ],
+    [
+      9,
+      "Newcastle Opens",
+      19,
+      "Orange Opens",
+      12,
+      14,
+      "done"
+    ],
+    [
+      9,
+      "Ku-ring-gai Opens",
+      20,
+      "Charlestown Opens",
+      13,
+      15,
+      "done"
+    ],
+    [
+      9,
+      "Illawarra District Opens",
+      14,
+      "Hills District Opens",
+      15,
+      12,
+      "done"
+    ],
+    [
+      9,
+      "Eastwood Ryde Opens",
+      14,
+      "Manly Warringah Opens",
+      23,
+      20,
+      "done"
+    ],
+    [
+      9,
+      "Baulkham Hills Shire Opens",
+      12,
+      "Maitland Opens",
+      31,
+      21,
+      "done"
+    ],
+    [
+      9,
+      "Sutherland Shire Opens",
+      18,
+      "Randwick Opens",
+      20,
+      22,
+      "done"
+    ],
+    [
+      9,
+      "Woolgoolga District Opens",
+      19,
+      "Camden & District Opens",
+      14,
+      23,
+      "done"
+    ],
+    [
+      10,
+      "Camden & District Opens",
+      12,
+      "Penrith District Opens",
+      17,
+      3,
+      "done"
+    ],
+    [
+      10,
+      "Randwick Opens",
+      18,
+      "Lakeside Opens",
+      20,
+      5,
+      "done"
+    ],
+    [
+      10,
+      "Maitland Opens",
+      23,
+      "Sutherland Shire Opens",
+      10,
+      13,
+      "done"
+    ],
+    [
+      10,
+      "Manly Warringah Opens",
+      35,
+      "Baulkham Hills Shire Opens",
+      13,
+      14,
+      "done"
+    ],
+    [
+      10,
+      "Hills District Opens",
+      33,
+      "Eastwood Ryde Opens",
+      6,
+      15,
+      "done"
+    ],
+    [
+      10,
+      "Charlestown Opens",
+      18,
+      "Illawarra District Opens",
+      10,
+      12,
+      "done"
+    ],
+    [
+      10,
+      "Orange Opens",
+      13,
+      "Ku-ring-gai Opens",
+      22,
+      20,
+      "done"
+    ],
+    [
+      10,
+      "Hastings Valley Opens",
+      15,
+      "Newcastle Opens",
+      22,
+      21,
+      "done"
+    ],
+    [
+      10,
+      "Gosford Opens",
+      11,
+      "Blacktown City Opens",
+      16,
+      22,
+      "done"
+    ],
+    [
+      10,
+      "Wyong District Opens",
+      15,
+      "Woolgoolga District Opens",
+      13,
+      23,
+      "done"
+    ],
+    [
+      11,
+      "Lakeside Opens",
+      15,
+      "Maitland Opens",
+      18,
+      3,
+      "done"
+    ],
+    [
+      11,
+      "Blacktown City Opens",
+      22,
+      "Camden & District Opens",
+      16,
+      5,
+      "done"
+    ],
+    [
+      11,
+      "Newcastle Opens",
+      9,
+      "Gosford Opens",
+      25,
+      13,
+      "done"
+    ],
+    [
+      11,
+      "Ku-ring-gai Opens",
+      29,
+      "Hastings Valley Opens",
+      12,
+      14,
+      "done"
+    ],
+    [
+      11,
+      "Illawarra District Opens",
+      24,
+      "Orange Opens",
+      15,
+      15,
+      "done"
+    ],
+    [
+      11,
+      "Eastwood Ryde Opens",
+      23,
+      "Charlestown Opens",
+      21,
+      12,
+      "done"
+    ],
+    [
+      11,
+      "Baulkham Hills Shire Opens",
+      10,
+      "Hills District Opens",
+      28,
+      20,
+      "done"
+    ],
+    [
+      11,
+      "Sutherland Shire Opens",
+      18,
+      "Manly Warringah Opens",
+      19,
+      21,
+      "done"
+    ],
+    [
+      11,
+      "Woolgoolga District Opens",
+      12,
+      "Penrith District Opens",
+      13,
+      22,
+      "done"
+    ],
+    [
+      11,
+      "Wyong District Opens",
+      17,
+      "Randwick Opens",
+      24,
+      23,
+      "done"
+    ],
+    [
+      12,
+      "Gosford Opens",
+      25,
+      "Ku-ring-gai Opens",
+      19,
+      3,
+      "done"
+    ],
+    [
+      12,
+      "Maitland Opens",
+      26,
+      "Wyong District Opens",
+      17,
+      5,
+      "done"
+    ],
+    [
+      12,
+      "Manly Warringah Opens",
+      25,
+      "Lakeside Opens",
+      11,
+      13,
+      "done"
+    ],
+    [
+      12,
+      "Hills District Opens",
+      23,
+      "Sutherland Shire Opens",
+      15,
+      14,
+      "done"
+    ],
+    [
+      12,
+      "Charlestown Opens",
+      21,
+      "Baulkham Hills Shire Opens",
+      20,
+      15,
+      "done"
+    ],
+    [
+      12,
+      "Orange Opens",
+      19,
+      "Eastwood Ryde Opens",
+      15,
+      12,
+      "done"
+    ],
+    [
+      12,
+      "Hastings Valley Opens",
+      7,
+      "Illawarra District Opens",
+      15,
+      20,
+      "done"
+    ],
+    [
+      12,
+      "Randwick Opens",
+      18,
+      "Woolgoolga District Opens",
+      11,
+      21,
+      "done"
+    ],
+    [
+      12,
+      "Camden & District Opens",
+      17,
+      "Newcastle Opens",
+      20,
+      22,
+      "done"
+    ],
+    [
+      12,
+      "Penrith District Opens",
+      16,
+      "Blacktown City Opens",
+      22,
+      23,
+      "done"
+    ],
+    [
+      13,
+      "Sutherland Shire Opens",
+      17,
+      "Charlestown Opens",
+      13,
+      3,
+      "done"
+    ],
+    [
+      13,
+      "Newcastle Opens",
+      18,
+      "Penrith District Opens",
+      14,
+      5,
+      "done"
+    ],
+    [
+      13,
+      "Ku-ring-gai Opens",
+      25,
+      "Camden & District Opens",
+      13,
+      13,
+      "done"
+    ],
+    [
+      13,
+      "Illawarra District Opens",
+      20,
+      "Gosford Opens",
+      19,
+      14,
+      "done"
+    ],
+    [
+      13,
+      "Eastwood Ryde Opens",
+      10,
+      "Hastings Valley Opens",
+      18,
+      15,
+      "done"
+    ],
+    [
+      13,
+      "Baulkham Hills Shire Opens",
+      18,
+      "Orange Opens",
+      7,
+      12,
+      "done"
+    ],
+    [
+      13,
+      "Woolgoolga District Opens",
+      11,
+      "Blacktown City Opens",
+      13,
+      20,
+      "done"
+    ],
+    [
+      13,
+      "Lakeside Opens",
+      11,
+      "Hills District Opens",
+      23,
+      21,
+      "done"
+    ],
+    [
+      13,
+      "Wyong District Opens",
+      10,
+      "Manly Warringah Opens",
+      25,
+      22,
+      "done"
+    ],
+    [
+      13,
+      "Randwick Opens",
+      16,
+      "Maitland Opens",
+      28,
+      23,
+      "done"
+    ],
+    [
+      14,
+      "Hastings Valley Opens",
+      null,
+      "Baulkham Hills Shire Opens",
+      null,
+      7,
+      "upcoming"
+    ],
+    [
+      14,
+      "Manly Warringah Opens",
+      null,
+      "Randwick Opens",
+      null,
+      10,
+      "upcoming"
+    ],
+    [
+      14,
+      "Hills District Opens",
+      null,
+      "Wyong District Opens",
+      null,
+      12,
+      "upcoming"
+    ],
+    [
+      14,
+      "Charlestown Opens",
+      null,
+      "Lakeside Opens",
+      null,
+      24,
+      "upcoming"
+    ],
+    [
+      14,
+      "Orange Opens",
+      null,
+      "Sutherland Shire Opens",
+      null,
+      25,
+      "upcoming"
+    ],
+    [
+      14,
+      "Maitland Opens",
+      null,
+      "Woolgoolga District Opens",
+      null,
+      26,
+      "upcoming"
+    ],
+    [
+      14,
+      "Gosford Opens",
+      null,
+      "Eastwood Ryde Opens",
+      null,
+      27,
+      "upcoming"
+    ],
+    [
+      14,
+      "Camden & District Opens",
+      null,
+      "Illawarra District Opens",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      14,
+      "Penrith District Opens",
+      null,
+      "Ku-ring-gai Opens",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      14,
+      "Blacktown City Opens",
+      null,
+      "Newcastle Opens",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      15,
+      "Baulkham Hills Shire Opens",
+      null,
+      "Gosford Opens",
+      null,
+      7,
+      "upcoming"
+    ],
+    [
+      15,
+      "Ku-ring-gai Opens",
+      null,
+      "Blacktown City Opens",
+      null,
+      10,
+      "upcoming"
+    ],
+    [
+      15,
+      "Illawarra District Opens",
+      null,
+      "Penrith District Opens",
+      null,
+      12,
+      "upcoming"
+    ],
+    [
+      15,
+      "Eastwood Ryde Opens",
+      null,
+      "Camden & District Opens",
+      null,
+      24,
+      "upcoming"
+    ],
+    [
+      15,
+      "Woolgoolga District Opens",
+      null,
+      "Newcastle Opens",
+      null,
+      25,
+      "upcoming"
+    ],
+    [
+      15,
+      "Sutherland Shire Opens",
+      null,
+      "Hastings Valley Opens",
+      null,
+      26,
+      "upcoming"
+    ],
+    [
+      15,
+      "Lakeside Opens",
+      null,
+      "Orange Opens",
+      null,
+      27,
+      "upcoming"
+    ],
+    [
+      15,
+      "Wyong District Opens",
+      null,
+      "Charlestown Opens",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      15,
+      "Randwick Opens",
+      null,
+      "Hills District Opens",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      15,
+      "Maitland Opens",
+      null,
+      "Manly Warringah Opens",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      16,
+      "Orange Opens",
+      null,
+      "Wyong District Opens",
+      null,
+      7,
+      "upcoming"
+    ],
+    [
+      16,
+      "Hills District Opens",
+      null,
+      "Maitland Opens",
+      null,
+      10,
+      "upcoming"
+    ],
+    [
+      16,
+      "Charlestown Opens",
+      null,
+      "Randwick Opens",
+      null,
+      12,
+      "upcoming"
+    ],
+    [
+      16,
+      "Manly Warringah Opens",
+      null,
+      "Woolgoolga District Opens",
+      null,
+      24,
+      "upcoming"
+    ],
+    [
+      16,
+      "Hastings Valley Opens",
+      null,
+      "Lakeside Opens",
+      null,
+      25,
+      "upcoming"
+    ],
+    [
+      16,
+      "Gosford Opens",
+      null,
+      "Sutherland Shire Opens",
+      null,
+      26,
+      "upcoming"
+    ],
+    [
+      16,
+      "Camden & District Opens",
+      null,
+      "Baulkham Hills Shire Opens",
+      null,
+      27,
+      "upcoming"
+    ],
+    [
+      16,
+      "Penrith District Opens",
+      null,
+      "Eastwood Ryde Opens",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      16,
+      "Blacktown City Opens",
+      null,
+      "Illawarra District Opens",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      16,
+      "Newcastle Opens",
+      null,
+      "Ku-ring-gai Opens",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      17,
+      "Eastwood Ryde Opens",
+      null,
+      "Blacktown City Opens",
+      null,
+      7,
+      "upcoming"
+    ],
+    [
+      17,
+      "Illawarra District Opens",
+      null,
+      "Newcastle Opens",
+      null,
+      10,
+      "upcoming"
+    ],
+    [
+      17,
+      "Woolgoolga District Opens",
+      null,
+      "Ku-ring-gai Opens",
+      null,
+      12,
+      "upcoming"
+    ],
+    [
+      17,
+      "Baulkham Hills Shire Opens",
+      null,
+      "Penrith District Opens",
+      null,
+      24,
+      "upcoming"
+    ],
+    [
+      17,
+      "Sutherland Shire Opens",
+      null,
+      "Camden & District Opens",
+      null,
+      25,
+      "upcoming"
+    ],
+    [
+      17,
+      "Lakeside Opens",
+      null,
+      "Gosford Opens",
+      null,
+      26,
+      "upcoming"
+    ],
+    [
+      17,
+      "Wyong District Opens",
+      null,
+      "Hastings Valley Opens",
+      null,
+      27,
+      "upcoming"
+    ],
+    [
+      17,
+      "Randwick Opens",
+      null,
+      "Orange Opens",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      17,
+      "Maitland Opens",
+      null,
+      "Charlestown Opens",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      17,
+      "Manly Warringah Opens",
+      null,
+      "Hills District Opens",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      18,
+      "Charlestown Opens",
+      null,
+      "Manly Warringah Opens",
+      null,
+      7,
+      "upcoming"
+    ],
+    [
+      18,
+      "Hills District Opens",
+      null,
+      "Woolgoolga District Opens",
+      null,
+      10,
+      "upcoming"
+    ],
+    [
+      18,
+      "Orange Opens",
+      null,
+      "Maitland Opens",
+      null,
+      12,
+      "upcoming"
+    ],
+    [
+      18,
+      "Hastings Valley Opens",
+      null,
+      "Randwick Opens",
+      null,
+      24,
+      "upcoming"
+    ],
+    [
+      18,
+      "Gosford Opens",
+      null,
+      "Wyong District Opens",
+      null,
+      25,
+      "upcoming"
+    ],
+    [
+      18,
+      "Camden & District Opens",
+      null,
+      "Lakeside Opens",
+      null,
+      26,
+      "upcoming"
+    ],
+    [
+      18,
+      "Penrith District Opens",
+      null,
+      "Sutherland Shire Opens",
+      null,
+      27,
+      "upcoming"
+    ],
+    [
+      18,
+      "Blacktown City Opens",
+      null,
+      "Baulkham Hills Shire Opens",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      18,
+      "Newcastle Opens",
+      null,
+      "Eastwood Ryde Opens",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      18,
+      "Ku-ring-gai Opens",
+      null,
+      "Illawarra District Opens",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      19,
+      "Woolgoolga District Opens",
+      null,
+      "Illawarra District Opens",
+      null,
+      7,
+      "upcoming"
+    ],
+    [
+      19,
+      "Eastwood Ryde Opens",
+      null,
+      "Ku-ring-gai Opens",
+      null,
+      10,
+      "upcoming"
+    ],
+    [
+      19,
+      "Baulkham Hills Shire Opens",
+      null,
+      "Newcastle Opens",
+      null,
+      12,
+      "upcoming"
+    ],
+    [
+      19,
+      "Sutherland Shire Opens",
+      null,
+      "Blacktown City Opens",
+      null,
+      24,
+      "upcoming"
+    ],
+    [
+      19,
+      "Lakeside Opens",
+      null,
+      "Penrith District Opens",
+      null,
+      25,
+      "upcoming"
+    ],
+    [
+      19,
+      "Wyong District Opens",
+      null,
+      "Camden & District Opens",
+      null,
+      26,
+      "upcoming"
+    ],
+    [
+      19,
+      "Randwick Opens",
+      null,
+      "Gosford Opens",
+      null,
+      27,
+      "upcoming"
+    ],
+    [
+      19,
+      "Maitland Opens",
+      null,
+      "Hastings Valley Opens",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      19,
+      "Manly Warringah Opens",
+      null,
+      "Orange Opens",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      19,
+      "Hills District Opens",
+      null,
+      "Charlestown Opens",
+      null,
+      30,
+      "upcoming"
+    ]
+  ]
+};
+
+function render(d) {
+  const key = (a, b) => [a, b].sort().join("|");
+  const M = {};
+  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+    const k = key(h, a);
+    const prev = M[k];
+    // Prefer completed result over upcoming; break ties by earlier round.
+    if (!prev || (prev.st !== "done" && st === "done") || (prev.st === st && rd < prev.rd))
+      M[k] = { rd, h, hs, a, as: as_, court, st };
+  });
+  const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
+
+  // Per-team next round: min round where their game isn't done
+  const nextRound = {};
+  d.teams.forEach(t => {
+    let min = Infinity;
+    d.games.forEach(([rd,, , , , , st]) => { if (st !== "done" && rd < min) min = rd; });
+    // narrow to this team's games
+    min = Infinity;
+    d.games.forEach(([rd, h, , a, , , st]) => {
+      if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
+    });
+    nextRound[t.code] = min === Infinity ? null : min;
+  });
+
+  const grid = document.getElementById("grid");
+  let html = "<thead><tr>";
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
+    : d.title;
+  html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
+  d.teams.forEach(t => {
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+
+  d.teams.forEach((rowT, ri) => {
+    const pinnedRow = rowT.code === d.pin;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<th class="rowhead">
+               <div class="rn">
+                 <span class="rkn">${rowT.rank}</span>
+                 <span class="nm">${rowT.name}</span>
+               </div>
+             </th>`;
+
+    d.teams.forEach((colT, ci) => {
+      const pinCol = colT.code === d.pin && !pinnedRow;
+      const pcls = pinCol ? " pincol" : "";
+
+      if (rowT.code === colT.code) {
+        html += `<td class="cell self">
+                   <div class="selfblock">
+                     <span class="sl1">${rowT.pts} pts</span>
+                     <span class="sl2">${rowT.pct}%</span>
+                   </div>
+                 </td>`;
+        return;
+      }
+
+      const m = M[key(rowT.code, colT.code)];
+      if (!m) { html += `<td class="cell${pcls}"></td>`; return; }
+      const rmeta = roundByN[m.rd] || {};
+      const rowScore = m.h === rowT.code ? m.hs : m.as;
+      const colScore = m.h === rowT.code ? m.as : m.hs;
+      const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+      if (m.st === "live" && rowScore != null) {
+        html += `<td class="cell live${ncls}${pcls}">
+                   <div class="scblock">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
+                   </div>
+                 </td>`;
+      } else if (m.st === "done" && rowScore != null) {
+        const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+        html += `<td class="cell ${cls}${ncls}${pcls}">
+                   <div class="scblock">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">${rowScore}–${colScore}</span>
+                   </div>
+                 </td>`;
+      } else {
+        const fixCls = m.st === "live" ? " live" : "";
+        html += `<td class="cell fix${fixCls}${ncls}${pcls}">
+                   <div class="fxblock">
+                     <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
+                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                   </div>
+                 </td>`;
+      }
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody>";
+  grid.innerHTML = html;
+}
+render(DATA);
+
+</script>
+</body>
+</html>

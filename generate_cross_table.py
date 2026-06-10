@@ -578,19 +578,33 @@ def _generate_one(grade_id, title, variants, pin=None, max_round=None,
         _write_html(generate_html(data, font_scale=font_scale), output)
 
 
-def _generate_menu(grades, base_slugs, output="index.html"):
-    rows = ""
-    for g, slug in zip(grades, base_slugs):
-        title = g.get("title", "Cross Table")
-        medium_slug = slug.replace(".html", "-medium.html")
-        rows += (
-            f'    <li>'
-            f'<span class="gtitle">{title}</span>'
-            f'<span class="links">'
-            f'<a href="{slug}">Small</a>'
-            f'<a href="{medium_slug}">Medium</a>'
-            f'</span></li>\n'
+def _generate_menu(competitions, output="index.html"):
+    sections = ""
+    for comp in competitions:
+        active = comp.get("active", True)
+        comp_cls = "" if active else " inactive"
+        prefix = comp.get("slug_prefix", "")
+        rows = ""
+        for g in comp.get("grades", []):
+            grade_active = active and g.get("active", True)
+            slug = g.get("output") or (prefix + _slugify(g.get("title", "cross-table")))
+            medium_slug = slug.replace(".html", "-medium.html")
+            grade_cls = "" if grade_active else " inactive"
+            rows += (
+                f'      <li class="grade{grade_cls}">'
+                f'<span class="gtitle">{g.get("title", "")}</span>'
+                f'<span class="links">'
+                f'<a href="{slug}">Small</a>'
+                f'<a href="{medium_slug}">Medium</a>'
+                f'</span></li>\n'
+            )
+        sections += (
+            f'    <section class="comp{comp_cls}">\n'
+            f'      <h2>{comp["title"]}</h2>\n'
+            f'      <ul>\n{rows}      </ul>\n'
+            f'    </section>\n'
         )
+
     html = f"""\
 <!doctype html>
 <html lang="en">
@@ -603,35 +617,41 @@ def _generate_menu(grades, base_slugs, output="index.html"):
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {{
-    --ink: #15223b; --ink-2: #51607a; --line: #dfe3ea;
-    --bg: #f3f5f8; --card: #fff; --accent: #e8542f;
+    --ink: #15223b; --ink-2: #51607a; --muted: #9aa4b6;
+    --line: #dfe3ea; --bg: #f3f5f8; --card: #fff; --accent: #e8542f;
   }}
   * {{ box-sizing: border-box; }}
   html, body {{ margin: 0; background: var(--bg); color: var(--ink);
     font-family: 'Barlow', system-ui, sans-serif; }}
-  .wrap {{ max-width: 480px; margin: 0 auto; padding: 32px 20px; }}
+  .wrap {{ max-width: 520px; margin: 0 auto; padding: 28px 20px; }}
   h1 {{ font-family: 'Barlow Semi Condensed', sans-serif;
-       font-size: 22px; font-weight: 700; color: var(--accent);
-       margin: 0 0 24px; }}
-  ul {{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }}
-  li {{ background: var(--card); border: 1px solid var(--line); border-radius: 8px;
-       padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }}
-  .gtitle {{ font-weight: 600; font-size: 15px; }}
-  .links {{ display: flex; gap: 8px; }}
+       font-size: 22px; font-weight: 700; color: var(--accent); margin: 0 0 20px; }}
+  .comp {{ margin-bottom: 24px; }}
+  .comp h2 {{ font-family: 'Barlow Semi Condensed', sans-serif;
+              font-size: 13px; font-weight: 700; text-transform: uppercase;
+              letter-spacing: .6px; color: var(--ink-2);
+              margin: 0 0 8px; padding-bottom: 5px;
+              border-bottom: 1px solid var(--line); }}
+  .comp.inactive h2 {{ color: var(--muted); }}
+  ul {{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }}
+  li.grade {{ background: var(--card); border: 1px solid var(--line); border-radius: 7px;
+       padding: 11px 14px; display: flex; align-items: center; justify-content: space-between; }}
+  li.grade.inactive {{ opacity: 0.45; }}
+  .gtitle {{ font-weight: 600; font-size: 14px; }}
+  .links {{ display: flex; gap: 6px; }}
   .links a {{
-    font-size: 13px; font-weight: 600; padding: 5px 14px;
+    font-size: 12px; font-weight: 600; padding: 4px 12px;
     border-radius: 5px; text-decoration: none;
     background: var(--bg); color: var(--ink-2); border: 1px solid var(--line);
   }}
   .links a:hover {{ background: var(--accent); color: #fff; border-color: var(--accent); }}
+  .comp.inactive .links a:hover {{ background: var(--ink-2); border-color: var(--ink-2); }}
 </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Cross Tables</h1>
-    <ul>
-{rows}    </ul>
-  </div>
+{sections}  </div>
 </body>
 </html>
 """
@@ -658,20 +678,31 @@ def main():
     if args.config:
         with open(args.config) as f:
             cfg = json.load(f)
-        grades = cfg["grades"]
-        base_slugs = [g.get("output") or _slugify(g.get("title", "cross-table")) for g in grades]
-        for g, slug in zip(grades, base_slugs):
-            medium_slug = slug.replace(".html", "-medium.html")
-            _generate_one(
-                grade_id=g["grade_id"],
-                title=g.get("title", "Cross Table"),
-                variants=[(slug, 1.0), (medium_slug, 1.5)],
-                pin=g.get("pin"),
-                max_round=g.get("rounds"),
-                force_regen=args.force_regen,
-                sanity=args.sanity_check,
-            )
-        _generate_menu(grades, base_slugs)
+        # Support both legacy {"grades": [...]} and new {"competitions": [...]} formats
+        if "competitions" in cfg:
+            competitions = cfg["competitions"]
+        else:
+            competitions = [{"title": "Cross Tables", "active": True, "grades": cfg["grades"]}]
+        for comp in competitions:
+            comp_active = comp.get("active", True)
+            prefix = comp.get("slug_prefix", "")
+            for g in comp.get("grades", []):
+                grade_active = comp_active and g.get("active", True)
+                if not grade_active:
+                    print(f"Skipping {g.get('title')} (inactive)", file=sys.stderr)
+                    continue
+                slug = g.get("output") or (prefix + _slugify(g.get("title", "cross-table")))
+                medium_slug = slug.replace(".html", "-medium.html")
+                _generate_one(
+                    grade_id=g["grade_id"],
+                    title=g.get("title", "Cross Table"),
+                    variants=[(slug, 1.0), (medium_slug, 1.5)],
+                    pin=g.get("pin"),
+                    max_round=g.get("rounds"),
+                    force_regen=args.force_regen,
+                    sanity=args.sanity_check,
+                )
+        _generate_menu(competitions)
     elif args.grade_id:
         _generate_one(
             grade_id=args.grade_id,

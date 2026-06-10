@@ -1,0 +1,2573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>15U Championship — Cross Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #15223b;
+    --ink-2:    #51607a;
+    --muted:    #9aa4b6;
+    --line:     #dfe3ea;
+    --line-2:   #eef0f4;
+    --bg:       #f3f5f8;
+    --card:     #ffffff;
+    --accent:   #e8542f;
+    --accent-bg:#fdece5;
+    --win:      #157a47;
+    --win-bg:   #e7f3ea;
+    --loss:     #b23b2c;
+    --loss-bg:  #fbe9e6;
+    --draw-bg:  #fff3e0;
+    --col-w:    52px;
+    --name-w:   110px;
+    --row-h:    33px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .scroll {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+  table.x { border-collapse: separate; border-spacing: 0; margin: 0; }
+  table.x th, table.x td { padding: 0; margin: 0; }
+  th.corner {
+    position: sticky; left: 0; top: 0; z-index: 6;
+    width: var(--name-w); min-width: var(--name-w);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 2px solid var(--line);
+  }
+  th.corner .lbl {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    padding: 5px 6px; text-align: left; line-height: 1.3;
+  }
+  th.corner .lbl a { color: inherit; text-decoration: none; }
+  th.corner .lbl a:hover { text-decoration: underline; }
+  th.colhead {
+    position: sticky; top: 0; z-index: 4;
+    width: var(--col-w); min-width: var(--col-w);
+    background: var(--card);
+    border-bottom: 2px solid var(--line);
+    border-left: 1px solid var(--line-2);
+    vertical-align: bottom;
+    padding: 4px 3px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 10px;
+    color: var(--ink); text-align: center;
+    overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.15; vertical-align: top;
+  }
+  th.colhead .ckn {
+    display: block;
+    font-size: 8px; font-weight: 700;
+    color: var(--muted); letter-spacing: .3px;
+    line-height: 1.4;
+  }
+  th.rowhead {
+    position: sticky; left: 0; z-index: 3;
+    width: var(--name-w); min-width: var(--name-w);
+    height: var(--row-h);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: top;
+  }
+  th.rowhead .rn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 5px 3px 5px;
+  }
+  th.rowhead .rkn {
+    flex: 0 0 auto; width: 13px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); text-align: center;
+  }
+  th.rowhead .nm {
+    font-size: 10px; font-weight: 600;
+    line-height: 1.1; color: var(--ink);
+  }
+  td.cell {
+    width: var(--col-w); min-width: var(--col-w);
+    height: var(--row-h);
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    position: relative;
+    background: var(--card);
+    vertical-align: top;
+  }
+  td.cell .scblock {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px; padding: 2px;
+  }
+  td.cell .scblock .rd {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .3px; color: var(--muted); line-height: 1;
+  }
+  td.cell .scblock .score {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 13px;
+    line-height: 1; letter-spacing: -.1px;
+  }
+  td.cell.fix { background: #f9fafb; }
+  td.cell.fix .fxblock {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px; padding: 2px;
+    text-align: center; line-height: 1.1;
+  }
+  td.cell.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  td.cell.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  td.cell.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  td.cell.fix.done { background: #f5f6f8; }
+  td.cell.fix.done .fl1 { color: var(--muted); }
+  td.cell.fix.done .fl1 b { color: var(--ink-2); }
+  td.cell.fix.done .fl2 { color: #bcc4d0; }
+  td.cell.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  td.cell.fix.live .fl1, td.cell.fix.live .fl1 b { color: var(--accent); }
+  td.cell.fix.live .fl2 { color: var(--accent); }
+  td.cell.win  { background: var(--win-bg); }
+  td.cell.win  .score { color: var(--win); }
+  td.cell.loss { background: var(--loss-bg); }
+  td.cell.loss .score { color: var(--loss); }
+  td.cell.draw { background: var(--draw-bg); }
+  td.cell.draw .score { color: #e65100; }
+  td.cell.live {
+    background: var(--accent-bg);
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+  td.cell.live .score {
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+  }
+  td.cell.live .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: pulse 1.3s infinite;
+  }
+  td.cell.upcoming .score { color: var(--muted); font-size: 11px; }
+  td.cell.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  td.cell.next.fix:not(.live) { background: #eef0fb; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
+  td.cell.self {
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
+      var(--ink);
+    overflow: hidden;
+  }
+  td.cell.self .selfblock {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px; padding: 2px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    color: #fff; text-align: center; line-height: 1.1;
+  }
+  td.cell.self .sl1 { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; }
+  td.cell.self .sl2 { font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; }
+  tr.pinned th.rowhead { background: #fff7ec; }
+  tr.pinned td.cell:not(.self) { background-color: #fffaf2; }
+  tr.pinned td.cell.win  { background-color: var(--win-bg); }
+  tr.pinned td.cell.loss { background-color: var(--loss-bg); }
+  tr.pinned td.cell.live { background-color: var(--accent-bg); }
+  td.cell.pincol:not(.self):not(.win):not(.loss):not(.live) { background-color: #fffaf2; }
+  @media (max-width: 400px) {
+    :root { --col-w: 42px; --name-w: 90px; }
+  }
+
+</style>
+</head>
+<body>
+  <div class="scroll">
+    <table class="x" id="grid"></table>
+  </div>
+<script>
+const DATA = {
+  "title": "15U Championship",
+  "venue": "Jamison Park Netball Complex, South Penrith",
+  "date": "Sat 6–Mon 8 Jun 2026",
+  "pin": null,
+  "menu_url": "index.html",
+  "teams": [
+    {
+      "code": "Liverpool City 15U",
+      "name": "Liverpool City",
+      "rank": 1,
+      "pts": 28,
+      "pct": "233.8",
+      "W": 14,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "Randwick 15U",
+      "name": "Randwick",
+      "rank": 2,
+      "pts": 24,
+      "pct": "164.9",
+      "W": 12,
+      "L": 1,
+      "D": 0
+    },
+    {
+      "code": "Manly Warringah 15U",
+      "name": "Manly Warringah",
+      "rank": 3,
+      "pts": 23,
+      "pct": "129.4",
+      "W": 11,
+      "L": 1,
+      "D": 1
+    },
+    {
+      "code": "Eastwood Ryde 15U",
+      "name": "Eastwood Ryde",
+      "rank": 4,
+      "pts": 20,
+      "pct": "99.5",
+      "W": 10,
+      "L": 3,
+      "D": 0
+    },
+    {
+      "code": "Sutherland Shire 15U",
+      "name": "Sutherland Shire",
+      "rank": 5,
+      "pts": 19,
+      "pct": "131.0",
+      "W": 9,
+      "L": 3,
+      "D": 1
+    },
+    {
+      "code": "Penrith District 15U",
+      "name": "Penrith District",
+      "rank": 6,
+      "pts": 18,
+      "pct": "134.1",
+      "W": 8,
+      "L": 3,
+      "D": 2
+    },
+    {
+      "code": "Ku-ring-gai 15U",
+      "name": "Ku-ring-gai",
+      "rank": 7,
+      "pts": 18,
+      "pct": "115.6",
+      "W": 9,
+      "L": 4,
+      "D": 0
+    },
+    {
+      "code": "Northern Suburbs 15U",
+      "name": "Northern Suburbs",
+      "rank": 8,
+      "pts": 16,
+      "pct": "126.7",
+      "W": 8,
+      "L": 5,
+      "D": 0
+    },
+    {
+      "code": "Lakeside 15U",
+      "name": "Lakeside",
+      "rank": 9,
+      "pts": 14,
+      "pct": "96.8",
+      "W": 7,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Charlestown 15U",
+      "name": "Charlestown",
+      "rank": 10,
+      "pts": 13,
+      "pct": "96.9",
+      "W": 6,
+      "L": 6,
+      "D": 1
+    },
+    {
+      "code": "Maitland 15U",
+      "name": "Maitland",
+      "rank": 11,
+      "pts": 12,
+      "pct": "98.0",
+      "W": 6,
+      "L": 8,
+      "D": 0
+    },
+    {
+      "code": "Wagga Wagga 15U",
+      "name": "Wagga Wagga",
+      "rank": 12,
+      "pts": 12,
+      "pct": "94.6",
+      "W": 6,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Blacktown City 15U",
+      "name": "Blacktown City",
+      "rank": 13,
+      "pts": 11,
+      "pct": "89.5",
+      "W": 5,
+      "L": 7,
+      "D": 1
+    },
+    {
+      "code": "Illawarra District 15U",
+      "name": "Illawarra District",
+      "rank": 14,
+      "pts": 9,
+      "pct": "78.7",
+      "W": 4,
+      "L": 8,
+      "D": 1
+    },
+    {
+      "code": "Campbelltown District 15U",
+      "name": "Campbelltown District",
+      "rank": 15,
+      "pts": 9,
+      "pct": "65.9",
+      "W": 4,
+      "L": 9,
+      "D": 1
+    },
+    {
+      "code": "Wyong District 15U",
+      "name": "Wyong District",
+      "rank": 16,
+      "pts": 8,
+      "pct": "78.3",
+      "W": 4,
+      "L": 9,
+      "D": 0
+    },
+    {
+      "code": "Hawkesbury City 15U",
+      "name": "Hawkesbury City",
+      "rank": 17,
+      "pts": 7,
+      "pct": "81.2",
+      "W": 3,
+      "L": 10,
+      "D": 1
+    },
+    {
+      "code": "Baulkham Hills Shire 15U",
+      "name": "Baulkham Hills Shire",
+      "rank": 18,
+      "pts": 7,
+      "pct": "78.2",
+      "W": 3,
+      "L": 9,
+      "D": 1
+    },
+    {
+      "code": "Bankstown City 15U",
+      "name": "Bankstown City",
+      "rank": 19,
+      "pts": 7,
+      "pct": "76.8",
+      "W": 3,
+      "L": 10,
+      "D": 1
+    },
+    {
+      "code": "Camden & District 15U",
+      "name": "Camden & District",
+      "rank": 20,
+      "pts": 5,
+      "pct": "77.0",
+      "W": 2,
+      "L": 10,
+      "D": 1
+    },
+    {
+      "code": "St George District 15U",
+      "name": "St George District",
+      "rank": 21,
+      "pts": 0,
+      "pct": "59.1",
+      "W": 0,
+      "L": 14,
+      "D": 0
+    }
+  ],
+  "rounds": [
+    {
+      "n": 1,
+      "day": "Sat",
+      "time": "09:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "day": "Sat",
+      "time": "10:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "day": "Sat",
+      "time": "11:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "day": "Sat",
+      "time": "12:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "day": "Sat",
+      "time": "13:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 6,
+      "day": "Sat",
+      "time": "14:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 7,
+      "day": "Sat",
+      "time": "15:00",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 8,
+      "day": "Sun",
+      "time": "08:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 9,
+      "day": "Sun",
+      "time": "09:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 10,
+      "day": "Sun",
+      "time": "10:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 11,
+      "day": "Sun",
+      "time": "11:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 12,
+      "day": "Sun",
+      "time": "12:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 13,
+      "day": "Sun",
+      "time": "13:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 14,
+      "day": "Sun",
+      "time": "14:30",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 15,
+      "day": "Mon",
+      "time": "08:30",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 16,
+      "day": "Mon",
+      "time": "09:30",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 17,
+      "day": "Mon",
+      "time": "10:30",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 18,
+      "day": "Mon",
+      "time": "11:30",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 19,
+      "day": "Mon",
+      "time": "12:30",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 20,
+      "day": "Mon",
+      "time": "13:30",
+      "sdate": "8/6",
+      "state": "upcoming"
+    },
+    {
+      "n": 21,
+      "day": "Mon",
+      "time": "14:30",
+      "sdate": "8/6",
+      "state": "upcoming"
+    }
+  ],
+  "games": [
+    [
+      1,
+      "Charlestown 15U",
+      11,
+      "Liverpool City 15U",
+      20,
+      2,
+      "done"
+    ],
+    [
+      1,
+      "Blacktown City 15U",
+      16,
+      "Lakeside 15U",
+      13,
+      3,
+      "done"
+    ],
+    [
+      1,
+      "Randwick 15U",
+      23,
+      "Campbelltown District 15U",
+      4,
+      4,
+      "done"
+    ],
+    [
+      1,
+      "Sutherland Shire 15U",
+      30,
+      "St George District 15U",
+      11,
+      5,
+      "done"
+    ],
+    [
+      1,
+      "Wyong District 15U",
+      18,
+      "Hawkesbury City 15U",
+      12,
+      14,
+      "done"
+    ],
+    [
+      1,
+      "Baulkham Hills Shire 15U",
+      11,
+      "Bankstown City 15U",
+      24,
+      16,
+      "done"
+    ],
+    [
+      1,
+      "Northern Suburbs 15U",
+      27,
+      "Maitland 15U",
+      21,
+      19,
+      "done"
+    ],
+    [
+      1,
+      "Manly Warringah 15U",
+      23,
+      "Camden & District 15U",
+      18,
+      20,
+      "done"
+    ],
+    [
+      1,
+      "Illawarra District 15U",
+      8,
+      "Wagga Wagga 15U",
+      12,
+      21,
+      "done"
+    ],
+    [
+      1,
+      "Ku-ring-gai 15U",
+      17,
+      "Eastwood Ryde 15U",
+      8,
+      22,
+      "done"
+    ],
+    [
+      2,
+      "Penrith District 15U",
+      19,
+      "Blacktown City 15U",
+      9,
+      2,
+      "done"
+    ],
+    [
+      2,
+      "Liverpool City 15U",
+      22,
+      "Randwick 15U",
+      18,
+      3,
+      "done"
+    ],
+    [
+      2,
+      "Lakeside 15U",
+      17,
+      "Sutherland Shire 15U",
+      18,
+      4,
+      "done"
+    ],
+    [
+      2,
+      "Campbelltown District 15U",
+      19,
+      "Wyong District 15U",
+      17,
+      5,
+      "done"
+    ],
+    [
+      2,
+      "St George District 15U",
+      20,
+      "Baulkham Hills Shire 15U",
+      23,
+      14,
+      "done"
+    ],
+    [
+      2,
+      "Hawkesbury City 15U",
+      15,
+      "Northern Suburbs 15U",
+      26,
+      16,
+      "done"
+    ],
+    [
+      2,
+      "Bankstown City 15U",
+      15,
+      "Manly Warringah 15U",
+      19,
+      19,
+      "done"
+    ],
+    [
+      2,
+      "Maitland 15U",
+      18,
+      "Illawarra District 15U",
+      13,
+      20,
+      "done"
+    ],
+    [
+      2,
+      "Camden & District 15U",
+      15,
+      "Ku-ring-gai 15U",
+      20,
+      21,
+      "done"
+    ],
+    [
+      2,
+      "Wagga Wagga 15U",
+      15,
+      "Eastwood Ryde 15U",
+      17,
+      22,
+      "done"
+    ],
+    [
+      3,
+      "Randwick 15U",
+      17,
+      "Charlestown 15U",
+      11,
+      2,
+      "done"
+    ],
+    [
+      3,
+      "Sutherland Shire 15U",
+      12,
+      "Penrith District 15U",
+      12,
+      3,
+      "done"
+    ],
+    [
+      3,
+      "Wyong District 15U",
+      8,
+      "Liverpool City 15U",
+      28,
+      4,
+      "done"
+    ],
+    [
+      3,
+      "Baulkham Hills Shire 15U",
+      13,
+      "Lakeside 15U",
+      17,
+      5,
+      "done"
+    ],
+    [
+      3,
+      "Northern Suburbs 15U",
+      28,
+      "Campbelltown District 15U",
+      9,
+      14,
+      "done"
+    ],
+    [
+      3,
+      "Manly Warringah 15U",
+      30,
+      "St George District 15U",
+      18,
+      16,
+      "done"
+    ],
+    [
+      3,
+      "Illawarra District 15U",
+      18,
+      "Hawkesbury City 15U",
+      12,
+      19,
+      "done"
+    ],
+    [
+      3,
+      "Ku-ring-gai 15U",
+      20,
+      "Bankstown City 15U",
+      12,
+      20,
+      "done"
+    ],
+    [
+      3,
+      "Eastwood Ryde 15U",
+      16,
+      "Maitland 15U",
+      15,
+      21,
+      "done"
+    ],
+    [
+      3,
+      "Wagga Wagga 15U",
+      16,
+      "Camden & District 15U",
+      10,
+      22,
+      "done"
+    ],
+    [
+      4,
+      "Blacktown City 15U",
+      16,
+      "Sutherland Shire 15U",
+      22,
+      2,
+      "done"
+    ],
+    [
+      4,
+      "Charlestown 15U",
+      17,
+      "Wyong District 15U",
+      14,
+      3,
+      "done"
+    ],
+    [
+      4,
+      "Penrith District 15U",
+      17,
+      "Baulkham Hills Shire 15U",
+      15,
+      4,
+      "done"
+    ],
+    [
+      4,
+      "Liverpool City 15U",
+      26,
+      "Northern Suburbs 15U",
+      15,
+      5,
+      "done"
+    ],
+    [
+      4,
+      "Lakeside 15U",
+      16,
+      "Manly Warringah 15U",
+      19,
+      14,
+      "done"
+    ],
+    [
+      4,
+      "Campbelltown District 15U",
+      10,
+      "Illawarra District 15U",
+      10,
+      16,
+      "done"
+    ],
+    [
+      4,
+      "St George District 15U",
+      11,
+      "Ku-ring-gai 15U",
+      19,
+      19,
+      "done"
+    ],
+    [
+      4,
+      "Hawkesbury City 15U",
+      10,
+      "Eastwood Ryde 15U",
+      13,
+      20,
+      "done"
+    ],
+    [
+      4,
+      "Bankstown City 15U",
+      11,
+      "Wagga Wagga 15U",
+      15,
+      21,
+      "done"
+    ],
+    [
+      4,
+      "Maitland 15U",
+      19,
+      "Camden & District 15U",
+      20,
+      22,
+      "done"
+    ],
+    [
+      5,
+      "Wyong District 15U",
+      10,
+      "Randwick 15U",
+      22,
+      2,
+      "done"
+    ],
+    [
+      5,
+      "Baulkham Hills Shire 15U",
+      18,
+      "Blacktown City 15U",
+      18,
+      3,
+      "done"
+    ],
+    [
+      5,
+      "Northern Suburbs 15U",
+      17,
+      "Charlestown 15U",
+      22,
+      4,
+      "done"
+    ],
+    [
+      5,
+      "Manly Warringah 15U",
+      22,
+      "Penrith District 15U",
+      22,
+      5,
+      "done"
+    ],
+    [
+      5,
+      "Illawarra District 15U",
+      9,
+      "Liverpool City 15U",
+      31,
+      14,
+      "done"
+    ],
+    [
+      5,
+      "Ku-ring-gai 15U",
+      16,
+      "Lakeside 15U",
+      9,
+      16,
+      "done"
+    ],
+    [
+      5,
+      "Eastwood Ryde 15U",
+      15,
+      "Campbelltown District 15U",
+      10,
+      19,
+      "done"
+    ],
+    [
+      5,
+      "Wagga Wagga 15U",
+      18,
+      "St George District 15U",
+      17,
+      20,
+      "done"
+    ],
+    [
+      5,
+      "Camden & District 15U",
+      10,
+      "Hawkesbury City 15U",
+      15,
+      21,
+      "done"
+    ],
+    [
+      5,
+      "Maitland 15U",
+      24,
+      "Bankstown City 15U",
+      17,
+      22,
+      "done"
+    ],
+    [
+      6,
+      "Sutherland Shire 15U",
+      24,
+      "Baulkham Hills Shire 15U",
+      13,
+      2,
+      "done"
+    ],
+    [
+      6,
+      "Randwick 15U",
+      23,
+      "Northern Suburbs 15U",
+      16,
+      3,
+      "done"
+    ],
+    [
+      6,
+      "Blacktown City 15U",
+      13,
+      "Manly Warringah 15U",
+      26,
+      4,
+      "done"
+    ],
+    [
+      6,
+      "Charlestown 15U",
+      16,
+      "Illawarra District 15U",
+      10,
+      5,
+      "done"
+    ],
+    [
+      6,
+      "Penrith District 15U",
+      17,
+      "Ku-ring-gai 15U",
+      11,
+      14,
+      "done"
+    ],
+    [
+      6,
+      "Liverpool City 15U",
+      25,
+      "Eastwood Ryde 15U",
+      6,
+      16,
+      "done"
+    ],
+    [
+      6,
+      "Lakeside 15U",
+      16,
+      "Wagga Wagga 15U",
+      10,
+      19,
+      "done"
+    ],
+    [
+      6,
+      "Campbelltown District 15U",
+      17,
+      "Camden & District 15U",
+      15,
+      20,
+      "done"
+    ],
+    [
+      6,
+      "St George District 15U",
+      13,
+      "Maitland 15U",
+      23,
+      21,
+      "done"
+    ],
+    [
+      6,
+      "Hawkesbury City 15U",
+      18,
+      "Bankstown City 15U",
+      18,
+      22,
+      "done"
+    ],
+    [
+      7,
+      "Northern Suburbs 15U",
+      18,
+      "Wyong District 15U",
+      15,
+      2,
+      "done"
+    ],
+    [
+      7,
+      "Manly Warringah 15U",
+      29,
+      "Sutherland Shire 15U",
+      26,
+      3,
+      "done"
+    ],
+    [
+      7,
+      "Illawarra District 15U",
+      14,
+      "Randwick 15U",
+      22,
+      4,
+      "done"
+    ],
+    [
+      7,
+      "Ku-ring-gai 15U",
+      13,
+      "Blacktown City 15U",
+      17,
+      5,
+      "done"
+    ],
+    [
+      7,
+      "Eastwood Ryde 15U",
+      16,
+      "Charlestown 15U",
+      11,
+      14,
+      "done"
+    ],
+    [
+      7,
+      "Wagga Wagga 15U",
+      8,
+      "Penrith District 15U",
+      22,
+      16,
+      "done"
+    ],
+    [
+      7,
+      "Camden & District 15U",
+      10,
+      "Liverpool City 15U",
+      30,
+      19,
+      "done"
+    ],
+    [
+      7,
+      "Maitland 15U",
+      14,
+      "Lakeside 15U",
+      18,
+      20,
+      "done"
+    ],
+    [
+      7,
+      "Bankstown City 15U",
+      9,
+      "Campbelltown District 15U",
+      13,
+      21,
+      "done"
+    ],
+    [
+      7,
+      "Hawkesbury City 15U",
+      21,
+      "St George District 15U",
+      17,
+      22,
+      "done"
+    ],
+    [
+      8,
+      "Baulkham Hills Shire 15U",
+      14,
+      "Manly Warringah 15U",
+      15,
+      8,
+      "done"
+    ],
+    [
+      8,
+      "Wyong District 15U",
+      17,
+      "Illawarra District 15U",
+      19,
+      9,
+      "done"
+    ],
+    [
+      8,
+      "Sutherland Shire 15U",
+      18,
+      "Ku-ring-gai 15U",
+      16,
+      11,
+      "done"
+    ],
+    [
+      8,
+      "Randwick 15U",
+      26,
+      "Eastwood Ryde 15U",
+      11,
+      24,
+      "done"
+    ],
+    [
+      8,
+      "Blacktown City 15U",
+      12,
+      "Wagga Wagga 15U",
+      9,
+      25,
+      "done"
+    ],
+    [
+      8,
+      "Charlestown 15U",
+      17,
+      "Camden & District 15U",
+      17,
+      26,
+      "done"
+    ],
+    [
+      8,
+      "Penrith District 15U",
+      18,
+      "Maitland 15U",
+      10,
+      27,
+      "done"
+    ],
+    [
+      8,
+      "Liverpool City 15U",
+      22,
+      "Bankstown City 15U",
+      8,
+      28,
+      "done"
+    ],
+    [
+      8,
+      "Lakeside 15U",
+      18,
+      "Hawkesbury City 15U",
+      14,
+      29,
+      "done"
+    ],
+    [
+      8,
+      "Campbelltown District 15U",
+      21,
+      "St George District 15U",
+      14,
+      30,
+      "done"
+    ],
+    [
+      9,
+      "Illawarra District 15U",
+      10,
+      "Northern Suburbs 15U",
+      24,
+      8,
+      "done"
+    ],
+    [
+      9,
+      "Ku-ring-gai 15U",
+      15,
+      "Baulkham Hills Shire 15U",
+      14,
+      9,
+      "done"
+    ],
+    [
+      9,
+      "Eastwood Ryde 15U",
+      18,
+      "Wyong District 15U",
+      11,
+      11,
+      "done"
+    ],
+    [
+      9,
+      "Wagga Wagga 15U",
+      15,
+      "Sutherland Shire 15U",
+      17,
+      24,
+      "done"
+    ],
+    [
+      9,
+      "Camden & District 15U",
+      21,
+      "Randwick 15U",
+      26,
+      25,
+      "done"
+    ],
+    [
+      9,
+      "Maitland 15U",
+      21,
+      "Blacktown City 15U",
+      19,
+      26,
+      "done"
+    ],
+    [
+      9,
+      "Bankstown City 15U",
+      15,
+      "Charlestown 15U",
+      14,
+      27,
+      "done"
+    ],
+    [
+      9,
+      "Hawkesbury City 15U",
+      14,
+      "Penrith District 15U",
+      27,
+      28,
+      "done"
+    ],
+    [
+      9,
+      "St George District 15U",
+      8,
+      "Liverpool City 15U",
+      26,
+      29,
+      "done"
+    ],
+    [
+      9,
+      "Campbelltown District 15U",
+      14,
+      "Lakeside 15U",
+      17,
+      30,
+      "done"
+    ],
+    [
+      10,
+      "Manly Warringah 15U",
+      21,
+      "Ku-ring-gai 15U",
+      25,
+      8,
+      "done"
+    ],
+    [
+      10,
+      "Northern Suburbs 15U",
+      20,
+      "Eastwood Ryde 15U",
+      25,
+      9,
+      "done"
+    ],
+    [
+      10,
+      "Baulkham Hills Shire 15U",
+      8,
+      "Wagga Wagga 15U",
+      13,
+      11,
+      "done"
+    ],
+    [
+      10,
+      "Wyong District 15U",
+      21,
+      "Camden & District 15U",
+      18,
+      24,
+      "done"
+    ],
+    [
+      10,
+      "Sutherland Shire 15U",
+      20,
+      "Maitland 15U",
+      21,
+      25,
+      "done"
+    ],
+    [
+      10,
+      "Randwick 15U",
+      23,
+      "Bankstown City 15U",
+      9,
+      26,
+      "done"
+    ],
+    [
+      10,
+      "Blacktown City 15U",
+      16,
+      "Hawkesbury City 15U",
+      10,
+      27,
+      "done"
+    ],
+    [
+      10,
+      "Charlestown 15U",
+      22,
+      "St George District 15U",
+      11,
+      28,
+      "done"
+    ],
+    [
+      10,
+      "Penrith District 15U",
+      17,
+      "Campbelltown District 15U",
+      9,
+      29,
+      "done"
+    ],
+    [
+      10,
+      "Liverpool City 15U",
+      24,
+      "Lakeside 15U",
+      11,
+      30,
+      "done"
+    ],
+    [
+      11,
+      "Eastwood Ryde 15U",
+      16,
+      "Illawarra District 15U",
+      14,
+      8,
+      "done"
+    ],
+    [
+      11,
+      "Wagga Wagga 15U",
+      12,
+      "Manly Warringah 15U",
+      21,
+      9,
+      "done"
+    ],
+    [
+      11,
+      "Camden & District 15U",
+      17,
+      "Northern Suburbs 15U",
+      26,
+      11,
+      "done"
+    ],
+    [
+      11,
+      "Maitland 15U",
+      12,
+      "Baulkham Hills Shire 15U",
+      15,
+      24,
+      "done"
+    ],
+    [
+      11,
+      "Bankstown City 15U",
+      19,
+      "Wyong District 15U",
+      13,
+      25,
+      "done"
+    ],
+    [
+      11,
+      "Hawkesbury City 15U",
+      12,
+      "Sutherland Shire 15U",
+      27,
+      26,
+      "done"
+    ],
+    [
+      11,
+      "St George District 15U",
+      15,
+      "Randwick 15U",
+      33,
+      27,
+      "done"
+    ],
+    [
+      11,
+      "Campbelltown District 15U",
+      8,
+      "Blacktown City 15U",
+      19,
+      28,
+      "done"
+    ],
+    [
+      11,
+      "Lakeside 15U",
+      15,
+      "Charlestown 15U",
+      7,
+      29,
+      "done"
+    ],
+    [
+      11,
+      "Liverpool City 15U",
+      25,
+      "Penrith District 15U",
+      15,
+      30,
+      "done"
+    ],
+    [
+      12,
+      "Ku-ring-gai 15U",
+      15,
+      "Wagga Wagga 15U",
+      13,
+      8,
+      "done"
+    ],
+    [
+      12,
+      "Illawarra District 15U",
+      19,
+      "Camden & District 15U",
+      26,
+      9,
+      "done"
+    ],
+    [
+      12,
+      "Manly Warringah 15U",
+      30,
+      "Maitland 15U",
+      22,
+      11,
+      "done"
+    ],
+    [
+      12,
+      "Northern Suburbs 15U",
+      26,
+      "Bankstown City 15U",
+      9,
+      24,
+      "done"
+    ],
+    [
+      12,
+      "Baulkham Hills Shire 15U",
+      14,
+      "Hawkesbury City 15U",
+      28,
+      25,
+      "done"
+    ],
+    [
+      12,
+      "Wyong District 15U",
+      23,
+      "St George District 15U",
+      17,
+      26,
+      "done"
+    ],
+    [
+      12,
+      "Sutherland Shire 15U",
+      21,
+      "Campbelltown District 15U",
+      11,
+      27,
+      "done"
+    ],
+    [
+      12,
+      "Randwick 15U",
+      20,
+      "Lakeside 15U",
+      11,
+      28,
+      "done"
+    ],
+    [
+      12,
+      "Blacktown City 15U",
+      11,
+      "Liverpool City 15U",
+      24,
+      29,
+      "done"
+    ],
+    [
+      12,
+      "Charlestown 15U",
+      16,
+      "Penrith District 15U",
+      15,
+      30,
+      "done"
+    ],
+    [
+      13,
+      "Camden & District 15U",
+      14,
+      "Eastwood Ryde 15U",
+      25,
+      8,
+      "done"
+    ],
+    [
+      13,
+      "Maitland 15U",
+      18,
+      "Ku-ring-gai 15U",
+      9,
+      9,
+      "done"
+    ],
+    [
+      13,
+      "Bankstown City 15U",
+      12,
+      "Illawarra District 15U",
+      17,
+      11,
+      "done"
+    ],
+    [
+      13,
+      "Hawkesbury City 15U",
+      17,
+      "Manly Warringah 15U",
+      19,
+      24,
+      "done"
+    ],
+    [
+      13,
+      "St George District 15U",
+      13,
+      "Northern Suburbs 15U",
+      23,
+      25,
+      "done"
+    ],
+    [
+      13,
+      "Campbelltown District 15U",
+      6,
+      "Baulkham Hills Shire 15U",
+      19,
+      26,
+      "done"
+    ],
+    [
+      13,
+      "Lakeside 15U",
+      16,
+      "Wyong District 15U",
+      17,
+      27,
+      "done"
+    ],
+    [
+      13,
+      "Liverpool City 15U",
+      18,
+      "Sutherland Shire 15U",
+      12,
+      28,
+      "done"
+    ],
+    [
+      13,
+      "Penrith District 15U",
+      17,
+      "Randwick 15U",
+      20,
+      29,
+      "done"
+    ],
+    [
+      13,
+      "Charlestown 15U",
+      12,
+      "Blacktown City 15U",
+      8,
+      30,
+      "done"
+    ],
+    [
+      14,
+      "Wagga Wagga 15U",
+      20,
+      "Maitland 15U",
+      12,
+      8,
+      "done"
+    ],
+    [
+      14,
+      "Eastwood Ryde 15U",
+      15,
+      "Bankstown City 15U",
+      14,
+      9,
+      "done"
+    ],
+    [
+      14,
+      "Ku-ring-gai 15U",
+      19,
+      "Hawkesbury City 15U",
+      13,
+      11,
+      "done"
+    ],
+    [
+      14,
+      "Illawarra District 15U",
+      16,
+      "St George District 15U",
+      9,
+      24,
+      "done"
+    ],
+    [
+      14,
+      "Manly Warringah 15U",
+      25,
+      "Campbelltown District 15U",
+      13,
+      25,
+      "done"
+    ],
+    [
+      14,
+      "Northern Suburbs 15U",
+      19,
+      "Lakeside 15U",
+      20,
+      26,
+      "done"
+    ],
+    [
+      14,
+      "Baulkham Hills Shire 15U",
+      6,
+      "Liverpool City 15U",
+      25,
+      27,
+      "done"
+    ],
+    [
+      14,
+      "Wyong District 15U",
+      11,
+      "Penrith District 15U",
+      26,
+      28,
+      "done"
+    ],
+    [
+      14,
+      "Sutherland Shire 15U",
+      19,
+      "Charlestown 15U",
+      12,
+      29,
+      "done"
+    ],
+    [
+      14,
+      "Randwick 15U",
+      14,
+      "Blacktown City 15U",
+      13,
+      30,
+      "done"
+    ],
+    [
+      15,
+      "Bankstown City 15U",
+      null,
+      "Camden & District 15U",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      15,
+      "Hawkesbury City 15U",
+      null,
+      "Wagga Wagga 15U",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      15,
+      "St George District 15U",
+      null,
+      "Eastwood Ryde 15U",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      15,
+      "Campbelltown District 15U",
+      null,
+      "Ku-ring-gai 15U",
+      null,
+      31,
+      "upcoming"
+    ],
+    [
+      15,
+      "Lakeside 15U",
+      null,
+      "Illawarra District 15U",
+      null,
+      32,
+      "upcoming"
+    ],
+    [
+      15,
+      "Liverpool City 15U",
+      null,
+      "Manly Warringah 15U",
+      null,
+      34,
+      "upcoming"
+    ],
+    [
+      15,
+      "Penrith District 15U",
+      null,
+      "Northern Suburbs 15U",
+      null,
+      35,
+      "upcoming"
+    ],
+    [
+      15,
+      "Charlestown 15U",
+      null,
+      "Baulkham Hills Shire 15U",
+      null,
+      36,
+      "upcoming"
+    ],
+    [
+      15,
+      "Blacktown City 15U",
+      null,
+      "Wyong District 15U",
+      null,
+      38,
+      "upcoming"
+    ],
+    [
+      15,
+      "Randwick 15U",
+      null,
+      "Sutherland Shire 15U",
+      null,
+      41,
+      "upcoming"
+    ],
+    [
+      16,
+      "Maitland 15U",
+      null,
+      "Hawkesbury City 15U",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      16,
+      "Camden & District 15U",
+      null,
+      "St George District 15U",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      16,
+      "Wagga Wagga 15U",
+      null,
+      "Campbelltown District 15U",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      16,
+      "Eastwood Ryde 15U",
+      null,
+      "Lakeside 15U",
+      null,
+      31,
+      "upcoming"
+    ],
+    [
+      16,
+      "Ku-ring-gai 15U",
+      null,
+      "Liverpool City 15U",
+      null,
+      32,
+      "upcoming"
+    ],
+    [
+      16,
+      "Illawarra District 15U",
+      null,
+      "Penrith District 15U",
+      null,
+      34,
+      "upcoming"
+    ],
+    [
+      16,
+      "Manly Warringah 15U",
+      null,
+      "Charlestown 15U",
+      null,
+      35,
+      "upcoming"
+    ],
+    [
+      16,
+      "Northern Suburbs 15U",
+      null,
+      "Blacktown City 15U",
+      null,
+      36,
+      "upcoming"
+    ],
+    [
+      16,
+      "Baulkham Hills Shire 15U",
+      null,
+      "Randwick 15U",
+      null,
+      38,
+      "upcoming"
+    ],
+    [
+      16,
+      "Wyong District 15U",
+      null,
+      "Sutherland Shire 15U",
+      null,
+      41,
+      "upcoming"
+    ],
+    [
+      17,
+      "St George District 15U",
+      null,
+      "Bankstown City 15U",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      17,
+      "Campbelltown District 15U",
+      null,
+      "Maitland 15U",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      17,
+      "Lakeside 15U",
+      null,
+      "Camden & District 15U",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      17,
+      "Liverpool City 15U",
+      null,
+      "Wagga Wagga 15U",
+      null,
+      31,
+      "upcoming"
+    ],
+    [
+      17,
+      "Penrith District 15U",
+      null,
+      "Eastwood Ryde 15U",
+      null,
+      32,
+      "upcoming"
+    ],
+    [
+      17,
+      "Charlestown 15U",
+      null,
+      "Ku-ring-gai 15U",
+      null,
+      34,
+      "upcoming"
+    ],
+    [
+      17,
+      "Blacktown City 15U",
+      null,
+      "Illawarra District 15U",
+      null,
+      35,
+      "upcoming"
+    ],
+    [
+      17,
+      "Randwick 15U",
+      null,
+      "Manly Warringah 15U",
+      null,
+      36,
+      "upcoming"
+    ],
+    [
+      17,
+      "Sutherland Shire 15U",
+      null,
+      "Northern Suburbs 15U",
+      null,
+      38,
+      "upcoming"
+    ],
+    [
+      17,
+      "Wyong District 15U",
+      null,
+      "Baulkham Hills Shire 15U",
+      null,
+      41,
+      "upcoming"
+    ],
+    [
+      18,
+      "Hawkesbury City 15U",
+      null,
+      "Campbelltown District 15U",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      18,
+      "Bankstown City 15U",
+      null,
+      "Lakeside 15U",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      18,
+      "Maitland 15U",
+      null,
+      "Liverpool City 15U",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      18,
+      "Camden & District 15U",
+      null,
+      "Penrith District 15U",
+      null,
+      31,
+      "upcoming"
+    ],
+    [
+      18,
+      "Wagga Wagga 15U",
+      null,
+      "Charlestown 15U",
+      null,
+      32,
+      "upcoming"
+    ],
+    [
+      18,
+      "Eastwood Ryde 15U",
+      null,
+      "Blacktown City 15U",
+      null,
+      34,
+      "upcoming"
+    ],
+    [
+      18,
+      "Ku-ring-gai 15U",
+      null,
+      "Randwick 15U",
+      null,
+      35,
+      "upcoming"
+    ],
+    [
+      18,
+      "Illawarra District 15U",
+      null,
+      "Sutherland Shire 15U",
+      null,
+      36,
+      "upcoming"
+    ],
+    [
+      18,
+      "Manly Warringah 15U",
+      null,
+      "Wyong District 15U",
+      null,
+      38,
+      "upcoming"
+    ],
+    [
+      18,
+      "Northern Suburbs 15U",
+      null,
+      "Baulkham Hills Shire 15U",
+      null,
+      41,
+      "upcoming"
+    ],
+    [
+      19,
+      "Lakeside 15U",
+      null,
+      "St George District 15U",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      19,
+      "Liverpool City 15U",
+      null,
+      "Hawkesbury City 15U",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      19,
+      "Penrith District 15U",
+      null,
+      "Bankstown City 15U",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      19,
+      "Charlestown 15U",
+      null,
+      "Maitland 15U",
+      null,
+      32,
+      "upcoming"
+    ],
+    [
+      19,
+      "Blacktown City 15U",
+      null,
+      "Camden & District 15U",
+      null,
+      31,
+      "upcoming"
+    ],
+    [
+      19,
+      "Randwick 15U",
+      null,
+      "Wagga Wagga 15U",
+      null,
+      35,
+      "upcoming"
+    ],
+    [
+      19,
+      "Sutherland Shire 15U",
+      null,
+      "Eastwood Ryde 15U",
+      null,
+      34,
+      "upcoming"
+    ],
+    [
+      19,
+      "Wyong District 15U",
+      null,
+      "Ku-ring-gai 15U",
+      null,
+      36,
+      "upcoming"
+    ],
+    [
+      19,
+      "Baulkham Hills Shire 15U",
+      null,
+      "Illawarra District 15U",
+      null,
+      38,
+      "upcoming"
+    ],
+    [
+      19,
+      "Northern Suburbs 15U",
+      null,
+      "Manly Warringah 15U",
+      null,
+      41,
+      "upcoming"
+    ],
+    [
+      20,
+      "Campbelltown District 15U",
+      null,
+      "Liverpool City 15U",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      20,
+      "St George District 15U",
+      null,
+      "Penrith District 15U",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      20,
+      "Hawkesbury City 15U",
+      null,
+      "Charlestown 15U",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      20,
+      "Bankstown City 15U",
+      null,
+      "Blacktown City 15U",
+      null,
+      31,
+      "upcoming"
+    ],
+    [
+      20,
+      "Maitland 15U",
+      null,
+      "Randwick 15U",
+      null,
+      32,
+      "upcoming"
+    ],
+    [
+      20,
+      "Camden & District 15U",
+      null,
+      "Sutherland Shire 15U",
+      null,
+      34,
+      "upcoming"
+    ],
+    [
+      20,
+      "Wagga Wagga 15U",
+      null,
+      "Wyong District 15U",
+      null,
+      35,
+      "upcoming"
+    ],
+    [
+      20,
+      "Eastwood Ryde 15U",
+      null,
+      "Baulkham Hills Shire 15U",
+      null,
+      36,
+      "upcoming"
+    ],
+    [
+      20,
+      "Ku-ring-gai 15U",
+      null,
+      "Northern Suburbs 15U",
+      null,
+      38,
+      "upcoming"
+    ],
+    [
+      20,
+      "Illawarra District 15U",
+      null,
+      "Manly Warringah 15U",
+      null,
+      41,
+      "upcoming"
+    ],
+    [
+      21,
+      "Penrith District 15U",
+      null,
+      "Lakeside 15U",
+      null,
+      28,
+      "upcoming"
+    ],
+    [
+      21,
+      "Charlestown 15U",
+      null,
+      "Campbelltown District 15U",
+      null,
+      29,
+      "upcoming"
+    ],
+    [
+      21,
+      "Blacktown City 15U",
+      null,
+      "St George District 15U",
+      null,
+      30,
+      "upcoming"
+    ],
+    [
+      21,
+      "Randwick 15U",
+      null,
+      "Hawkesbury City 15U",
+      null,
+      31,
+      "upcoming"
+    ],
+    [
+      21,
+      "Sutherland Shire 15U",
+      null,
+      "Bankstown City 15U",
+      null,
+      32,
+      "upcoming"
+    ],
+    [
+      21,
+      "Wyong District 15U",
+      null,
+      "Maitland 15U",
+      null,
+      34,
+      "upcoming"
+    ],
+    [
+      21,
+      "Baulkham Hills Shire 15U",
+      null,
+      "Camden & District 15U",
+      null,
+      35,
+      "upcoming"
+    ],
+    [
+      21,
+      "Northern Suburbs 15U",
+      null,
+      "Wagga Wagga 15U",
+      null,
+      36,
+      "upcoming"
+    ],
+    [
+      21,
+      "Manly Warringah 15U",
+      null,
+      "Eastwood Ryde 15U",
+      null,
+      38,
+      "upcoming"
+    ],
+    [
+      21,
+      "Illawarra District 15U",
+      null,
+      "Ku-ring-gai 15U",
+      null,
+      41,
+      "upcoming"
+    ]
+  ]
+};
+
+function render(d) {
+  const key = (a, b) => [a, b].sort().join("|");
+  const M = {};
+  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+    const k = key(h, a);
+    const prev = M[k];
+    // Prefer completed result over upcoming; break ties by earlier round.
+    if (!prev || (prev.st !== "done" && st === "done") || (prev.st === st && rd < prev.rd))
+      M[k] = { rd, h, hs, a, as: as_, court, st };
+  });
+  const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
+
+  // Per-team next round: min round where their game isn't done
+  const nextRound = {};
+  d.teams.forEach(t => {
+    let min = Infinity;
+    d.games.forEach(([rd,, , , , , st]) => { if (st !== "done" && rd < min) min = rd; });
+    // narrow to this team's games
+    min = Infinity;
+    d.games.forEach(([rd, h, , a, , , st]) => {
+      if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
+    });
+    nextRound[t.code] = min === Infinity ? null : min;
+  });
+
+  const grid = document.getElementById("grid");
+  let html = "<thead><tr>";
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
+    : d.title;
+  html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
+  d.teams.forEach(t => {
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+
+  d.teams.forEach((rowT, ri) => {
+    const pinnedRow = rowT.code === d.pin;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<th class="rowhead">
+               <div class="rn">
+                 <span class="rkn">${rowT.rank}</span>
+                 <span class="nm">${rowT.name}</span>
+               </div>
+             </th>`;
+
+    d.teams.forEach((colT, ci) => {
+      const pinCol = colT.code === d.pin && !pinnedRow;
+      const pcls = pinCol ? " pincol" : "";
+
+      if (rowT.code === colT.code) {
+        html += `<td class="cell self">
+                   <div class="selfblock">
+                     <span class="sl1">${rowT.pts} pts</span>
+                     <span class="sl2">${rowT.pct}%</span>
+                   </div>
+                 </td>`;
+        return;
+      }
+
+      const m = M[key(rowT.code, colT.code)];
+      if (!m) { html += `<td class="cell${pcls}"></td>`; return; }
+      const rmeta = roundByN[m.rd] || {};
+      const rowScore = m.h === rowT.code ? m.hs : m.as;
+      const colScore = m.h === rowT.code ? m.as : m.hs;
+      const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+      if (m.st === "live" && rowScore != null) {
+        html += `<td class="cell live${ncls}${pcls}">
+                   <div class="scblock">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
+                   </div>
+                 </td>`;
+      } else if (m.st === "done" && rowScore != null) {
+        const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+        html += `<td class="cell ${cls}${ncls}${pcls}">
+                   <div class="scblock">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">${rowScore}–${colScore}</span>
+                   </div>
+                 </td>`;
+      } else {
+        const fixCls = m.st === "live" ? " live" : "";
+        html += `<td class="cell fix${fixCls}${ncls}${pcls}">
+                   <div class="fxblock">
+                     <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
+                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                   </div>
+                 </td>`;
+      }
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody>";
+  grid.innerHTML = html;
+}
+render(DATA);
+
+</script>
+</body>
+</html>

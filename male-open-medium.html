@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>MALE Open — Cross Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #15223b;
+    --ink-2:    #51607a;
+    --muted:    #9aa4b6;
+    --line:     #dfe3ea;
+    --line-2:   #eef0f4;
+    --bg:       #f3f5f8;
+    --card:     #ffffff;
+    --accent:   #e8542f;
+    --accent-bg:#fdece5;
+    --win:      #157a47;
+    --win-bg:   #e7f3ea;
+    --loss:     #b23b2c;
+    --loss-bg:  #fbe9e6;
+    --draw-bg:  #fff3e0;
+    --col-w:    52px;
+    --name-w:   110px;
+    --row-h:    33px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .scroll {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+  table.x { border-collapse: separate; border-spacing: 0; margin: 0; }
+  table.x th, table.x td { padding: 0; margin: 0; }
+  th.corner {
+    position: sticky; left: 0; top: 0; z-index: 6;
+    width: var(--name-w); min-width: var(--name-w);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 2px solid var(--line);
+  }
+  th.corner .lbl {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    padding: 5px 6px; text-align: left; line-height: 1.3;
+  }
+  th.corner .lbl a { color: inherit; text-decoration: none; }
+  th.corner .lbl a:hover { text-decoration: underline; }
+  th.colhead {
+    position: sticky; top: 0; z-index: 4;
+    width: var(--col-w); min-width: var(--col-w);
+    background: var(--card);
+    border-bottom: 2px solid var(--line);
+    border-left: 1px solid var(--line-2);
+    vertical-align: bottom;
+    padding: 4px 3px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 10px;
+    color: var(--ink); text-align: center;
+    overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.15; vertical-align: top;
+  }
+  th.colhead .ckn {
+    display: block;
+    font-size: 8px; font-weight: 700;
+    color: var(--muted); letter-spacing: .3px;
+    line-height: 1.4;
+  }
+  th.rowhead {
+    position: sticky; left: 0; z-index: 3;
+    width: var(--name-w); min-width: var(--name-w);
+    height: var(--row-h);
+    background: var(--card);
+    border-right: 2px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: top;
+  }
+  th.rowhead .rn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 5px 3px 5px;
+  }
+  th.rowhead .rkn {
+    flex: 0 0 auto; width: 13px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); text-align: center;
+  }
+  th.rowhead .nm {
+    font-size: 10px; font-weight: 600;
+    line-height: 1.1; color: var(--ink);
+  }
+  td.cell {
+    width: var(--col-w); min-width: var(--col-w);
+    height: var(--row-h);
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    position: relative;
+    background: var(--card);
+    vertical-align: top;
+  }
+  td.cell .scblock {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px; padding: 2px;
+  }
+  td.cell .scblock .rd {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .3px; color: var(--muted); line-height: 1;
+  }
+  td.cell .scblock .score {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-weight: 700; font-size: 13px;
+    line-height: 1; letter-spacing: -.1px;
+  }
+  td.cell.fix { background: #f9fafb; }
+  td.cell.fix .fxblock {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px; padding: 2px;
+    text-align: center; line-height: 1.1;
+  }
+  td.cell.fix .fl1 {
+    font-size: 9.5px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  td.cell.fix .fl1 b { color: var(--ink); font-weight: 700; }
+  td.cell.fix .fl2 {
+    font-size: 8.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+  }
+  td.cell.fix.done { background: #f5f6f8; }
+  td.cell.fix.done .fl1 { color: var(--muted); }
+  td.cell.fix.done .fl1 b { color: var(--ink-2); }
+  td.cell.fix.done .fl2 { color: #bcc4d0; }
+  td.cell.fix.live { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+  td.cell.fix.live .fl1, td.cell.fix.live .fl1 b { color: var(--accent); }
+  td.cell.fix.live .fl2 { color: var(--accent); }
+  td.cell.win  { background: var(--win-bg); }
+  td.cell.win  .score { color: var(--win); }
+  td.cell.loss { background: var(--loss-bg); }
+  td.cell.loss .score { color: var(--loss); }
+  td.cell.draw { background: var(--draw-bg); }
+  td.cell.draw .score { color: #e65100; }
+  td.cell.live {
+    background: var(--accent-bg);
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+  td.cell.live .score {
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+  }
+  td.cell.live .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: pulse 1.3s infinite;
+  }
+  td.cell.upcoming .score { color: var(--muted); font-size: 11px; }
+  td.cell.next:not(.live) { box-shadow: inset 0 0 0 2px #5c6bc0; }
+  td.cell.next.fix:not(.live) { background: #eef0fb; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.3;transform:scale(.6);} }
+  td.cell.self {
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,.04) 5px 6px),
+      var(--ink);
+    overflow: hidden;
+  }
+  td.cell.self .selfblock {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1px; padding: 2px;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    color: #fff; text-align: center; line-height: 1.1;
+  }
+  td.cell.self .sl1 { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap; line-height: 1; }
+  td.cell.self .sl2 { font-size: 8px; font-weight: 700; letter-spacing: .3px; color: #aeb9cc; white-space: nowrap; line-height: 1; }
+  tr.pinned th.rowhead { background: #fff7ec; }
+  tr.pinned td.cell:not(.self) { background-color: #fffaf2; }
+  tr.pinned td.cell.win  { background-color: var(--win-bg); }
+  tr.pinned td.cell.loss { background-color: var(--loss-bg); }
+  tr.pinned td.cell.live { background-color: var(--accent-bg); }
+  td.cell.pincol:not(.self):not(.win):not(.loss):not(.live) { background-color: #fffaf2; }
+  @media (max-width: 400px) {
+    :root { --col-w: 42px; --name-w: 90px; }
+  }
+
+</style>
+<style>html { zoom: 1.5; }</style>
+</head>
+<body>
+  <div class="scroll">
+    <table class="x" id="grid"></table>
+  </div>
+<script>
+const DATA = {
+  "title": "MALE Open",
+  "venue": "Jamison Park Netball Complex, South Penrith",
+  "date": "Sat 6–Sun 7 Jun 2026",
+  "pin": null,
+  "menu_url": "index.html",
+  "teams": [
+    {
+      "code": "Liverpool City Open Male",
+      "name": "Liverpool City Open Male",
+      "rank": 1,
+      "pts": 18,
+      "pct": "291.5",
+      "W": 9,
+      "L": 0,
+      "D": 0
+    },
+    {
+      "code": "Cessnock District Open Male",
+      "name": "Cessnock District Open Male",
+      "rank": 2,
+      "pts": 16,
+      "pct": "244.3",
+      "W": 8,
+      "L": 1,
+      "D": 0
+    },
+    {
+      "code": "Manly Warringah Open Male",
+      "name": "Manly Warringah Open Male",
+      "rank": 3,
+      "pts": 14,
+      "pct": "214.7",
+      "W": 7,
+      "L": 2,
+      "D": 0
+    },
+    {
+      "code": "Lakeside Open Male",
+      "name": "Lakeside Open Male",
+      "rank": 4,
+      "pts": 12,
+      "pct": "90.1",
+      "W": 6,
+      "L": 3,
+      "D": 0
+    },
+    {
+      "code": "Wyong District Open Male",
+      "name": "Wyong District Open Male",
+      "rank": 5,
+      "pts": 10,
+      "pct": "79.4",
+      "W": 5,
+      "L": 4,
+      "D": 0
+    },
+    {
+      "code": "Ku-ring-gai Open Male",
+      "name": "Ku-ring-gai Open Male",
+      "rank": 6,
+      "pts": 8,
+      "pct": "100.0",
+      "W": 4,
+      "L": 5,
+      "D": 0
+    },
+    {
+      "code": "Bellingen Open Male",
+      "name": "Bellingen Open Male",
+      "rank": 7,
+      "pts": 6,
+      "pct": "68.6",
+      "W": 3,
+      "L": 6,
+      "D": 0
+    },
+    {
+      "code": "Gosford Open Male",
+      "name": "Gosford Open Male",
+      "rank": 8,
+      "pts": 4,
+      "pct": "78.4",
+      "W": 2,
+      "L": 7,
+      "D": 0
+    },
+    {
+      "code": "Randwick Open Male 1",
+      "name": "Randwick Open Male 1",
+      "rank": 9,
+      "pts": 2,
+      "pct": "49.3",
+      "W": 1,
+      "L": 8,
+      "D": 0
+    },
+    {
+      "code": "Eastwood Ryde Open Male",
+      "name": "Eastwood Ryde Open Male",
+      "rank": 10,
+      "pts": 0,
+      "pct": "22.7",
+      "W": 0,
+      "L": 9,
+      "D": 0
+    }
+  ],
+  "rounds": [
+    {
+      "n": 1,
+      "day": "Sat",
+      "time": "09:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "day": "Sat",
+      "time": "10:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "day": "Sat",
+      "time": "11:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "day": "Sat",
+      "time": "12:30",
+      "sdate": "6/6",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "day": "Sun",
+      "time": "09:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 6,
+      "day": "Sun",
+      "time": "10:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 7,
+      "day": "Sun",
+      "time": "11:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 8,
+      "day": "Sun",
+      "time": "12:00",
+      "sdate": "7/6",
+      "state": "done"
+    },
+    {
+      "n": 9,
+      "day": "Sun",
+      "time": "13:00",
+      "sdate": "7/6",
+      "state": "done"
+    }
+  ],
+  "games": [
+    [
+      1,
+      "Manly Warringah Open Male",
+      13,
+      "Cessnock District Open Male",
+      20,
+      3,
+      "done"
+    ],
+    [
+      1,
+      "Ku-ring-gai Open Male",
+      18,
+      "Gosford Open Male",
+      15,
+      15,
+      "done"
+    ],
+    [
+      1,
+      "Wyong District Open Male",
+      9,
+      "Liverpool City Open Male",
+      23,
+      16,
+      "done"
+    ],
+    [
+      1,
+      "Bellingen Open Male",
+      8,
+      "Lakeside Open Male",
+      20,
+      19,
+      "done"
+    ],
+    [
+      1,
+      "Randwick Open Male 1",
+      20,
+      "Eastwood Ryde Open Male",
+      8,
+      20,
+      "done"
+    ],
+    [
+      2,
+      "Liverpool City Open Male",
+      33,
+      "Bellingen Open Male",
+      6,
+      19,
+      "done"
+    ],
+    [
+      2,
+      "Lakeside Open Male",
+      19,
+      "Randwick Open Male 1",
+      15,
+      20,
+      "done"
+    ],
+    [
+      2,
+      "Eastwood Ryde Open Male",
+      9,
+      "Ku-ring-gai Open Male",
+      29,
+      16,
+      "done"
+    ],
+    [
+      2,
+      "Cessnock District Open Male",
+      27,
+      "Wyong District Open Male",
+      11,
+      15,
+      "done"
+    ],
+    [
+      2,
+      "Gosford Open Male",
+      12,
+      "Manly Warringah Open Male",
+      19,
+      3,
+      "done"
+    ],
+    [
+      3,
+      "Randwick Open Male 1",
+      6,
+      "Liverpool City Open Male",
+      34,
+      3,
+      "done"
+    ],
+    [
+      3,
+      "Wyong District Open Male",
+      18,
+      "Gosford Open Male",
+      16,
+      15,
+      "done"
+    ],
+    [
+      3,
+      "Bellingen Open Male",
+      8,
+      "Cessnock District Open Male",
+      24,
+      16,
+      "done"
+    ],
+    [
+      3,
+      "Ku-ring-gai Open Male",
+      5,
+      "Manly Warringah Open Male",
+      23,
+      19,
+      "done"
+    ],
+    [
+      3,
+      "Eastwood Ryde Open Male",
+      4,
+      "Lakeside Open Male",
+      25,
+      20,
+      "done"
+    ],
+    [
+      4,
+      "Manly Warringah Open Male",
+      23,
+      "Wyong District Open Male",
+      11,
+      19,
+      "done"
+    ],
+    [
+      4,
+      "Liverpool City Open Male",
+      41,
+      "Eastwood Ryde Open Male",
+      2,
+      20,
+      "done"
+    ],
+    [
+      4,
+      "Cessnock District Open Male",
+      37,
+      "Randwick Open Male 1",
+      11,
+      16,
+      "done"
+    ],
+    [
+      4,
+      "Gosford Open Male",
+      10,
+      "Bellingen Open Male",
+      16,
+      15,
+      "done"
+    ],
+    [
+      4,
+      "Lakeside Open Male",
+      16,
+      "Ku-ring-gai Open Male",
+      14,
+      3,
+      "done"
+    ],
+    [
+      5,
+      "Lakeside Open Male",
+      7,
+      "Liverpool City Open Male",
+      36,
+      7,
+      "done"
+    ],
+    [
+      5,
+      "Bellingen Open Male",
+      11,
+      "Manly Warringah Open Male",
+      26,
+      9,
+      "done"
+    ],
+    [
+      5,
+      "Randwick Open Male 1",
+      13,
+      "Gosford Open Male",
+      29,
+      10,
+      "done"
+    ],
+    [
+      5,
+      "Eastwood Ryde Open Male",
+      2,
+      "Cessnock District Open Male",
+      31,
+      24,
+      "done"
+    ],
+    [
+      5,
+      "Ku-ring-gai Open Male",
+      10,
+      "Wyong District Open Male",
+      12,
+      26,
+      "done"
+    ],
+    [
+      6,
+      "Manly Warringah Open Male",
+      32,
+      "Randwick Open Male 1",
+      7,
+      7,
+      "done"
+    ],
+    [
+      6,
+      "Cessnock District Open Male",
+      33,
+      "Lakeside Open Male",
+      13,
+      9,
+      "done"
+    ],
+    [
+      6,
+      "Gosford Open Male",
+      22,
+      "Eastwood Ryde Open Male",
+      7,
+      10,
+      "done"
+    ],
+    [
+      6,
+      "Liverpool City Open Male",
+      27,
+      "Ku-ring-gai Open Male",
+      15,
+      24,
+      "done"
+    ],
+    [
+      6,
+      "Wyong District Open Male",
+      15,
+      "Bellingen Open Male",
+      14,
+      26,
+      "done"
+    ],
+    [
+      7,
+      "Eastwood Ryde Open Male",
+      6,
+      "Manly Warringah Open Male",
+      43,
+      7,
+      "done"
+    ],
+    [
+      7,
+      "Randwick Open Male 1",
+      13,
+      "Wyong District Open Male",
+      14,
+      9,
+      "done"
+    ],
+    [
+      7,
+      "Ku-ring-gai Open Male",
+      22,
+      "Bellingen Open Male",
+      9,
+      10,
+      "done"
+    ],
+    [
+      7,
+      "Lakeside Open Male",
+      18,
+      "Gosford Open Male",
+      14,
+      24,
+      "done"
+    ],
+    [
+      7,
+      "Liverpool City Open Male",
+      22,
+      "Cessnock District Open Male",
+      18,
+      26,
+      "done"
+    ],
+    [
+      8,
+      "Gosford Open Male",
+      15,
+      "Liverpool City Open Male",
+      39,
+      7,
+      "done"
+    ],
+    [
+      8,
+      "Cessnock District Open Male",
+      32,
+      "Ku-ring-gai Open Male",
+      14,
+      9,
+      "done"
+    ],
+    [
+      8,
+      "Manly Warringah Open Male",
+      24,
+      "Lakeside Open Male",
+      11,
+      10,
+      "done"
+    ],
+    [
+      8,
+      "Wyong District Open Male",
+      20,
+      "Eastwood Ryde Open Male",
+      13,
+      24,
+      "done"
+    ],
+    [
+      8,
+      "Bellingen Open Male",
+      19,
+      "Randwick Open Male 1",
+      12,
+      26,
+      "done"
+    ],
+    [
+      9,
+      "Ku-ring-gai Open Male",
+      27,
+      "Randwick Open Male 1",
+      11,
+      7,
+      "done"
+    ],
+    [
+      9,
+      "Eastwood Ryde Open Male",
+      7,
+      "Bellingen Open Male",
+      25,
+      9,
+      "done"
+    ],
+    [
+      9,
+      "Lakeside Open Male",
+      16,
+      "Wyong District Open Male",
+      13,
+      10,
+      "done"
+    ],
+    [
+      9,
+      "Liverpool City Open Male",
+      19,
+      "Manly Warringah Open Male",
+      16,
+      24,
+      "done"
+    ],
+    [
+      9,
+      "Cessnock District Open Male",
+      37,
+      "Gosford Open Male",
+      12,
+      26,
+      "done"
+    ]
+  ]
+};
+
+function render(d) {
+  const key = (a, b) => [a, b].sort().join("|");
+  const M = {};
+  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+    const k = key(h, a);
+    const prev = M[k];
+    // Prefer completed result over upcoming; break ties by earlier round.
+    if (!prev || (prev.st !== "done" && st === "done") || (prev.st === st && rd < prev.rd))
+      M[k] = { rd, h, hs, a, as: as_, court, st };
+  });
+  const roundByN = Object.fromEntries(d.rounds.map(r => [r.n, r]));
+
+  // Per-team next round: min round where their game isn't done
+  const nextRound = {};
+  d.teams.forEach(t => {
+    let min = Infinity;
+    d.games.forEach(([rd,, , , , , st]) => { if (st !== "done" && rd < min) min = rd; });
+    // narrow to this team's games
+    min = Infinity;
+    d.games.forEach(([rd, h, , a, , , st]) => {
+      if ((h === t.code || a === t.code) && st !== "done" && rd < min) min = rd;
+    });
+    nextRound[t.code] = min === Infinity ? null : min;
+  });
+
+  const grid = document.getElementById("grid");
+  let html = "<thead><tr>";
+  const titleEl = d.menu_url
+    ? `<a href="${d.menu_url}">${d.title}</a>`
+    : d.title;
+  html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
+  d.teams.forEach(t => {
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+
+  d.teams.forEach((rowT, ri) => {
+    const pinnedRow = rowT.code === d.pin;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<th class="rowhead">
+               <div class="rn">
+                 <span class="rkn">${rowT.rank}</span>
+                 <span class="nm">${rowT.name}</span>
+               </div>
+             </th>`;
+
+    d.teams.forEach((colT, ci) => {
+      const pinCol = colT.code === d.pin && !pinnedRow;
+      const pcls = pinCol ? " pincol" : "";
+
+      if (rowT.code === colT.code) {
+        html += `<td class="cell self">
+                   <div class="selfblock">
+                     <span class="sl1">${rowT.pts} pts</span>
+                     <span class="sl2">${rowT.pct}%</span>
+                   </div>
+                 </td>`;
+        return;
+      }
+
+      const m = M[key(rowT.code, colT.code)];
+      if (!m) { html += `<td class="cell${pcls}"></td>`; return; }
+      const rmeta = roundByN[m.rd] || {};
+      const rowScore = m.h === rowT.code ? m.hs : m.as;
+      const colScore = m.h === rowT.code ? m.as : m.hs;
+      const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
+
+      if (m.st === "live" && rowScore != null) {
+        html += `<td class="cell live${ncls}${pcls}">
+                   <div class="scblock">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
+                   </div>
+                 </td>`;
+      } else if (m.st === "done" && rowScore != null) {
+        const cls = rowScore > colScore ? "win" : rowScore < colScore ? "loss" : "draw";
+        html += `<td class="cell ${cls}${ncls}${pcls}">
+                   <div class="scblock">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">${rowScore}–${colScore}</span>
+                   </div>
+                 </td>`;
+      } else {
+        const fixCls = m.st === "live" ? " live" : "";
+        html += `<td class="cell fix${fixCls}${ncls}${pcls}">
+                   <div class="fxblock">
+                     <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
+                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                   </div>
+                 </td>`;
+      }
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody>";
+  grid.innerHTML = html;
+}
+render(DATA);
+
+</script>
+</body>
+</html>
