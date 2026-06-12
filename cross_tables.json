@@ -6,6 +6,13 @@
       "active": true,
       "date_format": "dd MMM HH:mm",
       "grades": [
+        {"grade_id": "b9e7b8d3", "title": "9A"},
+        {"grade_id": "1204ef3c", "title": "9B"},
+        {"grade_id": "0e760b03", "title": "9C"},
+        {"grade_id": "d94367ae", "title": "10A"},
+        {"grade_id": "576a8cb3", "title": "10B"},
+        {"grade_id": "88414456", "title": "10C"},
+        {"grade_id": "920e28f7", "title": "10D"},
         {"grade_id": "71348000", "title": "11A"},
         {"grade_id": "b5d1acec", "title": "11B"},
         {"grade_id": "ecb52699", "title": "11C"},

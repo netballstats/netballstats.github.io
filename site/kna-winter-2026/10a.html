@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>Inters 2 — Cross Table</title>
+<title>10A — Cross Table</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -188,71 +188,93 @@
   </div>
 <script>
 const DATA = {
-  "title": "Inters 2",
+  "title": "10A",
   "venue": "Canoon Road Netball Courts, South Turramurra",
   "date": "Sat 2 May–Sat 12 Sep 2026",
   "pin": null,
   "menu_url": "../index.html",
   "teams": [
     {
-      "code": "WP15",
-      "name": "WP15",
+      "code": "KILL7",
+      "name": "KILL7",
       "rank": 1,
-      "pts": 9,
-      "pct": "311.9",
-      "W": 4,
-      "L": 0,
-      "D": 1,
-      "regraded": false
-    },
-    {
-      "code": "KP16",
-      "name": "KP16",
-      "rank": 2,
-      "pts": 9,
+      "pts": 10,
       "pct": "240.0",
-      "W": 4,
+      "W": 5,
       "L": 0,
-      "D": 1,
+      "D": 0,
       "regraded": false
     },
     {
-      "code": "WP16",
-      "name": "WP16",
+      "code": "BER26",
+      "name": "BER26",
+      "rank": 2,
+      "pts": 8,
+      "pct": "120.8",
+      "W": 4,
+      "L": 1,
+      "D": 0,
+      "regraded": false
+    },
+    {
+      "code": "KP26",
+      "name": "KP26",
       "rank": 3,
       "pts": 6,
-      "pct": "108.6",
+      "pct": "216.7",
       "W": 3,
       "L": 2,
       "D": 0,
       "regraded": false
     },
     {
-      "code": "PLC1",
-      "name": "PLC1",
+      "code": "WP27",
+      "name": "WP27",
       "rank": 4,
+      "pts": 6,
+      "pct": "150.0",
+      "W": 3,
+      "L": 2,
+      "D": 0,
+      "regraded": false
+    },
+    {
+      "code": "LNC23",
+      "name": "LNC23",
+      "rank": 5,
       "pts": 4,
-      "pct": "60.2",
+      "pct": "67.3",
       "W": 2,
       "L": 3,
       "D": 0,
       "regraded": false
     },
     {
-      "code": "BER15",
-      "name": "BER15",
-      "rank": 5,
+      "code": "STI29",
+      "name": "STI29",
+      "rank": 6,
+      "pts": 4,
+      "pct": "53.9",
+      "W": 2,
+      "L": 3,
+      "D": 0,
+      "regraded": false
+    },
+    {
+      "code": "WP28",
+      "name": "WP28",
+      "rank": 7,
       "pts": 2,
-      "pct": "65.4",
+      "pct": "50.0",
       "W": 1,
       "L": 4,
       "D": 0,
       "regraded": false
     },
     {
-      "code": "WAH07",
-      "name": "WAH07",
-      "rank": 6,
+      "code": "KP27",
+      "name": "KP27",
+      "rank": 8,
       "pts": 0,
       "pct": "0.0",
       "W": 0,
@@ -261,11 +283,11 @@ const DATA = {
       "regraded": false
     },
     {
-      "code": "STI17",
-      "name": "STI17",
-      "rank": 7,
+      "code": "NT8",
+      "name": "NT8",
+      "rank": 9,
       "pts": 0,
-      "pct": "34.3",
+      "pct": "20.0",
       "W": 0,
       "L": 5,
       "D": 0,
@@ -276,569 +298,690 @@ const DATA = {
     {
       "n": 1,
       "state": "done",
-      "ds": "2 May 11:45"
+      "ds": "2 May 08:50"
     },
     {
       "n": 2,
       "state": "done",
-      "ds": "9 May 11:45"
+      "ds": "9 May 08:50"
     },
     {
       "n": 3,
       "state": "done",
-      "ds": "16 May 11:45"
+      "ds": "16 May 08:50"
     },
     {
       "n": 4,
       "state": "done",
-      "ds": "23 May 11:45"
+      "ds": "23 May 08:50"
     },
     {
       "n": 5,
       "state": "done",
-      "ds": "30 May 11:45"
+      "ds": "30 May 08:50"
     },
     {
       "n": 6,
       "state": "upcoming",
-      "ds": "13 Jun 11:45"
+      "ds": "13 Jun 08:50"
     },
     {
       "n": 7,
       "state": "upcoming",
-      "ds": "20 Jun 11:45"
+      "ds": "20 Jun 08:50"
     },
     {
       "n": 8,
       "state": "upcoming",
-      "ds": "27 Jun 11:45"
+      "ds": "27 Jun 08:50"
     },
     {
       "n": 9,
       "state": "upcoming",
-      "ds": "18 Jul 11:45"
+      "ds": "18 Jul 08:50"
     },
     {
       "n": 10,
       "state": "upcoming",
-      "ds": "25 Jul 11:45"
+      "ds": "25 Jul 08:50"
     },
     {
       "n": 11,
       "state": "upcoming",
-      "ds": "1 Aug 11:45"
+      "ds": "1 Aug 08:50"
     },
     {
       "n": 12,
       "state": "upcoming",
-      "ds": "8 Aug 11:45"
+      "ds": "8 Aug 08:50"
     },
     {
       "n": 13,
       "state": "upcoming",
-      "ds": "15 Aug 11:45"
+      "ds": "15 Aug 08:50"
     },
     {
       "n": 14,
       "state": "upcoming",
-      "ds": "22 Aug 11:45"
+      "ds": "22 Aug 08:50"
     }
   ],
   "games": [
     [
       1,
-      "PLC1",
-      17,
-      "BER15",
-      16,
-      5,
-      "done",
-      null,
-      "2 May 11:45"
-    ],
-    [
-      1,
-      "KP16",
-      40,
-      "STI17",
-      6,
-      6,
-      "done",
-      null,
-      "2 May 11:45"
-    ],
-    [
-      1,
-      "WP15",
-      15,
-      "WP16",
-      12,
-      8,
-      "done",
-      null,
-      "2 May 11:45"
-    ],
-    [
-      2,
-      "STI17",
-      4,
-      "PLC1",
+      "STI29",
       18,
+      "NT8",
       5,
+      1,
       "done",
       null,
-      "9 May 11:45"
+      "2 May 08:50"
     ],
     [
-      2,
-      "BER15",
-      7,
-      "WP15",
-      45,
-      6,
-      "done",
-      null,
-      "9 May 11:45"
-    ],
-    [
-      2,
-      "WP16",
+      1,
+      "KP26",
       11,
-      "KP16",
-      24,
-      8,
+      "KILL7",
+      13,
+      2,
       "done",
       null,
-      "9 May 11:45"
+      "2 May 08:50"
     ],
     [
-      3,
-      "WP16",
-      24,
-      "BER15",
-      17,
+      1,
+      "BER26",
+      16,
+      "WP28",
       5,
-      "done",
-      null,
-      "16 May 11:45"
-    ],
-    [
       3,
-      "WP15",
-      28,
-      "STI17",
-      6,
-      6,
       "done",
       null,
-      "16 May 11:45"
+      "2 May 08:50"
     ],
     [
-      3,
-      "KP16",
-      23,
-      "PLC1",
-      8,
-      8,
-      "done",
-      null,
-      "16 May 11:45"
-    ],
-    [
+      1,
+      "LNC23",
       4,
-      "STI17",
-      14,
-      "WP16",
-      19,
+      "WP27",
+      12,
+      4,
+      "done",
+      null,
+      "2 May 08:50"
+    ],
+    [
+      2,
+      "NT8",
+      null,
+      "BER26",
+      null,
+      1,
+      "done",
+      "away",
+      "9 May 08:50"
+    ],
+    [
+      2,
+      "WP28",
       5,
+      "LNC23",
+      6,
+      2,
       "done",
       null,
-      "23 May 11:45"
+      "9 May 08:50"
     ],
     [
+      2,
+      "WP27",
       4,
-      "BER15",
-      15,
-      "KP16",
+      "KP26",
+      13,
+      3,
+      "done",
+      null,
+      "9 May 08:50"
+    ],
+    [
+      2,
+      "KILL7",
+      26,
+      "STI29",
+      5,
+      4,
+      "done",
+      null,
+      "9 May 08:50"
+    ],
+    [
+      3,
+      "WP27",
+      12,
+      "WP28",
+      3,
+      1,
+      "done",
+      null,
+      "16 May 08:50"
+    ],
+    [
+      3,
+      "BER26",
+      12,
+      "KILL7",
       30,
-      6,
+      2,
       "done",
       null,
-      "23 May 11:45"
+      "16 May 08:50"
+    ],
+    [
+      3,
+      "LNC23",
+      16,
+      "NT8",
+      3,
+      3,
+      "done",
+      null,
+      "16 May 08:50"
+    ],
+    [
+      3,
+      "KP26",
+      21,
+      "STI29",
+      5,
+      4,
+      "done",
+      null,
+      "16 May 08:50"
     ],
     [
       4,
-      "PLC1",
+      "STI29",
       2,
-      "WP15",
-      28,
-      8,
-      "done",
-      null,
-      "23 May 11:45"
-    ],
-    [
-      5,
-      "KP16",
-      15,
-      "WP15",
-      15,
-      5,
-      "done",
-      null,
-      "30 May 11:45"
-    ],
-    [
-      5,
-      "WP16",
-      22,
-      "PLC1",
-      11,
-      6,
-      "done",
-      null,
-      "30 May 11:45"
-    ],
-    [
-      5,
-      "BER15",
-      32,
-      "STI17",
+      "BER26",
       17,
-      8,
+      22,
       "done",
       null,
-      "30 May 11:45"
+      "23 May 08:50"
     ],
     [
-      6,
-      "WAH07",
+      4,
+      "NT8",
+      3,
+      "WP27",
+      16,
+      23,
+      "done",
       null,
-      "WP16",
+      "23 May 08:50"
+    ],
+    [
+      4,
+      "KILL7",
+      24,
+      "LNC23",
+      4,
+      24,
+      "done",
       null,
+      "23 May 08:50"
+    ],
+    [
+      4,
+      "WP28",
+      1,
+      "KP26",
+      22,
+      25,
+      "done",
+      null,
+      "23 May 08:50"
+    ],
+    [
       5,
-      "upcoming",
-      null,
-      "13 Jun 11:45"
-    ],
-    [
-      6,
-      "WP15",
-      null,
-      "BER15",
-      null,
-      6,
-      "upcoming",
-      null,
-      "13 Jun 11:45"
-    ],
-    [
-      6,
-      "PLC1",
-      null,
-      "KP16",
-      null,
-      8,
-      "upcoming",
-      null,
-      "13 Jun 11:45"
-    ],
-    [
-      7,
-      "WP16",
-      null,
-      "WP15",
-      null,
-      5,
-      "upcoming",
-      null,
-      "20 Jun 11:45"
-    ],
-    [
-      7,
-      "KP16",
-      null,
-      "WAH07",
-      null,
-      6,
-      "upcoming",
-      null,
-      "20 Jun 11:45"
-    ],
-    [
-      7,
-      "BER15",
-      null,
-      "PLC1",
-      null,
-      8,
-      "upcoming",
-      null,
-      "20 Jun 11:45"
-    ],
-    [
-      8,
-      "WAH07",
-      null,
-      "PLC1",
-      null,
-      5,
-      "upcoming",
-      null,
-      "27 Jun 11:45"
-    ],
-    [
-      8,
-      "WP15",
-      null,
-      "KP16",
-      null,
-      6,
-      "upcoming",
-      null,
-      "27 Jun 11:45"
-    ],
-    [
-      8,
-      "WP16",
-      null,
-      "BER15",
-      null,
-      8,
-      "upcoming",
-      null,
-      "27 Jun 11:45"
-    ],
-    [
-      8,
-      "BER15",
-      null,
-      "KP16",
-      null,
-      8,
-      "upcoming",
-      null,
-      "27 Jun 12:15"
-    ],
-    [
-      8,
-      "WAH07",
-      null,
-      "WP15",
-      null,
-      6,
-      "upcoming",
-      null,
-      "27 Jun 12:15"
-    ],
-    [
-      8,
-      "PLC1",
-      null,
-      "WP16",
-      null,
-      5,
-      "upcoming",
-      null,
-      "27 Jun 12:15"
-    ],
-    [
-      9,
-      "PLC1",
-      null,
-      "WP15",
-      null,
-      5,
-      "upcoming",
-      null,
-      "18 Jul 11:45"
-    ],
-    [
-      9,
-      "BER15",
-      null,
-      "WAH07",
-      null,
-      6,
-      "upcoming",
-      null,
-      "18 Jul 11:45"
-    ],
-    [
-      9,
-      "KP16",
-      null,
-      "WP16",
-      null,
-      8,
-      "upcoming",
-      null,
-      "18 Jul 11:45"
-    ],
-    [
-      10,
-      "KP16",
-      null,
-      "BER15",
-      null,
-      5,
-      "upcoming",
-      null,
-      "25 Jul 11:45"
-    ],
-    [
-      10,
-      "WP16",
-      null,
-      "PLC1",
-      null,
-      6,
-      "upcoming",
-      null,
-      "25 Jul 11:45"
-    ],
-    [
-      10,
-      "WP15",
-      null,
-      "WAH07",
-      null,
-      8,
-      "upcoming",
-      null,
-      "25 Jul 11:45"
-    ],
-    [
-      11,
-      "WP16",
-      null,
-      "WAH07",
-      null,
-      5,
-      "upcoming",
-      null,
-      "1 Aug 11:45"
-    ],
-    [
-      11,
-      "BER15",
-      null,
-      "WP15",
-      null,
-      6,
-      "upcoming",
-      null,
-      "1 Aug 11:45"
-    ],
-    [
-      11,
-      "KP16",
-      null,
-      "PLC1",
-      null,
-      8,
-      "upcoming",
-      null,
-      "1 Aug 11:45"
-    ],
-    [
-      12,
-      "WP15",
-      null,
-      "WP16",
-      null,
-      5,
-      "upcoming",
-      null,
-      "8 Aug 11:45"
-    ],
-    [
-      12,
-      "WAH07",
-      null,
-      "KP16",
-      null,
-      6,
-      "upcoming",
-      null,
-      "8 Aug 11:45"
-    ],
-    [
-      12,
-      "PLC1",
-      null,
-      "BER15",
-      null,
-      8,
-      "upcoming",
-      null,
-      "8 Aug 11:45"
-    ],
-    [
+      "WP27",
       13,
-      "PLC1",
+      "KILL7",
+      15,
+      1,
+      "done",
       null,
-      "WAH07",
-      null,
+      "30 May 08:50"
+    ],
+    [
       5,
-      "upcoming",
+      "LNC23",
+      7,
+      "STI29",
+      11,
+      2,
+      "done",
       null,
-      "15 Aug 11:45"
+      "30 May 08:50"
     ],
     [
+      5,
+      "KP26",
+      11,
+      "BER26",
       13,
-      "KP16",
+      3,
+      "done",
       null,
-      "WP15",
+      "30 May 08:50"
+    ],
+    [
+      5,
+      "WP28",
+      15,
+      "NT8",
+      2,
+      4,
+      "done",
       null,
+      "30 May 08:50"
+    ],
+    [
       6,
-      "upcoming",
+      "KILL7",
       null,
-      "15 Aug 11:45"
-    ],
-    [
-      13,
-      "BER15",
-      null,
-      "WP16",
-      null,
-      8,
-      "upcoming",
-      null,
-      "15 Aug 11:45"
-    ],
-    [
-      14,
-      "WP15",
-      null,
-      "PLC1",
+      "WP28",
       null,
       1,
       "upcoming",
       null,
-      "22 Aug 11:45"
+      "13 Jun 08:50"
     ],
     [
-      14,
-      "WAH07",
+      6,
+      "KP27",
       null,
-      "BER15",
+      "KP26",
       null,
       2,
       "upcoming",
       null,
-      "22 Aug 11:45"
+      "13 Jun 08:50"
     ],
     [
-      14,
-      "WP16",
+      6,
+      "STI29",
       null,
-      "KP16",
+      "WP27",
       null,
       3,
       "upcoming",
       null,
-      "22 Aug 11:45"
+      "13 Jun 08:50"
+    ],
+    [
+      6,
+      "BER26",
+      null,
+      "LNC23",
+      null,
+      4,
+      "upcoming",
+      null,
+      "13 Jun 08:50"
+    ],
+    [
+      7,
+      "KP26",
+      null,
+      "LNC23",
+      null,
+      9,
+      "upcoming",
+      null,
+      "20 Jun 08:50"
+    ],
+    [
+      7,
+      "WP27",
+      null,
+      "BER26",
+      null,
+      10,
+      "upcoming",
+      null,
+      "20 Jun 08:50"
+    ],
+    [
+      7,
+      "WP28",
+      null,
+      "STI29",
+      null,
+      11,
+      "upcoming",
+      null,
+      "20 Jun 08:50"
+    ],
+    [
+      7,
+      "KP27",
+      null,
+      "KILL7",
+      null,
+      12,
+      "upcoming",
+      null,
+      "20 Jun 08:50"
+    ],
+    [
+      8,
+      "KP27",
+      null,
+      "STI29",
+      null,
+      1,
+      "upcoming",
+      null,
+      "27 Jun 08:50"
+    ],
+    [
+      8,
+      "KILL7",
+      null,
+      "KP26",
+      null,
+      2,
+      "upcoming",
+      null,
+      "27 Jun 08:50"
+    ],
+    [
+      8,
+      "WP28",
+      null,
+      "BER26",
+      null,
+      3,
+      "upcoming",
+      null,
+      "27 Jun 08:50"
+    ],
+    [
+      8,
+      "WP27",
+      null,
+      "LNC23",
+      null,
+      4,
+      "upcoming",
+      null,
+      "27 Jun 08:50"
+    ],
+    [
+      9,
+      "BER26",
+      null,
+      "KP27",
+      null,
+      1,
+      "upcoming",
+      null,
+      "18 Jul 08:50"
+    ],
+    [
+      9,
+      "LNC23",
+      null,
+      "WP28",
+      null,
+      2,
+      "upcoming",
+      null,
+      "18 Jul 08:50"
+    ],
+    [
+      9,
+      "KP26",
+      null,
+      "WP27",
+      null,
+      3,
+      "upcoming",
+      null,
+      "18 Jul 08:50"
+    ],
+    [
+      9,
+      "STI29",
+      null,
+      "KILL7",
+      null,
+      4,
+      "upcoming",
+      null,
+      "18 Jul 08:50"
+    ],
+    [
+      10,
+      "WP28",
+      null,
+      "WP27",
+      null,
+      1,
+      "upcoming",
+      null,
+      "25 Jul 08:50"
+    ],
+    [
+      10,
+      "KILL7",
+      null,
+      "BER26",
+      null,
+      2,
+      "upcoming",
+      null,
+      "25 Jul 08:50"
+    ],
+    [
+      10,
+      "KP27",
+      null,
+      "LNC23",
+      null,
+      3,
+      "upcoming",
+      null,
+      "25 Jul 08:50"
+    ],
+    [
+      10,
+      "STI29",
+      null,
+      "KP26",
+      null,
+      4,
+      "upcoming",
+      null,
+      "25 Jul 08:50"
+    ],
+    [
+      11,
+      "BER26",
+      null,
+      "STI29",
+      null,
+      5,
+      "upcoming",
+      null,
+      "1 Aug 08:50"
+    ],
+    [
+      11,
+      "WP27",
+      null,
+      "KP27",
+      null,
+      6,
+      "upcoming",
+      null,
+      "1 Aug 08:50"
+    ],
+    [
+      11,
+      "LNC23",
+      null,
+      "KILL7",
+      null,
+      4,
+      "upcoming",
+      null,
+      "1 Aug 08:50"
+    ],
+    [
+      11,
+      "KP26",
+      null,
+      "WP28",
+      null,
+      8,
+      "upcoming",
+      null,
+      "1 Aug 08:50"
+    ],
+    [
+      12,
+      "KILL7",
+      null,
+      "WP27",
+      null,
+      1,
+      "upcoming",
+      null,
+      "8 Aug 08:50"
+    ],
+    [
+      12,
+      "STI29",
+      null,
+      "LNC23",
+      null,
+      2,
+      "upcoming",
+      null,
+      "8 Aug 08:50"
+    ],
+    [
+      12,
+      "BER26",
+      null,
+      "KP26",
+      null,
+      3,
+      "upcoming",
+      null,
+      "8 Aug 08:50"
+    ],
+    [
+      12,
+      "KP27",
+      null,
+      "WP28",
+      null,
+      4,
+      "upcoming",
+      null,
+      "8 Aug 08:50"
+    ],
+    [
+      13,
+      "WP28",
+      null,
+      "KILL7",
+      null,
+      1,
+      "upcoming",
+      null,
+      "15 Aug 08:50"
+    ],
+    [
+      13,
+      "KP26",
+      null,
+      "KP27",
+      null,
+      2,
+      "upcoming",
+      null,
+      "15 Aug 08:50"
+    ],
+    [
+      13,
+      "WP27",
+      null,
+      "STI29",
+      null,
+      3,
+      "upcoming",
+      null,
+      "15 Aug 08:50"
+    ],
+    [
+      13,
+      "LNC23",
+      null,
+      "BER26",
+      null,
+      4,
+      "upcoming",
+      null,
+      "15 Aug 08:50"
+    ],
+    [
+      14,
+      "LNC23",
+      null,
+      "KP26",
+      null,
+      1,
+      "upcoming",
+      null,
+      "22 Aug 08:50"
+    ],
+    [
+      14,
+      "BER26",
+      null,
+      "WP27",
+      null,
+      2,
+      "upcoming",
+      null,
+      "22 Aug 08:50"
+    ],
+    [
+      14,
+      "STI29",
+      null,
+      "WP28",
+      null,
+      3,
+      "upcoming",
+      null,
+      "22 Aug 08:50"
+    ],
+    [
+      14,
+      "KILL7",
+      null,
+      "KP27",
+      null,
+      4,
+      "upcoming",
+      null,
+      "22 Aug 08:50"
     ]
   ]
 };
