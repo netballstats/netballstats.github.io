@@ -36,7 +36,7 @@
     {
       "title": "HART Senior State Titles 2026",
       "dir": "hart-2026",
-      "active": true,
+      "active": false,
       "date_format": "ddd HH:mm",
       "grades": [
         {"grade_id": "2820ea1b", "title": "15U Championship"},
