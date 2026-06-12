@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -198,7 +202,8 @@ const DATA = {
       "pct": "316.2",
       "W": 5,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "STI20",
@@ -208,17 +213,19 @@ const DATA = {
       "pct": "181.1",
       "W": 5,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "WP18",
       "name": "WP18",
       "rank": 3,
-      "pts": 7,
+      "pts": 8,
       "pct": "240.0",
-      "W": 3,
+      "W": 4,
       "L": 1,
-      "D": 1
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "STI19",
@@ -228,7 +235,8 @@ const DATA = {
       "pct": "72.4",
       "W": 3,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "LNC14",
@@ -238,7 +246,8 @@ const DATA = {
       "pct": "84.1",
       "W": 1,
       "L": 4,
-      "D": 0
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "BER17",
@@ -248,7 +257,8 @@ const DATA = {
       "pct": "69.4",
       "W": 1,
       "L": 4,
-      "D": 0
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "LNC15",
@@ -258,127 +268,102 @@ const DATA = {
       "pct": "46.6",
       "W": 1,
       "L": 4,
-      "D": 0
-    },
-    {
-      "code": "PLC2",
-      "name": "PLC2",
-      "rank": 8,
-      "pts": 1,
-      "pct": "24.3",
-      "W": 0,
-      "L": 4,
-      "D": 1
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "WAH08",
       "name": "WAH08",
-      "rank": 9,
+      "rank": 8,
       "pts": 0,
       "pct": "0.0",
       "W": 0,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": false
+    },
+    {
+      "code": "PLC2",
+      "name": "PLC2",
+      "rank": 9,
+      "pts": 0,
+      "pct": "24.3",
+      "W": 0,
+      "L": 5,
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "2/5",
-      "state": "done"
+      "state": "done",
+      "ds": "2 May 11:45"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "9/5",
-      "state": "done"
+      "state": "done",
+      "ds": "9 May 11:45"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "16/5",
-      "state": "done"
+      "state": "done",
+      "ds": "16 May 11:45"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "23/5",
-      "state": "done"
+      "state": "done",
+      "ds": "23 May 11:45"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "30/5",
-      "state": "done"
+      "state": "done",
+      "ds": "30 May 11:45"
     },
     {
       "n": 6,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "13/6",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "13 Jun 11:45"
     },
     {
       "n": 7,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "20/6",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "20 Jun 11:45"
     },
     {
       "n": 8,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "27/6",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "27 Jun 11:45"
     },
     {
       "n": 9,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "18/7",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "18 Jul 11:45"
     },
     {
       "n": 10,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "25/7",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "25 Jul 11:45"
     },
     {
       "n": 11,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "1/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "1 Aug 11:45"
     },
     {
       "n": 12,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "8/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "8 Aug 11:45"
     },
     {
       "n": 13,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "15/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "15 Aug 11:45"
     },
     {
       "n": 14,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "22/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "22 Aug 11:45"
     }
   ],
   "games": [
@@ -389,7 +374,9 @@ const DATA = {
       "STI20",
       16,
       22,
-      "done"
+      "done",
+      null,
+      "2 May 11:45"
     ],
     [
       1,
@@ -398,7 +385,9 @@ const DATA = {
       "STI19",
       4,
       23,
-      "done"
+      "done",
+      null,
+      "2 May 11:45"
     ],
     [
       1,
@@ -407,7 +396,9 @@ const DATA = {
       "LNC15",
       12,
       24,
-      "done"
+      "done",
+      null,
+      "2 May 11:45"
     ],
     [
       1,
@@ -416,7 +407,9 @@ const DATA = {
       "BER17",
       10,
       25,
-      "done"
+      "done",
+      null,
+      "2 May 11:45"
     ],
     [
       2,
@@ -425,7 +418,9 @@ const DATA = {
       "LNC14",
       16,
       22,
-      "done"
+      "done",
+      null,
+      "9 May 11:45"
     ],
     [
       2,
@@ -434,7 +429,9 @@ const DATA = {
       "WP18",
       7,
       23,
-      "done"
+      "done",
+      null,
+      "9 May 11:45"
     ],
     [
       2,
@@ -443,7 +440,9 @@ const DATA = {
       "HH8",
       23,
       24,
-      "done"
+      "done",
+      null,
+      "9 May 11:45"
     ],
     [
       2,
@@ -452,7 +451,9 @@ const DATA = {
       "PLC2",
       5,
       25,
-      "done"
+      "done",
+      null,
+      "9 May 11:45"
     ],
     [
       3,
@@ -461,7 +462,9 @@ const DATA = {
       "LNC15",
       11,
       22,
-      "done"
+      "done",
+      null,
+      "16 May 11:45"
     ],
     [
       3,
@@ -470,7 +473,9 @@ const DATA = {
       "STI19",
       14,
       23,
-      "done"
+      "done",
+      null,
+      "16 May 11:45"
     ],
     [
       3,
@@ -479,7 +484,9 @@ const DATA = {
       "STI20",
       11,
       24,
-      "done"
+      "done",
+      null,
+      "16 May 11:45"
     ],
     [
       3,
@@ -488,7 +495,9 @@ const DATA = {
       "PLC2",
       2,
       25,
-      "done"
+      "done",
+      null,
+      "16 May 11:45"
     ],
     [
       4,
@@ -497,7 +506,9 @@ const DATA = {
       "LNC14",
       11,
       22,
-      "done"
+      "done",
+      null,
+      "23 May 11:45"
     ],
     [
       4,
@@ -506,7 +517,9 @@ const DATA = {
       "BER17",
       13,
       23,
-      "done"
+      "done",
+      null,
+      "23 May 11:45"
     ],
     [
       4,
@@ -515,7 +528,9 @@ const DATA = {
       "WP18",
       32,
       24,
-      "done"
+      "done",
+      null,
+      "23 May 11:45"
     ],
     [
       4,
@@ -524,7 +539,9 @@ const DATA = {
       "HH8",
       25,
       25,
-      "done"
+      "done",
+      null,
+      "23 May 11:45"
     ],
     [
       5,
@@ -533,7 +550,9 @@ const DATA = {
       "STI19",
       15,
       22,
-      "done"
+      "done",
+      null,
+      "30 May 11:45"
     ],
     [
       5,
@@ -542,7 +561,9 @@ const DATA = {
       "PLC2",
       0,
       23,
-      "done"
+      "done",
+      "home",
+      "30 May 11:45"
     ],
     [
       5,
@@ -551,7 +572,9 @@ const DATA = {
       "LNC14",
       13,
       24,
-      "done"
+      "done",
+      null,
+      "30 May 11:45"
     ],
     [
       5,
@@ -560,331 +583,405 @@ const DATA = {
       "STI20",
       25,
       25,
-      "done"
+      "done",
+      null,
+      "30 May 11:45"
     ],
     [
       6,
       "STI19",
       null,
-      "STI20",
+      "LNC15",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "13 Jun 11:45"
     ],
     [
       6,
-      "WAH08",
+      "STI20",
       null,
       "HH8",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "13 Jun 11:45"
+    ],
+    [
+      6,
+      "WAH08",
+      null,
+      "BER17",
+      null,
+      24,
+      "upcoming",
+      null,
+      "13 Jun 11:45"
     ],
     [
       6,
       "LNC14",
       null,
-      "LNC15",
-      null,
-      24,
-      "upcoming"
-    ],
-    [
-      6,
       "WP18",
       null,
-      "BER17",
-      null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "13 Jun 11:45"
     ],
     [
       7,
       "HH8",
       null,
-      "BER17",
+      "WP18",
       null,
       1,
-      "upcoming"
+      "upcoming",
+      null,
+      "20 Jun 11:45"
+    ],
+    [
+      7,
+      "BER17",
+      null,
+      "LNC14",
+      null,
+      2,
+      "upcoming",
+      null,
+      "20 Jun 11:45"
     ],
     [
       7,
       "LNC15",
       null,
-      "WP18",
+      "WAH08",
       null,
-      2,
-      "upcoming"
+      3,
+      "upcoming",
+      null,
+      "20 Jun 11:45"
     ],
     [
       7,
       "STI20",
-      null,
-      "LNC14",
-      null,
-      3,
-      "upcoming"
-    ],
-    [
-      7,
-      "WAH08",
       null,
       "STI19",
       null,
       4,
-      "upcoming"
-    ],
-    [
-      8,
-      "WAH08",
+      "upcoming",
       null,
-      "LNC14",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      8,
-      "STI19",
-      null,
-      "HH8",
-      null,
-      23,
-      "upcoming"
+      "20 Jun 11:45"
     ],
     [
       8,
       "STI20",
       null,
-      "WP18",
+      "WAH08",
       null,
-      24,
-      "upcoming"
+      22,
+      "upcoming",
+      null,
+      "27 Jun 11:45"
+    ],
+    [
+      8,
+      "STI19",
+      null,
+      "HH8",
+      null,
+      23,
+      "upcoming",
+      null,
+      "27 Jun 11:45"
     ],
     [
       8,
       "LNC15",
       null,
-      "BER17",
-      null,
-      25,
-      "upcoming"
-    ],
-    [
-      9,
-      "WP18",
-      null,
-      "WAH08",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      9,
-      "BER17",
-      null,
-      "STI20",
-      null,
-      23,
-      "upcoming"
-    ],
-    [
-      9,
-      "HH8",
-      null,
-      "LNC15",
+      "LNC14",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "27 Jun 11:45"
+    ],
+    [
+      8,
+      "BER17",
+      null,
+      "WP18",
+      null,
+      25,
+      "upcoming",
+      null,
+      "27 Jun 11:45"
     ],
     [
       9,
       "LNC14",
       null,
+      "STI20",
+      null,
+      22,
+      "upcoming",
+      null,
+      "18 Jul 11:45"
+    ],
+    [
+      9,
+      "WP18",
+      null,
+      "LNC15",
+      null,
+      23,
+      "upcoming",
+      null,
+      "18 Jul 11:45"
+    ],
+    [
+      9,
+      "HH8",
+      null,
+      "BER17",
+      null,
+      24,
+      "upcoming",
+      null,
+      "18 Jul 11:45"
+    ],
+    [
+      9,
+      "WAH08",
+      null,
       "STI19",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "18 Jul 11:45"
+    ],
+    [
+      10,
+      "LNC15",
+      null,
+      "BER17",
+      null,
+      22,
+      "upcoming",
+      null,
+      "25 Jul 11:45"
+    ],
+    [
+      10,
+      "STI19",
+      null,
+      "LNC14",
+      null,
+      23,
+      "upcoming",
+      null,
+      "25 Jul 11:45"
     ],
     [
       10,
       "STI20",
       null,
-      "LNC15",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      10,
-      "STI19",
-      null,
       "WP18",
       null,
-      23,
-      "upcoming"
+      24,
+      "upcoming",
+      null,
+      "25 Jul 11:45"
     ],
     [
       10,
       "WAH08",
       null,
-      "BER17",
-      null,
-      24,
-      "upcoming"
-    ],
-    [
-      10,
-      "LNC14",
-      null,
       "HH8",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "25 Jul 11:45"
     ],
     [
       11,
-      "WP18",
-      null,
       "LNC14",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      11,
-      "LNC15",
       null,
       "WAH08",
       null,
-      23,
-      "upcoming"
+      22,
+      "upcoming",
+      null,
+      "1 Aug 11:45"
     ],
     [
       11,
       "BER17",
       null,
+      "STI20",
+      null,
+      23,
+      "upcoming",
+      null,
+      "1 Aug 11:45"
+    ],
+    [
+      11,
+      "WP18",
+      null,
       "STI19",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "1 Aug 11:45"
     ],
     [
       11,
       "HH8",
       null,
-      "STI20",
+      "LNC15",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "1 Aug 11:45"
     ],
     [
       12,
       "STI19",
       null,
-      "LNC15",
-      null,
-      22,
-      "upcoming"
-    ],
-    [
-      12,
-      "LNC14",
-      null,
       "BER17",
       null,
-      23,
-      "upcoming"
-    ],
-    [
-      12,
-      "WP18",
+      22,
+      "upcoming",
       null,
-      "HH8",
-      null,
-      24,
-      "upcoming"
+      "8 Aug 11:45"
     ],
     [
       12,
       "WAH08",
       null,
+      "WP18",
+      null,
+      23,
+      "upcoming",
+      null,
+      "8 Aug 11:45"
+    ],
+    [
+      12,
+      "LNC14",
+      null,
+      "HH8",
+      null,
+      24,
+      "upcoming",
+      null,
+      "8 Aug 11:45"
+    ],
+    [
+      12,
       "STI20",
       null,
+      "LNC15",
+      null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "8 Aug 11:45"
     ],
     [
       13,
-      "STI20",
+      "LNC15",
       null,
       "STI19",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "15 Aug 11:45"
     ],
     [
       13,
       "HH8",
       null,
-      "WAH08",
+      "STI20",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "15 Aug 11:45"
     ],
     [
       13,
-      "LNC15",
+      "BER17",
+      null,
+      "WAH08",
+      null,
+      24,
+      "upcoming",
+      null,
+      "15 Aug 11:45"
+    ],
+    [
+      13,
+      "WP18",
       null,
       "LNC14",
       null,
-      24,
-      "upcoming"
-    ],
-    [
-      13,
-      "BER17",
-      null,
-      "WP18",
-      null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "15 Aug 11:45"
     ],
     [
       14,
-      "BER17",
+      "WP18",
       null,
       "HH8",
       null,
       22,
-      "upcoming"
-    ],
-    [
-      14,
-      "WP18",
+      "upcoming",
       null,
-      "LNC15",
-      null,
-      23,
-      "upcoming"
+      "22 Aug 11:45"
     ],
     [
       14,
       "LNC14",
       null,
-      "STI20",
+      "BER17",
+      null,
+      23,
+      "upcoming",
+      null,
+      "22 Aug 11:45"
+    ],
+    [
+      14,
+      "WAH08",
+      null,
+      "LNC15",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "22 Aug 11:45"
     ],
     [
       14,
       "STI19",
       null,
-      "WAH08",
+      "STI20",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "22 Aug 11:45"
     ]
   ]
 };
@@ -894,10 +991,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -920,13 +1017,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -936,7 +1033,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -956,7 +1053,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -971,7 +1075,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

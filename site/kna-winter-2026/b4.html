@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -191,194 +195,175 @@ const DATA = {
   "menu_url": "../index.html",
   "teams": [
     {
-      "code": "STI05",
-      "name": "STI05",
+      "code": "WAH03",
+      "name": "WAH03",
       "rank": 1,
-      "pts": 10,
-      "pct": "236.0",
-      "W": 5,
-      "L": 0,
-      "D": 0
+      "pts": 8,
+      "pct": "173.0",
+      "W": 4,
+      "L": 1,
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "STI07",
       "name": "STI07",
       "rank": 2,
-      "pts": 7,
+      "pts": 8,
       "pct": "115.5",
-      "W": 3,
+      "W": 4,
       "L": 1,
-      "D": 1
-    },
-    {
-      "code": "WAH03",
-      "name": "WAH03",
-      "rank": 3,
-      "pts": 6,
-      "pct": "173.0",
-      "W": 3,
-      "L": 1,
-      "D": 0
-    },
-    {
-      "code": "KNA All Stars",
-      "name": "KNA All Stars",
-      "rank": 4,
-      "pts": 4,
-      "pct": "187.5",
-      "W": 1,
-      "L": 0,
-      "D": 2
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "STI08",
       "name": "STI08",
-      "rank": 5,
-      "pts": 4,
-      "pct": "90.4",
-      "W": 2,
-      "L": 3,
-      "D": 0
+      "rank": 3,
+      "pts": 6,
+      "pct": "101.0",
+      "W": 3,
+      "L": 2,
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "BER9",
       "name": "BER9",
-      "rank": 6,
+      "rank": 4,
       "pts": 4,
       "pct": "40.6",
       "W": 2,
       "L": 3,
-      "D": 0
-    },
-    {
-      "code": "STI06",
-      "name": "STI06",
-      "rank": 7,
-      "pts": 1,
-      "pct": "58.1",
-      "W": 0,
-      "L": 4,
-      "D": 1
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "WP07",
       "name": "WP07",
-      "rank": 8,
-      "pts": 0,
+      "rank": 5,
+      "pts": 2,
       "pct": "58.4",
-      "W": 0,
+      "W": 1,
       "L": 4,
-      "D": 0
+      "D": 0,
+      "regraded": false
+    },
+    {
+      "code": "STI06",
+      "name": "STI06",
+      "rank": 6,
+      "pts": 2,
+      "pct": "58.1",
+      "W": 1,
+      "L": 4,
+      "D": 0,
+      "regraded": false
+    },
+    {
+      "code": "KNA All Stars",
+      "name": "KNA All Stars",
+      "rank": 7,
+      "pts": 0,
+      "pct": "0.0",
+      "W": 0,
+      "L": 5,
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "LNC04",
       "name": "LNC04",
-      "rank": 9,
+      "rank": 8,
       "pts": 0,
       "pct": "0.0",
       "W": 0,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": false
+    },
+    {
+      "code": "STI05",
+      "name": "STI05",
+      "rank": 9,
+      "pts": 10,
+      "pct": "236.0",
+      "W": 5,
+      "L": 0,
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "2/5",
-      "state": "done"
+      "state": "done",
+      "ds": "2 May 14:05"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "9/5",
-      "state": "done"
+      "state": "done",
+      "ds": "9 May 14:05"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "16/5",
-      "state": "done"
+      "state": "done",
+      "ds": "16 May 14:05"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "23/5",
-      "state": "done"
+      "state": "done",
+      "ds": "23 May 14:05"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "30/5",
-      "state": "done"
+      "state": "done",
+      "ds": "30 May 14:05"
     },
     {
       "n": 6,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "13/6",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "13 Jun 14:05"
     },
     {
       "n": 7,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "20/6",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "20 Jun 14:05"
     },
     {
       "n": 8,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "27/6",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "27 Jun 14:05"
     },
     {
       "n": 9,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "18/7",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "18 Jul 14:05"
     },
     {
       "n": 10,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "25/7",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "25 Jul 14:05"
     },
     {
       "n": 11,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "1/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "1 Aug 14:05"
     },
     {
       "n": 12,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "8/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "8 Aug 14:05"
     },
     {
       "n": 13,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "15/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "15 Aug 14:05"
     },
     {
       "n": 14,
-      "day": "Sat",
-      "time": "14:05",
-      "sdate": "22/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "22 Aug 14:05"
     }
   ],
   "games": [
@@ -389,7 +374,9 @@ const DATA = {
       "KNA All Stars",
       0,
       25,
-      "done"
+      "done",
+      "home",
+      "2 May 14:05"
     ],
     [
       1,
@@ -398,7 +385,9 @@ const DATA = {
       "STI05",
       80,
       23,
-      "done"
+      "done",
+      null,
+      "2 May 14:05"
     ],
     [
       1,
@@ -407,7 +396,9 @@ const DATA = {
       "WP07",
       11,
       24,
-      "done"
+      "done",
+      null,
+      "2 May 14:05"
     ],
     [
       1,
@@ -416,7 +407,9 @@ const DATA = {
       "WAH03",
       42,
       22,
-      "done"
+      "done",
+      null,
+      "2 May 14:05"
     ],
     [
       2,
@@ -425,7 +418,9 @@ const DATA = {
       "STI07",
       0,
       25,
-      "done"
+      "done",
+      "away",
+      "9 May 14:05"
     ],
     [
       2,
@@ -434,7 +429,9 @@ const DATA = {
       "STI08",
       23,
       23,
-      "done"
+      "done",
+      null,
+      "9 May 14:05"
     ],
     [
       2,
@@ -443,7 +440,9 @@ const DATA = {
       "BER9",
       10,
       24,
-      "done"
+      "done",
+      null,
+      "9 May 14:05"
     ],
     [
       2,
@@ -452,7 +451,9 @@ const DATA = {
       "STI06",
       10,
       22,
-      "done"
+      "done",
+      null,
+      "9 May 14:05"
     ],
     [
       3,
@@ -461,7 +462,9 @@ const DATA = {
       "WP07",
       15,
       22,
-      "done"
+      "done",
+      null,
+      "16 May 14:05"
     ],
     [
       3,
@@ -470,7 +473,9 @@ const DATA = {
       "STI05",
       56,
       23,
-      "done"
+      "done",
+      null,
+      "16 May 14:05"
     ],
     [
       3,
@@ -479,7 +484,9 @@ const DATA = {
       "KNA All Stars",
       30,
       25,
-      "done"
+      "done",
+      "home",
+      "16 May 14:05"
     ],
     [
       3,
@@ -488,7 +495,9 @@ const DATA = {
       "STI06",
       25,
       24,
-      "done"
+      "done",
+      null,
+      "16 May 14:05"
     ],
     [
       4,
@@ -497,7 +506,9 @@ const DATA = {
       "STI07",
       28,
       22,
-      "done"
+      "done",
+      null,
+      "23 May 14:05"
     ],
     [
       4,
@@ -506,7 +517,9 @@ const DATA = {
       "WAH03",
       null,
       25,
-      "done"
+      "done",
+      "away",
+      "23 May 14:05"
     ],
     [
       4,
@@ -515,7 +528,9 @@ const DATA = {
       "STI08",
       32,
       24,
-      "done"
+      "done",
+      null,
+      "23 May 14:05"
     ],
     [
       4,
@@ -524,7 +539,9 @@ const DATA = {
       "BER9",
       35,
       23,
-      "done"
+      "done",
+      null,
+      "23 May 14:05"
     ],
     [
       5,
@@ -533,7 +550,9 @@ const DATA = {
       "STI05",
       51,
       22,
-      "done"
+      "done",
+      null,
+      "30 May 14:05"
     ],
     [
       5,
@@ -542,7 +561,9 @@ const DATA = {
       "STI06",
       16,
       23,
-      "done"
+      "done",
+      null,
+      "30 May 14:05"
     ],
     [
       5,
@@ -551,7 +572,9 @@ const DATA = {
       "STI07",
       45,
       24,
-      "done"
+      "done",
+      null,
+      "30 May 14:05"
     ],
     [
       5,
@@ -560,7 +583,9 @@ const DATA = {
       "KNA All Stars",
       null,
       25,
-      "done"
+      "done",
+      "home",
+      "30 May 14:05"
     ],
     [
       6,
@@ -569,7 +594,9 @@ const DATA = {
       "WP07",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "13 Jun 14:05"
     ],
     [
       6,
@@ -578,7 +605,9 @@ const DATA = {
       "BER9",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "13 Jun 14:05"
     ],
     [
       6,
@@ -587,7 +616,9 @@ const DATA = {
       "WAH03",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "13 Jun 14:05"
     ],
     [
       6,
@@ -596,7 +627,9 @@ const DATA = {
       "STI08",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "13 Jun 14:05"
     ],
     [
       7,
@@ -605,7 +638,9 @@ const DATA = {
       "STI08",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "20 Jun 14:05"
     ],
     [
       7,
@@ -614,7 +649,9 @@ const DATA = {
       "STI07",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "20 Jun 14:05"
     ],
     [
       7,
@@ -623,7 +660,9 @@ const DATA = {
       "STI06",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "20 Jun 14:05"
     ],
     [
       7,
@@ -632,7 +671,9 @@ const DATA = {
       "LNC04",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "20 Jun 14:05"
     ],
     [
       8,
@@ -641,7 +682,9 @@ const DATA = {
       "STI06",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "27 Jun 14:05"
     ],
     [
       8,
@@ -650,7 +693,9 @@ const DATA = {
       "BER9",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "27 Jun 14:05"
     ],
     [
       8,
@@ -659,7 +704,9 @@ const DATA = {
       "STI07",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "27 Jun 14:05"
     ],
     [
       8,
@@ -668,7 +715,9 @@ const DATA = {
       "STI08",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "27 Jun 14:05"
     ],
     [
       9,
@@ -677,7 +726,9 @@ const DATA = {
       "KNA All Stars",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "18 Jul 14:05"
     ],
     [
       9,
@@ -686,7 +737,9 @@ const DATA = {
       "WP07",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "18 Jul 14:05"
     ],
     [
       9,
@@ -695,7 +748,9 @@ const DATA = {
       "WAH03",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "18 Jul 14:05"
     ],
     [
       9,
@@ -704,7 +759,9 @@ const DATA = {
       "LNC04",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "18 Jul 14:05"
     ],
     [
       10,
@@ -713,7 +770,9 @@ const DATA = {
       "WAH03",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "25 Jul 14:05"
     ],
     [
       10,
@@ -722,7 +781,9 @@ const DATA = {
       "STI07",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "25 Jul 14:05"
     ],
     [
       10,
@@ -731,7 +792,9 @@ const DATA = {
       "STI08",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "25 Jul 14:05"
     ],
     [
       10,
@@ -740,7 +803,9 @@ const DATA = {
       "BER9",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "25 Jul 14:05"
     ],
     [
       11,
@@ -749,7 +814,9 @@ const DATA = {
       "STI06",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "1 Aug 14:05"
     ],
     [
       11,
@@ -758,7 +825,9 @@ const DATA = {
       "KNA All Stars",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "1 Aug 14:05"
     ],
     [
       11,
@@ -767,7 +836,9 @@ const DATA = {
       "LNC04",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "1 Aug 14:05"
     ],
     [
       11,
@@ -776,7 +847,9 @@ const DATA = {
       "WP07",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "1 Aug 14:05"
     ],
     [
       12,
@@ -785,7 +858,9 @@ const DATA = {
       "WAH03",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "8 Aug 14:05"
     ],
     [
       12,
@@ -794,7 +869,9 @@ const DATA = {
       "STI08",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "8 Aug 14:05"
     ],
     [
       12,
@@ -803,7 +880,9 @@ const DATA = {
       "BER9",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "8 Aug 14:05"
     ],
     [
       12,
@@ -812,7 +891,9 @@ const DATA = {
       "WP07",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "8 Aug 14:05"
     ],
     [
       13,
@@ -821,7 +902,9 @@ const DATA = {
       "LNC04",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "15 Aug 14:05"
     ],
     [
       13,
@@ -830,7 +913,9 @@ const DATA = {
       "KNA All Stars",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "15 Aug 14:05"
     ],
     [
       13,
@@ -839,7 +924,9 @@ const DATA = {
       "STI06",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "15 Aug 14:05"
     ],
     [
       13,
@@ -848,7 +935,9 @@ const DATA = {
       "STI07",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "15 Aug 14:05"
     ],
     [
       14,
@@ -857,7 +946,9 @@ const DATA = {
       "BER9",
       null,
       22,
-      "upcoming"
+      "upcoming",
+      null,
+      "22 Aug 14:05"
     ],
     [
       14,
@@ -866,7 +957,9 @@ const DATA = {
       "WAH03",
       null,
       23,
-      "upcoming"
+      "upcoming",
+      null,
+      "22 Aug 14:05"
     ],
     [
       14,
@@ -875,7 +968,9 @@ const DATA = {
       "WP07",
       null,
       24,
-      "upcoming"
+      "upcoming",
+      null,
+      "22 Aug 14:05"
     ],
     [
       14,
@@ -884,7 +979,9 @@ const DATA = {
       "KNA All Stars",
       null,
       25,
-      "upcoming"
+      "upcoming",
+      null,
+      "22 Aug 14:05"
     ]
   ]
 };
@@ -894,10 +991,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -920,13 +1017,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -936,7 +1033,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -956,7 +1053,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -971,7 +1075,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

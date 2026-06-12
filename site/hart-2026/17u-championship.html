@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -198,7 +202,8 @@ const DATA = {
       "pct": "178.5",
       "W": 20,
       "L": 1,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Sutherland Shire 17U",
@@ -208,7 +213,8 @@ const DATA = {
       "pct": "147.4",
       "W": 17,
       "L": 3,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Wyong District 17U",
@@ -218,7 +224,8 @@ const DATA = {
       "pct": "130.5",
       "W": 17,
       "L": 3,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Baulkham Hills Shire 17U",
@@ -228,7 +235,8 @@ const DATA = {
       "pct": "125.6",
       "W": 15,
       "L": 4,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Randwick 17U",
@@ -238,7 +246,8 @@ const DATA = {
       "pct": "118.5",
       "W": 15,
       "L": 5,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Maitland 17U",
@@ -248,7 +257,8 @@ const DATA = {
       "pct": "112.7",
       "W": 14,
       "L": 6,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Charlestown 17U",
@@ -258,7 +268,8 @@ const DATA = {
       "pct": "110.6",
       "W": 12,
       "L": 7,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Barellan & District 17U",
@@ -268,7 +279,8 @@ const DATA = {
       "pct": "114.1",
       "W": 11,
       "L": 7,
-      "D": 3
+      "D": 3,
+      "regraded": true
     },
     {
       "code": "Northern Suburbs 17U",
@@ -278,7 +290,8 @@ const DATA = {
       "pct": "102.8",
       "W": 12,
       "L": 8,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Bankstown City 17U",
@@ -288,7 +301,8 @@ const DATA = {
       "pct": "104.6",
       "W": 11,
       "L": 10,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Penrith District 17U",
@@ -298,7 +312,8 @@ const DATA = {
       "pct": "91.4",
       "W": 10,
       "L": 10,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Eastwood Ryde 17U",
@@ -308,7 +323,8 @@ const DATA = {
       "pct": "108.7",
       "W": 9,
       "L": 10,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Manly Warringah 17U",
@@ -318,7 +334,8 @@ const DATA = {
       "pct": "101.1",
       "W": 10,
       "L": 11,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Ku-ring-gai 17U",
@@ -328,7 +345,8 @@ const DATA = {
       "pct": "85.6",
       "W": 7,
       "L": 13,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Orange 17U",
@@ -338,7 +356,8 @@ const DATA = {
       "pct": "88.1",
       "W": 7,
       "L": 14,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Blacktown City 17U",
@@ -348,7 +367,8 @@ const DATA = {
       "pct": "86.4",
       "W": 7,
       "L": 14,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Wagga Wagga 17U",
@@ -358,7 +378,8 @@ const DATA = {
       "pct": "91.2",
       "W": 6,
       "L": 14,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Camden & District 17U",
@@ -368,7 +389,8 @@ const DATA = {
       "pct": "82.7",
       "W": 6,
       "L": 14,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Hills District 17U",
@@ -378,7 +400,8 @@ const DATA = {
       "pct": "74.3",
       "W": 5,
       "L": 15,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Liverpool City 17U",
@@ -388,7 +411,8 @@ const DATA = {
       "pct": "61.4",
       "W": 4,
       "L": 17,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Illawarra District 17U",
@@ -398,7 +422,8 @@ const DATA = {
       "pct": "76.7",
       "W": 3,
       "L": 17,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Newcastle 17U",
@@ -408,156 +433,115 @@ const DATA = {
       "pct": "64.4",
       "W": 3,
       "L": 18,
-      "D": 0
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "09:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 09:30"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "10:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 10:30"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "11:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 11:30"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "12:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 12:30"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "13:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 13:30"
     },
     {
       "n": 6,
-      "day": "Sat",
-      "time": "14:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 14:30"
     },
     {
       "n": 7,
-      "day": "Sat",
-      "time": "15:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 15:30"
     },
     {
       "n": 8,
-      "day": "Sun",
-      "time": "08:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 08:30"
     },
     {
       "n": 9,
-      "day": "Sun",
-      "time": "09:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 09:30"
     },
     {
       "n": 10,
-      "day": "Sun",
-      "time": "10:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 10:30"
     },
     {
       "n": 11,
-      "day": "Sun",
-      "time": "11:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 11:30"
     },
     {
       "n": 12,
-      "day": "Sun",
-      "time": "12:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 12:30"
     },
     {
       "n": 13,
-      "day": "Sun",
-      "time": "13:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 13:30"
     },
     {
       "n": 14,
-      "day": "Sun",
-      "time": "14:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 14:30"
     },
     {
       "n": 15,
-      "day": "Mon",
-      "time": "08:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 08:30"
     },
     {
       "n": 16,
-      "day": "Mon",
-      "time": "09:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 09:30"
     },
     {
       "n": 17,
-      "day": "Mon",
-      "time": "10:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 10:30"
     },
     {
       "n": 18,
-      "day": "Mon",
-      "time": "11:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 11:30"
     },
     {
       "n": 19,
-      "day": "Mon",
-      "time": "12:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 12:30"
     },
     {
       "n": 20,
-      "day": "Mon",
-      "time": "13:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 13:30"
     },
     {
       "n": 21,
-      "day": "Mon",
-      "time": "14:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 14:30"
     }
   ],
   "games": [
@@ -568,7 +552,9 @@ const DATA = {
       "Penrith District 17U",
       13,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -577,7 +563,9 @@ const DATA = {
       "Lakeside 17U",
       25,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -586,7 +574,9 @@ const DATA = {
       "Charlestown 17U",
       26,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -595,7 +585,9 @@ const DATA = {
       "Blacktown City 17U",
       24,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -604,7 +596,9 @@ const DATA = {
       "Randwick 17U",
       24,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -613,7 +607,9 @@ const DATA = {
       "Sutherland Shire 17U",
       23,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -622,7 +618,9 @@ const DATA = {
       "Wyong District 17U",
       18,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -631,7 +629,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       18,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -640,7 +640,9 @@ const DATA = {
       "Northern Suburbs 17U",
       15,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -649,7 +651,9 @@ const DATA = {
       "Manly Warringah 17U",
       14,
       40,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -658,7 +662,9 @@ const DATA = {
       "Illawarra District 17U",
       27,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       2,
@@ -667,7 +673,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       11,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -676,7 +684,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       15,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -685,7 +695,9 @@ const DATA = {
       "Barellan & District 17U",
       23,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -694,7 +706,9 @@ const DATA = {
       "Wagga Wagga 17U",
       18,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -703,7 +717,9 @@ const DATA = {
       "Camden & District 17U",
       10,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -712,7 +728,9 @@ const DATA = {
       "Maitland 17U",
       12,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -721,7 +739,9 @@ const DATA = {
       "Bankstown City 17U",
       18,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -730,7 +750,9 @@ const DATA = {
       "Hills District 17U",
       15,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -739,7 +761,9 @@ const DATA = {
       "Newcastle 17U",
       16,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -748,7 +772,9 @@ const DATA = {
       "Liverpool City 17U",
       17,
       40,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -757,7 +783,9 @@ const DATA = {
       "Orange 17U",
       16,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       3,
@@ -766,7 +794,9 @@ const DATA = {
       "Charlestown 17U",
       19,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -775,7 +805,9 @@ const DATA = {
       "Lakeside 17U",
       36,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -784,7 +816,9 @@ const DATA = {
       "Penrith District 17U",
       16,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -793,7 +827,9 @@ const DATA = {
       "Orange 17U",
       18,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -802,7 +838,9 @@ const DATA = {
       "Blacktown City 17U",
       16,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -811,7 +849,9 @@ const DATA = {
       "Randwick 17U",
       20,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -820,7 +860,9 @@ const DATA = {
       "Sutherland Shire 17U",
       24,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -829,7 +871,9 @@ const DATA = {
       "Wyong District 17U",
       23,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -838,7 +882,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       11,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -847,7 +893,9 @@ const DATA = {
       "Northern Suburbs 17U",
       26,
       40,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -856,7 +904,9 @@ const DATA = {
       "Manly Warringah 17U",
       22,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       4,
@@ -865,7 +915,9 @@ const DATA = {
       "Wagga Wagga 17U",
       8,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -874,7 +926,9 @@ const DATA = {
       "Illawarra District 17U",
       19,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -883,7 +937,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       17,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -892,7 +948,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       16,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -901,7 +959,9 @@ const DATA = {
       "Barellan & District 17U",
       15,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -910,7 +970,9 @@ const DATA = {
       "Camden & District 17U",
       17,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -919,7 +981,9 @@ const DATA = {
       "Maitland 17U",
       21,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -928,7 +992,9 @@ const DATA = {
       "Bankstown City 17U",
       19,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -937,7 +1003,9 @@ const DATA = {
       "Hills District 17U",
       14,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -946,7 +1014,9 @@ const DATA = {
       "Newcastle 17U",
       11,
       40,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -955,7 +1025,9 @@ const DATA = {
       "Liverpool City 17U",
       12,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       5,
@@ -964,7 +1036,9 @@ const DATA = {
       "Blacktown City 17U",
       18,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -973,7 +1047,9 @@ const DATA = {
       "Orange 17U",
       16,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -982,7 +1058,9 @@ const DATA = {
       "Lakeside 17U",
       24,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -991,7 +1069,9 @@ const DATA = {
       "Penrith District 17U",
       17,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -1000,7 +1080,9 @@ const DATA = {
       "Charlestown 17U",
       16,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -1009,7 +1091,9 @@ const DATA = {
       "Liverpool City 17U",
       9,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -1018,7 +1102,9 @@ const DATA = {
       "Randwick 17U",
       23,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -1027,7 +1113,9 @@ const DATA = {
       "Sutherland Shire 17U",
       16,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -1036,7 +1124,9 @@ const DATA = {
       "Wyong District 17U",
       27,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -1045,7 +1135,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       24,
       40,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       5,
@@ -1054,7 +1146,9 @@ const DATA = {
       "Northern Suburbs 17U",
       20,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 13:30"
     ],
     [
       6,
@@ -1063,7 +1157,9 @@ const DATA = {
       "Camden & District 17U",
       14,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1072,7 +1168,9 @@ const DATA = {
       "Manly Warringah 17U",
       15,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1081,7 +1179,9 @@ const DATA = {
       "Illawarra District 17U",
       16,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1090,7 +1190,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       8,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1099,7 +1201,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       17,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1108,7 +1212,9 @@ const DATA = {
       "Wagga Wagga 17U",
       16,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1117,7 +1223,9 @@ const DATA = {
       "Barellan & District 17U",
       12,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1126,7 +1234,9 @@ const DATA = {
       "Maitland 17U",
       14,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1135,7 +1245,9 @@ const DATA = {
       "Bankstown City 17U",
       16,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1144,7 +1256,9 @@ const DATA = {
       "Hills District 17U",
       14,
       40,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       6,
@@ -1153,7 +1267,9 @@ const DATA = {
       "Newcastle 17U",
       15,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 14:30"
     ],
     [
       7,
@@ -1162,7 +1278,9 @@ const DATA = {
       "Randwick 17U",
       18,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1171,7 +1289,9 @@ const DATA = {
       "Liverpool City 17U",
       13,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1180,7 +1300,9 @@ const DATA = {
       "Orange 17U",
       14,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1189,7 +1311,9 @@ const DATA = {
       "Lakeside 17U",
       28,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1198,7 +1322,9 @@ const DATA = {
       "Penrith District 17U",
       12,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1207,7 +1333,9 @@ const DATA = {
       "Charlestown 17U",
       25,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1216,7 +1344,9 @@ const DATA = {
       "Blacktown City 17U",
       19,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1225,7 +1355,9 @@ const DATA = {
       "Newcastle 17U",
       16,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1234,7 +1366,9 @@ const DATA = {
       "Sutherland Shire 17U",
       25,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1243,7 +1377,9 @@ const DATA = {
       "Wyong District 17U",
       20,
       39,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       7,
@@ -1252,7 +1388,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       18,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 15:30"
     ],
     [
       8,
@@ -1261,7 +1399,9 @@ const DATA = {
       "Maitland 17U",
       17,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1270,7 +1410,9 @@ const DATA = {
       "Northern Suburbs 17U",
       15,
       4,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1279,7 +1421,9 @@ const DATA = {
       "Manly Warringah 17U",
       11,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1288,7 +1432,9 @@ const DATA = {
       "Illawarra District 17U",
       16,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1297,7 +1443,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       18,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1306,7 +1454,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       20,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1315,7 +1465,9 @@ const DATA = {
       "Wagga Wagga 17U",
       13,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1324,7 +1476,9 @@ const DATA = {
       "Camden & District 17U",
       14,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1333,7 +1487,9 @@ const DATA = {
       "Barellan & District 17U",
       16,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1342,7 +1498,9 @@ const DATA = {
       "Bankstown City 17U",
       15,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -1351,7 +1509,9 @@ const DATA = {
       "Hills District 17U",
       17,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       9,
@@ -1360,7 +1520,9 @@ const DATA = {
       "Sutherland Shire 17U",
       15,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1369,7 +1531,9 @@ const DATA = {
       "Newcastle 17U",
       8,
       4,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1378,7 +1542,9 @@ const DATA = {
       "Liverpool City 17U",
       9,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1387,7 +1553,9 @@ const DATA = {
       "Orange 17U",
       21,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1396,7 +1564,9 @@ const DATA = {
       "Lakeside 17U",
       23,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1405,7 +1575,9 @@ const DATA = {
       "Penrith District 17U",
       16,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1414,7 +1586,9 @@ const DATA = {
       "Charlestown 17U",
       20,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1423,7 +1597,9 @@ const DATA = {
       "Blacktown City 17U",
       22,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1432,7 +1608,9 @@ const DATA = {
       "Randwick 17U",
       18,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1441,7 +1619,9 @@ const DATA = {
       "Hills District 17U",
       14,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1450,7 +1630,9 @@ const DATA = {
       "Wyong District 17U",
       12,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       10,
@@ -1459,7 +1641,9 @@ const DATA = {
       "Bankstown City 17U",
       13,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1468,7 +1652,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       11,
       4,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1477,7 +1663,9 @@ const DATA = {
       "Northern Suburbs 17U",
       14,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1486,7 +1674,9 @@ const DATA = {
       "Manly Warringah 17U",
       21,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1495,7 +1685,9 @@ const DATA = {
       "Illawarra District 17U",
       16,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1504,7 +1696,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       19,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1513,7 +1707,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       15,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1522,7 +1718,9 @@ const DATA = {
       "Wagga Wagga 17U",
       19,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1531,7 +1729,9 @@ const DATA = {
       "Camden & District 17U",
       17,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1540,7 +1740,9 @@ const DATA = {
       "Maitland 17U",
       22,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1549,7 +1751,9 @@ const DATA = {
       "Barellan & District 17U",
       19,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       11,
@@ -1558,7 +1762,9 @@ const DATA = {
       "Sutherland Shire 17U",
       17,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1567,7 +1773,9 @@ const DATA = {
       "Hills District 17U",
       12,
       4,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1576,7 +1784,9 @@ const DATA = {
       "Newcastle 17U",
       9,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1585,7 +1795,9 @@ const DATA = {
       "Liverpool City 17U",
       11,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1594,7 +1806,9 @@ const DATA = {
       "Orange 17U",
       15,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1603,7 +1817,9 @@ const DATA = {
       "Lakeside 17U",
       29,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1612,7 +1828,9 @@ const DATA = {
       "Penrith District 17U",
       21,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1621,7 +1839,9 @@ const DATA = {
       "Charlestown 17U",
       20,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1630,7 +1850,9 @@ const DATA = {
       "Blacktown City 17U",
       18,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1639,7 +1861,9 @@ const DATA = {
       "Randwick 17U",
       19,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1648,7 +1872,9 @@ const DATA = {
       "Bankstown City 17U",
       19,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       12,
@@ -1657,7 +1883,9 @@ const DATA = {
       "Camden & District 17U",
       13,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1666,7 +1894,9 @@ const DATA = {
       "Wyong District 17U",
       18,
       4,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1675,7 +1905,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       16,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1684,7 +1916,9 @@ const DATA = {
       "Northern Suburbs 17U",
       13,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1693,7 +1927,9 @@ const DATA = {
       "Manly Warringah 17U",
       22,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1702,7 +1938,9 @@ const DATA = {
       "Illawarra District 17U",
       9,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1711,7 +1949,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       27,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1720,7 +1960,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       14,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1729,7 +1971,9 @@ const DATA = {
       "Wagga Wagga 17U",
       14,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1738,7 +1982,9 @@ const DATA = {
       "Barellan & District 17U",
       18,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1747,7 +1993,9 @@ const DATA = {
       "Maitland 17U",
       17,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       13,
@@ -1756,7 +2004,9 @@ const DATA = {
       "Charlestown 17U",
       14,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1765,7 +2015,9 @@ const DATA = {
       "Bankstown City 17U",
       25,
       4,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1774,7 +2026,9 @@ const DATA = {
       "Hills District 17U",
       11,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1783,7 +2037,9 @@ const DATA = {
       "Newcastle 17U",
       15,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1792,7 +2048,9 @@ const DATA = {
       "Liverpool City 17U",
       11,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1801,7 +2059,9 @@ const DATA = {
       "Orange 17U",
       18,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1810,7 +2070,9 @@ const DATA = {
       "Lakeside 17U",
       24,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1819,7 +2081,9 @@ const DATA = {
       "Penrith District 17U",
       17,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1828,7 +2092,9 @@ const DATA = {
       "Maitland 17U",
       20,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1837,7 +2103,9 @@ const DATA = {
       "Blacktown City 17U",
       18,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1846,7 +2114,9 @@ const DATA = {
       "Randwick 17U",
       17,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       14,
@@ -1855,7 +2125,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       21,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1864,7 +2136,9 @@ const DATA = {
       "Sutherland Shire 17U",
       20,
       4,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1873,7 +2147,9 @@ const DATA = {
       "Wyong District 17U",
       22,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1882,7 +2158,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       18,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1891,7 +2169,9 @@ const DATA = {
       "Northern Suburbs 17U",
       17,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1900,7 +2180,9 @@ const DATA = {
       "Manly Warringah 17U",
       18,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1909,7 +2191,9 @@ const DATA = {
       "Illawarra District 17U",
       19,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1918,7 +2202,9 @@ const DATA = {
       "Barellan & District 17U",
       18,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1927,7 +2213,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       19,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1936,7 +2224,9 @@ const DATA = {
       "Wagga Wagga 17U",
       16,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       14,
@@ -1945,7 +2235,9 @@ const DATA = {
       "Camden & District 17U",
       12,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 14:30"
     ],
     [
       15,
@@ -1954,7 +2246,9 @@ const DATA = {
       "Orange 17U",
       14,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -1963,7 +2257,9 @@ const DATA = {
       "Maitland 17U",
       22,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -1972,7 +2268,9 @@ const DATA = {
       "Bankstown City 17U",
       11,
       9,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -1981,7 +2279,9 @@ const DATA = {
       "Hills District 17U",
       15,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -1990,7 +2290,9 @@ const DATA = {
       "Newcastle 17U",
       20,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -1999,7 +2301,9 @@ const DATA = {
       "Liverpool City 17U",
       11,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -2008,7 +2312,9 @@ const DATA = {
       "Camden & District 17U",
       13,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -2017,7 +2323,9 @@ const DATA = {
       "Lakeside 17U",
       18,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -2026,7 +2334,9 @@ const DATA = {
       "Penrith District 17U",
       9,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -2035,7 +2345,9 @@ const DATA = {
       "Charlestown 17U",
       13,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       15,
@@ -2044,7 +2356,9 @@ const DATA = {
       "Blacktown City 17U",
       13,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       16,
@@ -2053,7 +2367,9 @@ const DATA = {
       "Northern Suburbs 17U",
       17,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2062,7 +2378,9 @@ const DATA = {
       "Randwick 17U",
       15,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2071,7 +2389,9 @@ const DATA = {
       "Sutherland Shire 17U",
       22,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2080,7 +2400,9 @@ const DATA = {
       "Wyong District 17U",
       15,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2089,7 +2411,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       21,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2098,7 +2422,9 @@ const DATA = {
       "Barellan & District 17U",
       25,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2107,7 +2433,9 @@ const DATA = {
       "Manly Warringah 17U",
       15,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2116,7 +2444,9 @@ const DATA = {
       "Illawarra District 17U",
       25,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2125,7 +2455,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       11,
       9,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2134,7 +2466,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       19,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       16,
@@ -2143,7 +2477,9 @@ const DATA = {
       "Wagga Wagga 17U",
       15,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       17,
@@ -2152,7 +2488,9 @@ const DATA = {
       "Hills District 17U",
       8,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2161,7 +2499,9 @@ const DATA = {
       "Camden & District 17U",
       16,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2170,7 +2510,9 @@ const DATA = {
       "Maitland 17U",
       17,
       9,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2179,7 +2521,9 @@ const DATA = {
       "Bankstown City 17U",
       24,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2188,7 +2532,9 @@ const DATA = {
       "Wagga Wagga 17U",
       15,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2197,7 +2543,9 @@ const DATA = {
       "Newcastle 17U",
       12,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2206,7 +2554,9 @@ const DATA = {
       "Liverpool City 17U",
       8,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2215,7 +2565,9 @@ const DATA = {
       "Orange 17U",
       12,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2224,7 +2576,9 @@ const DATA = {
       "Lakeside 17U",
       23,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2233,7 +2587,9 @@ const DATA = {
       "Penrith District 17U",
       18,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       17,
@@ -2242,7 +2598,9 @@ const DATA = {
       "Charlestown 17U",
       28,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       18,
@@ -2251,7 +2609,9 @@ const DATA = {
       "Sutherland Shire 17U",
       27,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2260,7 +2620,9 @@ const DATA = {
       "Blacktown City 17U",
       15,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2269,7 +2631,9 @@ const DATA = {
       "Randwick 17U",
       15,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2278,7 +2642,9 @@ const DATA = {
       "Barellan & District 17U",
       18,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2287,7 +2653,9 @@ const DATA = {
       "Wyong District 17U",
       22,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2296,7 +2664,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       24,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2305,7 +2675,9 @@ const DATA = {
       "Northern Suburbs 17U",
       18,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2314,7 +2686,9 @@ const DATA = {
       "Manly Warringah 17U",
       12,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2323,7 +2697,9 @@ const DATA = {
       "Illawarra District 17U",
       13,
       9,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2332,7 +2708,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       22,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       18,
@@ -2341,7 +2719,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       17,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       19,
@@ -2350,7 +2730,9 @@ const DATA = {
       "Camden & District 17U",
       16,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2359,7 +2741,9 @@ const DATA = {
       "Wagga Wagga 17U",
       15,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2368,7 +2752,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       20,
       9,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2377,7 +2763,9 @@ const DATA = {
       "Maitland 17U",
       22,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2386,7 +2774,9 @@ const DATA = {
       "Bankstown City 17U",
       15,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2395,7 +2785,9 @@ const DATA = {
       "Hills District 17U",
       12,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2404,7 +2796,9 @@ const DATA = {
       "Newcastle 17U",
       14,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2413,7 +2807,9 @@ const DATA = {
       "Liverpool City 17U",
       15,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2422,7 +2818,9 @@ const DATA = {
       "Orange 17U",
       18,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2431,7 +2829,9 @@ const DATA = {
       "Lakeside 17U",
       28,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       19,
@@ -2440,7 +2840,9 @@ const DATA = {
       "Penrith District 17U",
       16,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       20,
@@ -2449,7 +2851,9 @@ const DATA = {
       "Charlestown 17U",
       17,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2458,7 +2862,9 @@ const DATA = {
       "Barellan & District 17U",
       17,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2467,7 +2873,9 @@ const DATA = {
       "Blacktown City 17U",
       13,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2476,7 +2884,9 @@ const DATA = {
       "Randwick 17U",
       20,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2485,7 +2895,9 @@ const DATA = {
       "Sutherland Shire 17U",
       28,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2494,7 +2906,9 @@ const DATA = {
       "Wyong District 17U",
       20,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2503,7 +2917,9 @@ const DATA = {
       "Baulkham Hills Shire 17U",
       19,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2512,7 +2928,9 @@ const DATA = {
       "Northern Suburbs 17U",
       15,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2521,7 +2939,9 @@ const DATA = {
       "Manly Warringah 17U",
       14,
       9,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2530,7 +2950,9 @@ const DATA = {
       "Illawarra District 17U",
       21,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       20,
@@ -2539,7 +2961,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       14,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       21,
@@ -2548,7 +2972,9 @@ const DATA = {
       "Ku-ring-gai 17U",
       18,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2557,7 +2983,9 @@ const DATA = {
       "Eastwood Ryde 17U",
       21,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2566,7 +2994,9 @@ const DATA = {
       "Wagga Wagga 17U",
       19,
       9,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2575,7 +3005,9 @@ const DATA = {
       "Camden & District 17U",
       17,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2584,7 +3016,9 @@ const DATA = {
       "Maitland 17U",
       19,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2593,7 +3027,9 @@ const DATA = {
       "Bankstown City 17U",
       14,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2602,7 +3038,9 @@ const DATA = {
       "Hills District 17U",
       12,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2611,7 +3049,9 @@ const DATA = {
       "Newcastle 17U",
       7,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2620,7 +3060,9 @@ const DATA = {
       "Liverpool City 17U",
       16,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2629,7 +3071,9 @@ const DATA = {
       "Orange 17U",
       13,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ],
     [
       21,
@@ -2638,7 +3082,9 @@ const DATA = {
       "Lakeside 17U",
       27,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 14:30"
     ]
   ]
 };
@@ -2648,10 +3094,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -2674,13 +3120,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -2690,7 +3136,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -2710,7 +3156,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -2725,7 +3178,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

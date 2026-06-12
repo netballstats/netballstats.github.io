@@ -171,6 +171,7 @@ class Fixture:
     home_score: Optional[int] = None
     away_score: Optional[int] = None
     status: str = ""
+    forfeit_winner: str = ""  # "home", "away", or "" if not a forfeit
 
 
 @dataclass
@@ -568,6 +569,13 @@ def rounds_to_fixtures(rounds_data: list[dict]) -> list[Fixture]:
             home_score = get_score(result.get("home"))
             away_score = get_score(result.get("away"))
 
+            outcome_val = (result.get("outcome") or {}).get("value", "")
+            winner_val = (result.get("winner") or {}).get("value", "")
+            if "FORFEIT" in outcome_val:
+                forfeit_winner = "home" if winner_val == "HOME" else "away"
+            else:
+                forfeit_winner = ""
+
             venue_name = venue_info.get("name", "")
             suburb = venue_info.get("suburb", "")
             venue_str = f"{venue_name}, {suburb}" if suburb else venue_name
@@ -583,6 +591,7 @@ def rounds_to_fixtures(rounds_data: list[dict]) -> list[Fixture]:
                 home_score=home_score,
                 away_score=away_score,
                 status=status,
+                forfeit_winner=forfeit_winner,
             ))
 
     return fixtures

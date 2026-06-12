@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -199,7 +203,8 @@ const DATA = {
       "pct": "185.6",
       "W": 14,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Gosford 17U",
@@ -209,7 +214,8 @@ const DATA = {
       "pct": "171.7",
       "W": 14,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Hastings Valley 17U",
@@ -219,7 +225,8 @@ const DATA = {
       "pct": "146.2",
       "W": 13,
       "L": 2,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Callaghan District 17U",
@@ -229,7 +236,8 @@ const DATA = {
       "pct": "150.4",
       "W": 12,
       "L": 4,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Bellingen 17U",
@@ -239,7 +247,8 @@ const DATA = {
       "pct": "139.8",
       "W": 12,
       "L": 4,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Bathurst 17U",
@@ -249,7 +258,8 @@ const DATA = {
       "pct": "113.8",
       "W": 8,
       "L": 5,
-      "D": 3
+      "D": 3,
+      "regraded": true
     },
     {
       "code": "Dubbo 17U",
@@ -259,7 +269,8 @@ const DATA = {
       "pct": "122.5",
       "W": 8,
       "L": 6,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Queanbeyan 17U",
@@ -269,7 +280,8 @@ const DATA = {
       "pct": "99.5",
       "W": 7,
       "L": 7,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Hawkesbury City 17U",
@@ -279,7 +291,8 @@ const DATA = {
       "pct": "98.2",
       "W": 7,
       "L": 9,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Coffs Harbour 17U",
@@ -289,7 +302,8 @@ const DATA = {
       "pct": "79.6",
       "W": 7,
       "L": 9,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Inner West 17U",
@@ -299,7 +313,8 @@ const DATA = {
       "pct": "92.7",
       "W": 6,
       "L": 9,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Lismore & District 17U",
@@ -309,7 +324,8 @@ const DATA = {
       "pct": "88.4",
       "W": 6,
       "L": 9,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Southern Highlands 17U",
@@ -319,7 +335,8 @@ const DATA = {
       "pct": "78.9",
       "W": 4,
       "L": 10,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Shoalhaven 17U",
@@ -329,7 +346,8 @@ const DATA = {
       "pct": "64.4",
       "W": 4,
       "L": 10,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "St George District 17U",
@@ -339,7 +357,8 @@ const DATA = {
       "pct": "67.0",
       "W": 3,
       "L": 12,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Blue Mountains 17U",
@@ -349,7 +368,8 @@ const DATA = {
       "pct": "66.7",
       "W": 3,
       "L": 12,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Singleton 17U",
@@ -359,128 +379,95 @@ const DATA = {
       "pct": "49.4",
       "W": 0,
       "L": 16,
-      "D": 0
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "09:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 09:00"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "10:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 10:00"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "11:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 11:00"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "12:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 12:00"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "13:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 13:00"
     },
     {
       "n": 6,
-      "day": "Sat",
-      "time": "14:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 14:00"
     },
     {
       "n": 7,
-      "day": "Sun",
-      "time": "08:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 08:30"
     },
     {
       "n": 8,
-      "day": "Sun",
-      "time": "09:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 09:30"
     },
     {
       "n": 9,
-      "day": "Sun",
-      "time": "10:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 10:30"
     },
     {
       "n": 10,
-      "day": "Sun",
-      "time": "11:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 11:30"
     },
     {
       "n": 11,
-      "day": "Sun",
-      "time": "12:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 12:30"
     },
     {
       "n": 12,
-      "day": "Sun",
-      "time": "13:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 13:30"
     },
     {
       "n": 13,
-      "day": "Mon",
-      "time": "08:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 08:30"
     },
     {
       "n": 14,
-      "day": "Mon",
-      "time": "09:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 09:30"
     },
     {
       "n": 15,
-      "day": "Mon",
-      "time": "10:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 10:30"
     },
     {
       "n": 16,
-      "day": "Mon",
-      "time": "11:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 11:30"
     },
     {
       "n": 17,
-      "day": "Mon",
-      "time": "12:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 12:30"
     }
   ],
   "games": [
@@ -491,7 +478,9 @@ const DATA = {
       "Coffs Harbour 17U",
       20,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -500,7 +489,9 @@ const DATA = {
       "Lismore & District 17U",
       13,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -509,7 +500,9 @@ const DATA = {
       "Southern Highlands 17U",
       18,
       9,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -518,7 +511,9 @@ const DATA = {
       "Bellingen 17U",
       21,
       11,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -527,7 +522,9 @@ const DATA = {
       "Hastings Valley 17U",
       22,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -536,7 +533,9 @@ const DATA = {
       "Gosford 17U",
       13,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -545,7 +544,9 @@ const DATA = {
       "Inner West 17U",
       22,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -554,7 +555,9 @@ const DATA = {
       "Blue Mountains 17U",
       16,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       2,
@@ -563,7 +566,9 @@ const DATA = {
       "Bathurst 17U",
       11,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -572,7 +577,9 @@ const DATA = {
       "Shoalhaven 17U",
       19,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -581,7 +588,9 @@ const DATA = {
       "St George District 17U",
       13,
       9,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -590,7 +599,9 @@ const DATA = {
       "Dubbo 17U",
       18,
       11,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -599,7 +610,9 @@ const DATA = {
       "Hawkesbury City 17U",
       10,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -608,7 +621,9 @@ const DATA = {
       "Singleton 17U",
       12,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -617,7 +632,9 @@ const DATA = {
       "Callaghan District 17U",
       19,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -626,7 +643,9 @@ const DATA = {
       "Blue Mountains 17U",
       10,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       3,
@@ -635,7 +654,9 @@ const DATA = {
       "Queanbeyan 17U",
       25,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -644,7 +665,9 @@ const DATA = {
       "Ballina 17U",
       23,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -653,7 +676,9 @@ const DATA = {
       "Coffs Harbour 17U",
       15,
       9,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -662,7 +687,9 @@ const DATA = {
       "Lismore & District 17U",
       15,
       11,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -671,7 +698,9 @@ const DATA = {
       "Southern Highlands 17U",
       28,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -680,7 +709,9 @@ const DATA = {
       "Bellingen 17U",
       28,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -689,7 +720,9 @@ const DATA = {
       "Hastings Valley 17U",
       28,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -698,7 +731,9 @@ const DATA = {
       "Gosford 17U",
       16,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       4,
@@ -707,7 +742,9 @@ const DATA = {
       "St George District 17U",
       20,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -716,7 +753,9 @@ const DATA = {
       "Dubbo 17U",
       14,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -725,7 +764,9 @@ const DATA = {
       "Hawkesbury City 17U",
       10,
       9,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -734,7 +775,9 @@ const DATA = {
       "Singleton 17U",
       16,
       11,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -743,7 +786,9 @@ const DATA = {
       "Callaghan District 17U",
       32,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -752,7 +797,9 @@ const DATA = {
       "Blue Mountains 17U",
       19,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -761,7 +808,9 @@ const DATA = {
       "Inner West 17U",
       13,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -770,7 +819,9 @@ const DATA = {
       "Gosford 17U",
       23,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       5,
@@ -779,7 +830,9 @@ const DATA = {
       "Shoalhaven 17U",
       10,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -788,7 +841,9 @@ const DATA = {
       "Bathurst 17U",
       14,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -797,7 +852,9 @@ const DATA = {
       "Queanbeyan 17U",
       16,
       9,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -806,7 +863,9 @@ const DATA = {
       "Ballina 17U",
       19,
       11,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -815,7 +874,9 @@ const DATA = {
       "Coffs Harbour 17U",
       24,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -824,7 +885,9 @@ const DATA = {
       "Lismore & District 17U",
       23,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -833,7 +896,9 @@ const DATA = {
       "Southern Highlands 17U",
       15,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -842,7 +907,9 @@ const DATA = {
       "Bellingen 17U",
       19,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       6,
@@ -851,7 +918,9 @@ const DATA = {
       "Hawkesbury City 17U",
       20,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -860,7 +929,9 @@ const DATA = {
       "Singleton 17U",
       15,
       9,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -869,7 +940,9 @@ const DATA = {
       "Callaghan District 17U",
       19,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -878,7 +951,9 @@ const DATA = {
       "Blue Mountains 17U",
       7,
       11,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -887,7 +962,9 @@ const DATA = {
       "Inner West 17U",
       11,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -896,7 +973,9 @@ const DATA = {
       "Gosford 17U",
       21,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -905,7 +984,9 @@ const DATA = {
       "Hastings Valley 17U",
       22,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -914,7 +995,9 @@ const DATA = {
       "Bellingen 17U",
       29,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       7,
@@ -923,7 +1006,9 @@ const DATA = {
       "Dubbo 17U",
       20,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       7,
@@ -932,7 +1017,9 @@ const DATA = {
       "St George District 17U",
       5,
       32,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       7,
@@ -941,7 +1028,9 @@ const DATA = {
       "Shoalhaven 17U",
       18,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       7,
@@ -950,7 +1039,9 @@ const DATA = {
       "Bathurst 17U",
       15,
       35,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       7,
@@ -959,7 +1050,9 @@ const DATA = {
       "Queanbeyan 17U",
       10,
       37,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       7,
@@ -968,7 +1061,9 @@ const DATA = {
       "Ballina 17U",
       12,
       38,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       7,
@@ -977,7 +1072,9 @@ const DATA = {
       "Coffs Harbour 17U",
       14,
       40,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       7,
@@ -986,7 +1083,9 @@ const DATA = {
       "Lismore & District 17U",
       16,
       41,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       8,
@@ -995,7 +1094,9 @@ const DATA = {
       "Callaghan District 17U",
       10,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       8,
@@ -1004,7 +1105,9 @@ const DATA = {
       "Blue Mountains 17U",
       7,
       32,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       8,
@@ -1013,7 +1116,9 @@ const DATA = {
       "Inner West 17U",
       17,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       8,
@@ -1022,7 +1127,9 @@ const DATA = {
       "Gosford 17U",
       26,
       35,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       8,
@@ -1031,7 +1138,9 @@ const DATA = {
       "Hastings Valley 17U",
       18,
       37,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       8,
@@ -1040,7 +1149,9 @@ const DATA = {
       "Bellingen 17U",
       20,
       38,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       8,
@@ -1049,7 +1160,9 @@ const DATA = {
       "Southern Highlands 17U",
       10,
       40,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       8,
@@ -1058,7 +1171,9 @@ const DATA = {
       "Lismore & District 17U",
       19,
       41,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       9,
@@ -1067,7 +1182,9 @@ const DATA = {
       "Singleton 17U",
       12,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       9,
@@ -1076,7 +1193,9 @@ const DATA = {
       "Hawkesbury City 17U",
       9,
       32,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       9,
@@ -1085,7 +1204,9 @@ const DATA = {
       "Dubbo 17U",
       14,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       9,
@@ -1094,7 +1215,9 @@ const DATA = {
       "St George District 17U",
       12,
       35,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       9,
@@ -1103,7 +1226,9 @@ const DATA = {
       "Shoalhaven 17U",
       25,
       37,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       9,
@@ -1112,7 +1237,9 @@ const DATA = {
       "Bathurst 17U",
       20,
       38,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       9,
@@ -1121,7 +1248,9 @@ const DATA = {
       "Queanbeyan 17U",
       14,
       40,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       9,
@@ -1130,7 +1259,9 @@ const DATA = {
       "Ballina 17U",
       28,
       41,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       10,
@@ -1139,7 +1270,9 @@ const DATA = {
       "Inner West 17U",
       15,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       10,
@@ -1148,7 +1281,9 @@ const DATA = {
       "Gosford 17U",
       22,
       32,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       10,
@@ -1157,7 +1292,9 @@ const DATA = {
       "Hastings Valley 17U",
       16,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       10,
@@ -1166,7 +1303,9 @@ const DATA = {
       "Bellingen 17U",
       14,
       35,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       10,
@@ -1175,7 +1314,9 @@ const DATA = {
       "Southern Highlands 17U",
       20,
       37,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       10,
@@ -1184,7 +1325,9 @@ const DATA = {
       "Lismore & District 17U",
       26,
       38,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       10,
@@ -1193,7 +1336,9 @@ const DATA = {
       "Coffs Harbour 17U",
       7,
       40,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       10,
@@ -1202,7 +1347,9 @@ const DATA = {
       "Ballina 17U",
       14,
       41,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       11,
@@ -1211,7 +1358,9 @@ const DATA = {
       "Blue Mountains 17U",
       7,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       11,
@@ -1220,7 +1369,9 @@ const DATA = {
       "Callaghan District 17U",
       15,
       32,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       11,
@@ -1229,7 +1380,9 @@ const DATA = {
       "Singleton 17U",
       8,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       11,
@@ -1238,7 +1391,9 @@ const DATA = {
       "Hawkesbury City 17U",
       18,
       35,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       11,
@@ -1247,7 +1402,9 @@ const DATA = {
       "Dubbo 17U",
       16,
       37,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       11,
@@ -1256,7 +1413,9 @@ const DATA = {
       "St George District 17U",
       12,
       38,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       11,
@@ -1265,7 +1424,9 @@ const DATA = {
       "Shoalhaven 17U",
       4,
       40,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       11,
@@ -1274,7 +1435,9 @@ const DATA = {
       "Bathurst 17U",
       17,
       41,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       12,
@@ -1283,7 +1446,9 @@ const DATA = {
       "Hastings Valley 17U",
       21,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       12,
@@ -1292,7 +1457,9 @@ const DATA = {
       "Bellingen 17U",
       16,
       32,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       12,
@@ -1301,7 +1468,9 @@ const DATA = {
       "Southern Highlands 17U",
       14,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       12,
@@ -1310,7 +1479,9 @@ const DATA = {
       "Lismore & District 17U",
       23,
       35,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       12,
@@ -1319,7 +1490,9 @@ const DATA = {
       "Coffs Harbour 17U",
       17,
       37,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       12,
@@ -1328,7 +1501,9 @@ const DATA = {
       "Ballina 17U",
       20,
       38,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       12,
@@ -1337,7 +1512,9 @@ const DATA = {
       "Queanbeyan 17U",
       11,
       40,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       12,
@@ -1346,7 +1523,9 @@ const DATA = {
       "Bathurst 17U",
       18,
       41,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       13,
@@ -1355,7 +1534,9 @@ const DATA = {
       "Gosford 17U",
       21,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       13,
@@ -1364,7 +1545,9 @@ const DATA = {
       "Inner West 17U",
       19,
       4,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       13,
@@ -1373,7 +1556,9 @@ const DATA = {
       "Blue Mountains 17U",
       17,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       13,
@@ -1382,7 +1567,9 @@ const DATA = {
       "Callaghan District 17U",
       23,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       13,
@@ -1391,7 +1578,9 @@ const DATA = {
       "Singleton 17U",
       8,
       15,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       13,
@@ -1400,7 +1589,9 @@ const DATA = {
       "Hawkesbury City 17U",
       11,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       13,
@@ -1409,7 +1600,9 @@ const DATA = {
       "Dubbo 17U",
       14,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       13,
@@ -1418,7 +1611,9 @@ const DATA = {
       "St George District 17U",
       10,
       20,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       14,
@@ -1427,7 +1622,9 @@ const DATA = {
       "Southern Highlands 17U",
       12,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       14,
@@ -1436,7 +1633,9 @@ const DATA = {
       "Lismore & District 17U",
       12,
       4,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       14,
@@ -1445,7 +1644,9 @@ const DATA = {
       "Coffs Harbour 17U",
       14,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       14,
@@ -1454,7 +1655,9 @@ const DATA = {
       "Ballina 17U",
       18,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       14,
@@ -1463,7 +1666,9 @@ const DATA = {
       "Queanbeyan 17U",
       13,
       15,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       14,
@@ -1472,7 +1677,9 @@ const DATA = {
       "Bathurst 17U",
       19,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       14,
@@ -1481,7 +1688,9 @@ const DATA = {
       "Shoalhaven 17U",
       10,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       14,
@@ -1490,7 +1699,9 @@ const DATA = {
       "St George District 17U",
       9,
       20,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       15,
@@ -1499,7 +1710,9 @@ const DATA = {
       "Bellingen 17U",
       17,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       15,
@@ -1508,7 +1721,9 @@ const DATA = {
       "Hastings Valley 17U",
       23,
       20,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       15,
@@ -1517,7 +1732,9 @@ const DATA = {
       "Gosford 17U",
       16,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       15,
@@ -1526,7 +1743,9 @@ const DATA = {
       "Inner West 17U",
       6,
       15,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       15,
@@ -1535,7 +1754,9 @@ const DATA = {
       "Blue Mountains 17U",
       11,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       15,
@@ -1544,7 +1765,9 @@ const DATA = {
       "Callaghan District 17U",
       22,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       15,
@@ -1553,7 +1776,9 @@ const DATA = {
       "Singleton 17U",
       7,
       4,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       15,
@@ -1562,7 +1787,9 @@ const DATA = {
       "Hawkesbury City 17U",
       13,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       16,
@@ -1571,7 +1798,9 @@ const DATA = {
       "Coffs Harbour 17U",
       18,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       16,
@@ -1580,7 +1809,9 @@ const DATA = {
       "Ballina 17U",
       21,
       4,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       16,
@@ -1589,7 +1820,9 @@ const DATA = {
       "Queanbeyan 17U",
       12,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       16,
@@ -1598,7 +1831,9 @@ const DATA = {
       "Bathurst 17U",
       18,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       16,
@@ -1607,7 +1842,9 @@ const DATA = {
       "Shoalhaven 17U",
       17,
       15,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       16,
@@ -1616,7 +1853,9 @@ const DATA = {
       "St George District 17U",
       13,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       16,
@@ -1625,7 +1864,9 @@ const DATA = {
       "Dubbo 17U",
       16,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       16,
@@ -1634,7 +1875,9 @@ const DATA = {
       "Hawkesbury City 17U",
       18,
       20,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       17,
@@ -1643,7 +1886,9 @@ const DATA = {
       "Lismore & District 17U",
       12,
       20,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       17,
@@ -1652,7 +1897,9 @@ const DATA = {
       "Southern Highlands 17U",
       14,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       17,
@@ -1661,7 +1908,9 @@ const DATA = {
       "Bellingen 17U",
       12,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       17,
@@ -1670,7 +1919,9 @@ const DATA = {
       "Hastings Valley 17U",
       25,
       15,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       17,
@@ -1679,7 +1930,9 @@ const DATA = {
       "Gosford 17U",
       17,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       17,
@@ -1688,7 +1941,9 @@ const DATA = {
       "Inner West 17U",
       9,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       17,
@@ -1697,7 +1952,9 @@ const DATA = {
       "Blue Mountains 17U",
       10,
       4,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       17,
@@ -1706,7 +1963,9 @@ const DATA = {
       "Callaghan District 17U",
       33,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ]
   ]
 };
@@ -1716,10 +1975,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -1742,13 +2001,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -1758,7 +2017,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -1778,7 +2037,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -1793,7 +2059,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

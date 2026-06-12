@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -199,7 +203,8 @@ const DATA = {
       "pct": "302.8",
       "W": 5,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Baulkham Hills 17U Male",
@@ -209,7 +214,8 @@ const DATA = {
       "pct": "135.9",
       "W": 4,
       "L": 1,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Maitland 17U Male",
@@ -219,7 +225,8 @@ const DATA = {
       "pct": "114.1",
       "W": 3,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Inner West 17U Male",
@@ -229,7 +236,8 @@ const DATA = {
       "pct": "124.3",
       "W": 2,
       "L": 3,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Port Stephens 17U Male",
@@ -239,7 +247,8 @@ const DATA = {
       "pct": "52.5",
       "W": 1,
       "L": 4,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Davidson 17U Male (INV)",
@@ -249,44 +258,35 @@ const DATA = {
       "pct": "32.1",
       "W": 0,
       "L": 5,
-      "D": 0
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Mon",
-      "time": "10:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 10:00"
     },
     {
       "n": 2,
-      "day": "Mon",
-      "time": "11:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 11:00"
     },
     {
       "n": 3,
-      "day": "Mon",
-      "time": "12:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 12:00"
     },
     {
       "n": 4,
-      "day": "Mon",
-      "time": "13:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 13:00"
     },
     {
       "n": 5,
-      "day": "Mon",
-      "time": "14:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 14:00"
     }
   ],
   "games": [
@@ -297,7 +297,9 @@ const DATA = {
       "Ku-ring-gai 17U Male",
       19,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       1,
@@ -306,7 +308,9 @@ const DATA = {
       "Port Stephens 17U Male",
       12,
       33,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       1,
@@ -315,7 +319,9 @@ const DATA = {
       "Inner West 17U Male",
       13,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       2,
@@ -324,7 +330,9 @@ const DATA = {
       "Maitland 17U Male",
       18,
       33,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       2,
@@ -333,7 +341,9 @@ const DATA = {
       "Baulkham Hills 17U Male",
       12,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       2,
@@ -342,7 +352,9 @@ const DATA = {
       "Davidson 17U Male (INV)",
       5,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       3,
@@ -351,7 +363,9 @@ const DATA = {
       "Ku-ring-gai 17U Male",
       16,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       3,
@@ -360,7 +374,9 @@ const DATA = {
       "Port Stephens 17U Male",
       10,
       33,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       3,
@@ -369,7 +385,9 @@ const DATA = {
       "Maitland 17U Male",
       18,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       4,
@@ -378,7 +396,9 @@ const DATA = {
       "Inner West 17U Male",
       24,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       4,
@@ -387,7 +407,9 @@ const DATA = {
       "Davidson 17U Male (INV)",
       2,
       33,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       4,
@@ -396,7 +418,9 @@ const DATA = {
       "Baulkham Hills 17U Male",
       16,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       5,
@@ -405,7 +429,9 @@ const DATA = {
       "Baulkham Hills 17U Male",
       21,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       5,
@@ -414,7 +440,9 @@ const DATA = {
       "Maitland 17U Male",
       19,
       33,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       5,
@@ -423,7 +451,9 @@ const DATA = {
       "Port Stephens 17U Male",
       9,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ]
   ]
 };
@@ -433,10 +463,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -459,13 +489,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -475,7 +505,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -495,7 +525,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -510,7 +547,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

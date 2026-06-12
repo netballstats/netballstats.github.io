@@ -155,22 +155,44 @@ def build_data(fixtures, title="Cross Table", pin=None,
             teams_seen.add(f.home_team)
         teams_seen.add(f.away_team)
 
+    # Detect regraded teams: played games here but have no future games in this grade
+    from collections import defaultdict
+    _done_count = defaultdict(int)
+    _upcoming_count = defaultdict(int)
+    for f in fixtures:
+        if _skip_fixture(f):
+            continue
+        for team in (f.home_team, f.away_team):
+            if f.status in ("completed", "live"):
+                _done_count[team] += 1
+            elif f.status == "scheduled":
+                _upcoming_count[team] += 1
+    regraded = {t for t in teams_seen if _done_count[t] > 0 and _upcoming_count[t] == 0}
+
     stats = {t: {"W": 0, "L": 0, "D": 0, "PF": 0, "PA": 0} for t in teams_seen}
     for f in fixtures:
-        if _skip_fixture(f) or f.status not in ("completed", "live") or f.home_score is None:
+        if _skip_fixture(f) or f.status not in ("completed", "live"):
             continue
         rn = _parse_round_n(f.round_name)
         if max_round is not None and rn > max_round:
             continue
-        h, a, hs, as_ = f.home_team, f.away_team, f.home_score, f.away_score
-        stats[h]["PF"] += hs; stats[h]["PA"] += as_
-        stats[a]["PF"] += as_; stats[a]["PA"] += hs
-        if hs > as_:
-            stats[h]["W"] += 1; stats[a]["L"] += 1
-        elif hs < as_:
-            stats[a]["W"] += 1; stats[h]["L"] += 1
-        else:
-            stats[h]["D"] += 1; stats[a]["D"] += 1
+        h, a = f.home_team, f.away_team
+        fw = getattr(f, "forfeit_winner", "")
+        if fw:
+            if fw == "home":
+                stats[h]["W"] += 1; stats[a]["L"] += 1
+            else:
+                stats[a]["W"] += 1; stats[h]["L"] += 1
+        elif f.home_score is not None:
+            hs, as_ = f.home_score, f.away_score
+            stats[h]["PF"] += hs; stats[h]["PA"] += as_
+            stats[a]["PF"] += as_; stats[a]["PA"] += hs
+            if hs > as_:
+                stats[h]["W"] += 1; stats[a]["L"] += 1
+            elif hs < as_:
+                stats[a]["W"] += 1; stats[h]["L"] += 1
+            else:
+                stats[h]["D"] += 1; stats[a]["D"] += 1
 
     has_results = any(s["W"] + s["L"] + s["D"] > 0 for s in stats.values())
 
@@ -178,9 +200,12 @@ def build_data(fixtures, title="Cross Table", pin=None,
         s = stats[t]
         pts = s["W"] * 2 + s["D"]
         pct = s["PF"] / s["PA"] if s["PA"] > 0 else 0
-        return (-pts, -pct)
+        return (1 if t in regraded else 0, -pts, -pct)
 
-    ordered = sorted(teams_seen, key=sort_key if has_results else None)
+    def sort_key_no_results(t):
+        return (1 if t in regraded else 0, t)
+
+    ordered = sorted(teams_seen, key=sort_key if has_results else sort_key_no_results)
 
     teams_js = []
     for i, name in enumerate(ordered, 1):
@@ -195,6 +220,7 @@ def build_data(fixtures, title="Cross Table", pin=None,
             "W": s["W"],
             "L": s["L"],
             "D": s["D"],
+            "regraded": name in regraded,
         })
 
     round_meta = {}
@@ -219,10 +245,13 @@ def build_data(fixtures, title="Cross Table", pin=None,
         if max_round is not None and rn > max_round:
             st = "upcoming"
             hs, as_ = None, None
+            fw = None
         else:
             st = "done" if f.status == "completed" else ("live" if f.status == "live" else "upcoming")
             hs, as_ = f.home_score, f.away_score
-        games_js.append([rn, hc, hs, ac, as_, _parse_court_n(f.court), st])
+            fw = getattr(f, "forfeit_winner", "") or None
+        ds = _fmt_round_date(f.date, _fmt_time(f.time), date_format)
+        games_js.append([rn, hc, hs, ac, as_, _parse_court_n(f.court), st, fw, ds])
 
     venue = next((f.venue for f in fixtures if f.venue), "")
     dates = sorted(set(f.date for f in fixtures if f.date))
@@ -256,7 +285,7 @@ CSS = """\
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -404,8 +433,12 @@ CSS = """\
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 """
 
@@ -415,10 +448,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -441,13 +474,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -457,7 +490,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -477,7 +510,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -492,7 +532,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.ds || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

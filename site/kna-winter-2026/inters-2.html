@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -198,7 +202,8 @@ const DATA = {
       "pct": "311.9",
       "W": 4,
       "L": 0,
-      "D": 1
+      "D": 1,
+      "regraded": false
     },
     {
       "code": "KP16",
@@ -208,7 +213,8 @@ const DATA = {
       "pct": "240.0",
       "W": 4,
       "L": 0,
-      "D": 1
+      "D": 1,
+      "regraded": false
     },
     {
       "code": "WP16",
@@ -218,7 +224,8 @@ const DATA = {
       "pct": "108.6",
       "W": 3,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "PLC1",
@@ -228,7 +235,8 @@ const DATA = {
       "pct": "60.2",
       "W": 2,
       "L": 3,
-      "D": 0
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "BER15",
@@ -238,127 +246,102 @@ const DATA = {
       "pct": "65.4",
       "W": 1,
       "L": 4,
-      "D": 0
-    },
-    {
-      "code": "STI17",
-      "name": "STI17",
-      "rank": 6,
-      "pts": 0,
-      "pct": "34.3",
-      "W": 0,
-      "L": 5,
-      "D": 0
+      "D": 0,
+      "regraded": false
     },
     {
       "code": "WAH07",
       "name": "WAH07",
-      "rank": 7,
+      "rank": 6,
       "pts": 0,
       "pct": "0.0",
       "W": 0,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": false
+    },
+    {
+      "code": "STI17",
+      "name": "STI17",
+      "rank": 7,
+      "pts": 0,
+      "pct": "34.3",
+      "W": 0,
+      "L": 5,
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "2/5",
-      "state": "done"
+      "state": "done",
+      "ds": "2 May 11:45"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "9/5",
-      "state": "done"
+      "state": "done",
+      "ds": "9 May 11:45"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "16/5",
-      "state": "done"
+      "state": "done",
+      "ds": "16 May 11:45"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "23/5",
-      "state": "done"
+      "state": "done",
+      "ds": "23 May 11:45"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "30/5",
-      "state": "done"
+      "state": "done",
+      "ds": "30 May 11:45"
     },
     {
       "n": 6,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "13/6",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "13 Jun 11:45"
     },
     {
       "n": 7,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "20/6",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "20 Jun 11:45"
     },
     {
       "n": 8,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "27/6",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "27 Jun 11:45"
     },
     {
       "n": 9,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "18/7",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "18 Jul 11:45"
     },
     {
       "n": 10,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "25/7",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "25 Jul 11:45"
     },
     {
       "n": 11,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "1/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "1 Aug 11:45"
     },
     {
       "n": 12,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "8/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "8 Aug 11:45"
     },
     {
       "n": 13,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "15/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "15 Aug 11:45"
     },
     {
       "n": 14,
-      "day": "Sat",
-      "time": "11:45",
-      "sdate": "22/8",
-      "state": "upcoming"
+      "state": "upcoming",
+      "ds": "22 Aug 11:45"
     }
   ],
   "games": [
@@ -369,7 +352,9 @@ const DATA = {
       "BER15",
       16,
       5,
-      "done"
+      "done",
+      null,
+      "2 May 11:45"
     ],
     [
       1,
@@ -378,7 +363,9 @@ const DATA = {
       "STI17",
       6,
       6,
-      "done"
+      "done",
+      null,
+      "2 May 11:45"
     ],
     [
       1,
@@ -387,7 +374,9 @@ const DATA = {
       "WP16",
       12,
       8,
-      "done"
+      "done",
+      null,
+      "2 May 11:45"
     ],
     [
       2,
@@ -396,7 +385,9 @@ const DATA = {
       "PLC1",
       18,
       5,
-      "done"
+      "done",
+      null,
+      "9 May 11:45"
     ],
     [
       2,
@@ -405,7 +396,9 @@ const DATA = {
       "WP15",
       45,
       6,
-      "done"
+      "done",
+      null,
+      "9 May 11:45"
     ],
     [
       2,
@@ -414,7 +407,9 @@ const DATA = {
       "KP16",
       24,
       8,
-      "done"
+      "done",
+      null,
+      "9 May 11:45"
     ],
     [
       3,
@@ -423,7 +418,9 @@ const DATA = {
       "BER15",
       17,
       5,
-      "done"
+      "done",
+      null,
+      "16 May 11:45"
     ],
     [
       3,
@@ -432,7 +429,9 @@ const DATA = {
       "STI17",
       6,
       6,
-      "done"
+      "done",
+      null,
+      "16 May 11:45"
     ],
     [
       3,
@@ -441,7 +440,9 @@ const DATA = {
       "PLC1",
       8,
       8,
-      "done"
+      "done",
+      null,
+      "16 May 11:45"
     ],
     [
       4,
@@ -450,7 +451,9 @@ const DATA = {
       "WP16",
       19,
       5,
-      "done"
+      "done",
+      null,
+      "23 May 11:45"
     ],
     [
       4,
@@ -459,7 +462,9 @@ const DATA = {
       "KP16",
       30,
       6,
-      "done"
+      "done",
+      null,
+      "23 May 11:45"
     ],
     [
       4,
@@ -468,7 +473,9 @@ const DATA = {
       "WP15",
       28,
       8,
-      "done"
+      "done",
+      null,
+      "23 May 11:45"
     ],
     [
       5,
@@ -477,7 +484,9 @@ const DATA = {
       "WP15",
       15,
       5,
-      "done"
+      "done",
+      null,
+      "30 May 11:45"
     ],
     [
       5,
@@ -486,7 +495,9 @@ const DATA = {
       "PLC1",
       11,
       6,
-      "done"
+      "done",
+      null,
+      "30 May 11:45"
     ],
     [
       5,
@@ -495,16 +506,31 @@ const DATA = {
       "STI17",
       17,
       8,
-      "done"
+      "done",
+      null,
+      "30 May 11:45"
     ],
     [
       6,
       "WAH07",
       null,
-      "WP15",
+      "WP16",
       null,
       5,
-      "upcoming"
+      "upcoming",
+      null,
+      "13 Jun 11:45"
+    ],
+    [
+      6,
+      "WP15",
+      null,
+      "BER15",
+      null,
+      6,
+      "upcoming",
+      null,
+      "13 Jun 11:45"
     ],
     [
       6,
@@ -512,62 +538,54 @@ const DATA = {
       null,
       "KP16",
       null,
-      6,
-      "upcoming"
-    ],
-    [
-      6,
-      "BER15",
-      null,
-      "WP16",
-      null,
       8,
-      "upcoming"
+      "upcoming",
+      null,
+      "13 Jun 11:45"
     ],
     [
       7,
+      "WP16",
+      null,
       "WP15",
       null,
-      "PLC1",
-      null,
       5,
-      "upcoming"
-    ],
-    [
-      7,
-      "WP16",
+      "upcoming",
       null,
-      "WAH07",
-      null,
-      6,
-      "upcoming"
+      "20 Jun 11:45"
     ],
     [
       7,
       "KP16",
       null,
+      "WAH07",
+      null,
+      6,
+      "upcoming",
+      null,
+      "20 Jun 11:45"
+    ],
+    [
+      7,
       "BER15",
       null,
+      "PLC1",
+      null,
       8,
-      "upcoming"
+      "upcoming",
+      null,
+      "20 Jun 11:45"
     ],
     [
       8,
       "WAH07",
       null,
-      "BER15",
-      null,
-      5,
-      "upcoming"
-    ],
-    [
-      8,
       "PLC1",
       null,
-      "WP16",
+      5,
+      "upcoming",
       null,
-      6,
-      "upcoming"
+      "27 Jun 11:45"
     ],
     [
       8,
@@ -575,71 +593,142 @@ const DATA = {
       null,
       "KP16",
       null,
+      6,
+      "upcoming",
+      null,
+      "27 Jun 11:45"
+    ],
+    [
       8,
-      "upcoming"
+      "WP16",
+      null,
+      "BER15",
+      null,
+      8,
+      "upcoming",
+      null,
+      "27 Jun 11:45"
+    ],
+    [
+      8,
+      "BER15",
+      null,
+      "WP16",
+      null,
+      8,
+      "upcoming",
+      null,
+      "27 Jun 12:15"
+    ],
+    [
+      8,
+      "KP16",
+      null,
+      "WP15",
+      null,
+      6,
+      "upcoming",
+      null,
+      "27 Jun 12:15"
+    ],
+    [
+      8,
+      "PLC1",
+      null,
+      "WP16",
+      null,
+      5,
+      "upcoming",
+      null,
+      "27 Jun 12:15"
+    ],
+    [
+      9,
+      "PLC1",
+      null,
+      "WP15",
+      null,
+      5,
+      "upcoming",
+      null,
+      "18 Jul 11:45"
     ],
     [
       9,
       "BER15",
       null,
-      "PLC1",
+      "WAH07",
       null,
-      5,
-      "upcoming"
+      6,
+      "upcoming",
+      null,
+      "18 Jul 11:45"
     ],
     [
       9,
       "KP16",
       null,
-      "WAH07",
-      null,
-      6,
-      "upcoming"
-    ],
-    [
-      9,
       "WP16",
       null,
-      "WP15",
-      null,
       8,
-      "upcoming"
+      "upcoming",
+      null,
+      "18 Jul 11:45"
+    ],
+    [
+      10,
+      "KP16",
+      null,
+      "BER15",
+      null,
+      5,
+      "upcoming",
+      null,
+      "25 Jul 11:45"
     ],
     [
       10,
       "WP16",
       null,
-      "KP16",
+      "PLC1",
       null,
-      5,
-      "upcoming"
+      6,
+      "upcoming",
+      null,
+      "25 Jul 11:45"
     ],
     [
       10,
       "WP15",
       null,
-      "BER15",
-      null,
-      6,
-      "upcoming"
-    ],
-    [
-      10,
-      "PLC1",
-      null,
       "WAH07",
       null,
       8,
-      "upcoming"
+      "upcoming",
+      null,
+      "25 Jul 11:45"
     ],
     [
       11,
-      "WP15",
+      "WP16",
       null,
       "WAH07",
       null,
       5,
-      "upcoming"
+      "upcoming",
+      null,
+      "1 Aug 11:45"
+    ],
+    [
+      11,
+      "BER15",
+      null,
+      "WP15",
+      null,
+      6,
+      "upcoming",
+      null,
+      "1 Aug 11:45"
     ],
     [
       11,
@@ -647,62 +736,54 @@ const DATA = {
       null,
       "PLC1",
       null,
-      6,
-      "upcoming"
-    ],
-    [
-      11,
-      "WP16",
-      null,
-      "BER15",
-      null,
       8,
-      "upcoming"
+      "upcoming",
+      null,
+      "1 Aug 11:45"
     ],
     [
       12,
-      "PLC1",
-      null,
       "WP15",
       null,
+      "WP16",
+      null,
       5,
-      "upcoming"
+      "upcoming",
+      null,
+      "8 Aug 11:45"
     ],
     [
       12,
       "WAH07",
-      null,
-      "WP16",
-      null,
-      6,
-      "upcoming"
-    ],
-    [
-      12,
-      "BER15",
       null,
       "KP16",
       null,
+      6,
+      "upcoming",
+      null,
+      "8 Aug 11:45"
+    ],
+    [
+      12,
+      "PLC1",
+      null,
+      "BER15",
+      null,
       8,
-      "upcoming"
+      "upcoming",
+      null,
+      "8 Aug 11:45"
     ],
     [
       13,
-      "BER15",
+      "PLC1",
       null,
       "WAH07",
       null,
       5,
-      "upcoming"
-    ],
-    [
-      13,
-      "WP16",
+      "upcoming",
       null,
-      "PLC1",
-      null,
-      6,
-      "upcoming"
+      "15 Aug 11:45"
     ],
     [
       13,
@@ -710,35 +791,54 @@ const DATA = {
       null,
       "WP15",
       null,
+      6,
+      "upcoming",
+      null,
+      "15 Aug 11:45"
+    ],
+    [
+      13,
+      "BER15",
+      null,
+      "WP16",
+      null,
       8,
-      "upcoming"
+      "upcoming",
+      null,
+      "15 Aug 11:45"
     ],
     [
       14,
-      "PLC1",
+      "WP15",
       null,
-      "BER15",
+      "PLC1",
       null,
       1,
-      "upcoming"
+      "upcoming",
+      null,
+      "22 Aug 11:45"
     ],
     [
       14,
       "WAH07",
       null,
-      "KP16",
+      "BER15",
       null,
       2,
-      "upcoming"
+      "upcoming",
+      null,
+      "22 Aug 11:45"
     ],
     [
       14,
-      "WP15",
-      null,
       "WP16",
       null,
+      "KP16",
+      null,
       3,
-      "upcoming"
+      "upcoming",
+      null,
+      "22 Aug 11:45"
     ]
   ]
 };
@@ -748,10 +848,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -774,13 +874,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -790,7 +890,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -810,7 +910,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -825,7 +932,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

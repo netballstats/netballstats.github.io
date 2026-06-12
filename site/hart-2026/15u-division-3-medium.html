@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -199,7 +203,8 @@ const DATA = {
       "pct": "175.4",
       "W": 16,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Kiama 15U",
@@ -209,7 +214,8 @@ const DATA = {
       "pct": "177.1",
       "W": 14,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Woy Woy Peninsula 15U",
@@ -219,7 +225,8 @@ const DATA = {
       "pct": "174.9",
       "W": 14,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Southern Highlands 15U",
@@ -229,7 +236,8 @@ const DATA = {
       "pct": "115.3",
       "W": 11,
       "L": 5,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Tamworth 15U",
@@ -239,7 +247,8 @@ const DATA = {
       "pct": "114.8",
       "W": 10,
       "L": 5,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Griffith 15U",
@@ -249,7 +258,8 @@ const DATA = {
       "pct": "112.5",
       "W": 9,
       "L": 6,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Great Lakes 15U",
@@ -259,7 +269,8 @@ const DATA = {
       "pct": "93.9",
       "W": 8,
       "L": 6,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Cessnock District 15U",
@@ -269,7 +280,8 @@ const DATA = {
       "pct": "92.5",
       "W": 8,
       "L": 6,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Casino 15U",
@@ -279,7 +291,8 @@ const DATA = {
       "pct": "101.7",
       "W": 7,
       "L": 8,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Nelson Bay 15U",
@@ -289,7 +302,8 @@ const DATA = {
       "pct": "94.2",
       "W": 7,
       "L": 8,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Manning Valley 15U",
@@ -299,7 +313,8 @@ const DATA = {
       "pct": "95.7",
       "W": 6,
       "L": 8,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Blue Mountains 15U",
@@ -309,7 +324,8 @@ const DATA = {
       "pct": "73.9",
       "W": 5,
       "L": 10,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Tumut 15U",
@@ -319,7 +335,8 @@ const DATA = {
       "pct": "89.2",
       "W": 5,
       "L": 11,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Dubbo 15U",
@@ -329,7 +346,8 @@ const DATA = {
       "pct": "77.9",
       "W": 4,
       "L": 11,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Wollondilly 15U",
@@ -339,7 +357,8 @@ const DATA = {
       "pct": "82.6",
       "W": 4,
       "L": 12,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Port Stephens 15U",
@@ -349,7 +368,8 @@ const DATA = {
       "pct": "66.0",
       "W": 1,
       "L": 15,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Mudgee District 15U",
@@ -359,128 +379,95 @@ const DATA = {
       "pct": "43.7",
       "W": 1,
       "L": 15,
-      "D": 0
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "10:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 10:00"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "11:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 11:00"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "12:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 12:00"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "13:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 13:00"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "14:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 14:00"
     },
     {
       "n": 6,
-      "day": "Sun",
-      "time": "08:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 08:30"
     },
     {
       "n": 7,
-      "day": "Sun",
-      "time": "09:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 09:30"
     },
     {
       "n": 8,
-      "day": "Sun",
-      "time": "10:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 10:30"
     },
     {
       "n": 9,
-      "day": "Sun",
-      "time": "11:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 11:30"
     },
     {
       "n": 10,
-      "day": "Sun",
-      "time": "12:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 12:30"
     },
     {
       "n": 11,
-      "day": "Sun",
-      "time": "13:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 13:30"
     },
     {
       "n": 12,
-      "day": "Mon",
-      "time": "08:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 08:30"
     },
     {
       "n": 13,
-      "day": "Mon",
-      "time": "09:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 09:30"
     },
     {
       "n": 14,
-      "day": "Mon",
-      "time": "10:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 10:30"
     },
     {
       "n": 15,
-      "day": "Mon",
-      "time": "11:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 11:30"
     },
     {
       "n": 16,
-      "day": "Mon",
-      "time": "12:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 12:30"
     },
     {
       "n": 17,
-      "day": "Mon",
-      "time": "13:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 13:30"
     }
   ],
   "games": [
@@ -491,7 +478,9 @@ const DATA = {
       "Tumut 15U",
       16,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -500,7 +489,9 @@ const DATA = {
       "Port Stephens 15U",
       8,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -509,7 +500,9 @@ const DATA = {
       "Tamworth 15U",
       12,
       26,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -518,7 +511,9 @@ const DATA = {
       "Casino 15U",
       18,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -527,7 +522,9 @@ const DATA = {
       "Nelson Bay 15U",
       13,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -536,7 +533,9 @@ const DATA = {
       "Dubbo 15U",
       12,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -545,7 +544,9 @@ const DATA = {
       "Manning Valley 15U",
       16,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -554,7 +555,9 @@ const DATA = {
       "Blue Mountains 15U",
       21,
       39,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -563,7 +566,9 @@ const DATA = {
       "Cessnock District 15U",
       7,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -572,7 +577,9 @@ const DATA = {
       "Woy Woy Peninsula 15U",
       30,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -581,7 +588,9 @@ const DATA = {
       "Great Lakes 15U",
       26,
       26,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -590,7 +599,9 @@ const DATA = {
       "Kiama 15U",
       22,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -599,7 +610,9 @@ const DATA = {
       "Temora 15U",
       23,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -608,7 +621,9 @@ const DATA = {
       "Wollondilly 15U",
       24,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -617,7 +632,9 @@ const DATA = {
       "Mudgee District 15U",
       16,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -626,7 +643,9 @@ const DATA = {
       "Blue Mountains 15U",
       14,
       39,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -635,7 +654,9 @@ const DATA = {
       "Griffith 15U",
       20,
       39,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -644,7 +665,9 @@ const DATA = {
       "Southern Highlands 15U",
       16,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -653,7 +676,9 @@ const DATA = {
       "Tumut 15U",
       21,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -662,7 +687,9 @@ const DATA = {
       "Port Stephens 15U",
       12,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -671,7 +698,9 @@ const DATA = {
       "Tamworth 15U",
       21,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -680,7 +709,9 @@ const DATA = {
       "Casino 15U",
       22,
       26,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -689,7 +720,9 @@ const DATA = {
       "Nelson Bay 15U",
       16,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -698,7 +731,9 @@ const DATA = {
       "Dubbo 15U",
       13,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -707,7 +742,9 @@ const DATA = {
       "Great Lakes 15U",
       14,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -716,7 +753,9 @@ const DATA = {
       "Kiama 15U",
       22,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -725,7 +764,9 @@ const DATA = {
       "Temora 15U",
       15,
       26,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -734,7 +775,9 @@ const DATA = {
       "Wollondilly 15U",
       17,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -743,7 +786,9 @@ const DATA = {
       "Mudgee District 15U",
       13,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -752,7 +797,9 @@ const DATA = {
       "Blue Mountains 15U",
       11,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -761,7 +808,9 @@ const DATA = {
       "Manning Valley 15U",
       16,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -770,7 +819,9 @@ const DATA = {
       "Dubbo 15U",
       9,
       39,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -779,7 +830,9 @@ const DATA = {
       "Woy Woy Peninsula 15U",
       22,
       25,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -788,7 +841,9 @@ const DATA = {
       "Cessnock District 15U",
       10,
       24,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -797,7 +852,9 @@ const DATA = {
       "Griffith 15U",
       19,
       26,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -806,7 +863,9 @@ const DATA = {
       "Southern Highlands 15U",
       19,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -815,7 +874,9 @@ const DATA = {
       "Tumut 15U",
       21,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -824,7 +885,9 @@ const DATA = {
       "Port Stephens 15U",
       14,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -833,7 +896,9 @@ const DATA = {
       "Tamworth 15U",
       20,
       35,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -842,7 +907,9 @@ const DATA = {
       "Casino 15U",
       15,
       39,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -851,7 +918,9 @@ const DATA = {
       "Temora 15U",
       31,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       6,
@@ -860,7 +929,9 @@ const DATA = {
       "Wollondilly 15U",
       16,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       6,
@@ -869,7 +940,9 @@ const DATA = {
       "Mudgee District 15U",
       6,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       6,
@@ -878,7 +951,9 @@ const DATA = {
       "Blue Mountains 15U",
       10,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       6,
@@ -887,7 +962,9 @@ const DATA = {
       "Manning Valley 15U",
       19,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       6,
@@ -896,7 +973,9 @@ const DATA = {
       "Dubbo 15U",
       19,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       6,
@@ -905,7 +984,9 @@ const DATA = {
       "Nelson Bay 15U",
       16,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       6,
@@ -914,7 +995,9 @@ const DATA = {
       "Casino 15U",
       9,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 08:30"
     ],
     [
       7,
@@ -923,7 +1006,9 @@ const DATA = {
       "Kiama 15U",
       23,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -932,7 +1017,9 @@ const DATA = {
       "Great Lakes 15U",
       28,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -941,7 +1028,9 @@ const DATA = {
       "Woy Woy Peninsula 15U",
       22,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -950,7 +1039,9 @@ const DATA = {
       "Cessnock District 15U",
       16,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -959,7 +1050,9 @@ const DATA = {
       "Griffith 15U",
       19,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -968,7 +1061,9 @@ const DATA = {
       "Southern Highlands 15U",
       13,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -977,7 +1072,9 @@ const DATA = {
       "Tumut 15U",
       9,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -986,7 +1083,9 @@ const DATA = {
       "Port Stephens 15U",
       13,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       8,
@@ -995,7 +1094,9 @@ const DATA = {
       "Mudgee District 15U",
       8,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1004,7 +1105,9 @@ const DATA = {
       "Blue Mountains 15U",
       7,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1013,7 +1116,9 @@ const DATA = {
       "Manning Valley 15U",
       23,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1022,7 +1127,9 @@ const DATA = {
       "Dubbo 15U",
       10,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1031,7 +1138,9 @@ const DATA = {
       "Nelson Bay 15U",
       17,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1040,7 +1149,9 @@ const DATA = {
       "Casino 15U",
       17,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1049,7 +1160,9 @@ const DATA = {
       "Tamworth 15U",
       13,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1058,7 +1171,9 @@ const DATA = {
       "Port Stephens 15U",
       17,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       9,
@@ -1067,7 +1182,9 @@ const DATA = {
       "Wollondilly 15U",
       13,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1076,7 +1193,9 @@ const DATA = {
       "Temora 15U",
       28,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1085,7 +1204,9 @@ const DATA = {
       "Kiama 15U",
       20,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1094,7 +1215,9 @@ const DATA = {
       "Great Lakes 15U",
       17,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1103,7 +1226,9 @@ const DATA = {
       "Woy Woy Peninsula 15U",
       21,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1112,7 +1237,9 @@ const DATA = {
       "Cessnock District 15U",
       14,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1121,7 +1248,9 @@ const DATA = {
       "Griffith 15U",
       23,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1130,7 +1259,9 @@ const DATA = {
       "Southern Highlands 15U",
       16,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       10,
@@ -1139,7 +1270,9 @@ const DATA = {
       "Manning Valley 15U",
       24,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1148,7 +1281,9 @@ const DATA = {
       "Dubbo 15U",
       13,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1157,7 +1292,9 @@ const DATA = {
       "Nelson Bay 15U",
       12,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1166,7 +1303,9 @@ const DATA = {
       "Casino 15U",
       11,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1175,7 +1314,9 @@ const DATA = {
       "Tamworth 15U",
       30,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1184,7 +1325,9 @@ const DATA = {
       "Port Stephens 15U",
       10,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1193,7 +1336,9 @@ const DATA = {
       "Tumut 15U",
       13,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1202,7 +1347,9 @@ const DATA = {
       "Southern Highlands 15U",
       17,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       11,
@@ -1211,7 +1358,9 @@ const DATA = {
       "Blue Mountains 15U",
       13,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1220,7 +1369,9 @@ const DATA = {
       "Mudgee District 15U",
       15,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1229,7 +1380,9 @@ const DATA = {
       "Wollondilly 15U",
       13,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1238,7 +1391,9 @@ const DATA = {
       "Temora 15U",
       22,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1247,7 +1402,9 @@ const DATA = {
       "Kiama 15U",
       25,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1256,7 +1413,9 @@ const DATA = {
       "Great Lakes 15U",
       22,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1265,7 +1424,9 @@ const DATA = {
       "Woy Woy Peninsula 15U",
       17,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1274,7 +1435,9 @@ const DATA = {
       "Cessnock District 15U",
       12,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       12,
@@ -1283,7 +1446,9 @@ const DATA = {
       "Nelson Bay 15U",
       21,
       17,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1292,7 +1457,9 @@ const DATA = {
       "Casino 15U",
       21,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1301,7 +1468,9 @@ const DATA = {
       "Tamworth 15U",
       24,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1310,7 +1479,9 @@ const DATA = {
       "Port Stephens 15U",
       15,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1319,7 +1490,9 @@ const DATA = {
       "Tumut 15U",
       14,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1328,7 +1501,9 @@ const DATA = {
       "Southern Highlands 15U",
       11,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1337,7 +1512,9 @@ const DATA = {
       "Griffith 15U",
       18,
       36,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1346,7 +1523,9 @@ const DATA = {
       "Cessnock District 15U",
       9,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       13,
@@ -1355,7 +1534,9 @@ const DATA = {
       "Dubbo 15U",
       13,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1364,7 +1545,9 @@ const DATA = {
       "Manning Valley 15U",
       22,
       36,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1373,7 +1556,9 @@ const DATA = {
       "Blue Mountains 15U",
       16,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1382,7 +1567,9 @@ const DATA = {
       "Mudgee District 15U",
       6,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1391,7 +1578,9 @@ const DATA = {
       "Wollondilly 15U",
       8,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1400,7 +1589,9 @@ const DATA = {
       "Temora 15U",
       17,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1409,7 +1600,9 @@ const DATA = {
       "Kiama 15U",
       14,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1418,7 +1611,9 @@ const DATA = {
       "Great Lakes 15U",
       11,
       17,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       14,
@@ -1427,7 +1622,9 @@ const DATA = {
       "Tamworth 15U",
       18,
       17,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1436,7 +1633,9 @@ const DATA = {
       "Port Stephens 15U",
       9,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1445,7 +1644,9 @@ const DATA = {
       "Tumut 15U",
       19,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1454,7 +1655,9 @@ const DATA = {
       "Southern Highlands 15U",
       19,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1463,7 +1666,9 @@ const DATA = {
       "Griffith 15U",
       23,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1472,7 +1677,9 @@ const DATA = {
       "Cessnock District 15U",
       11,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1481,7 +1688,9 @@ const DATA = {
       "Woy Woy Peninsula 15U",
       20,
       36,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1490,7 +1699,9 @@ const DATA = {
       "Great Lakes 15U",
       15,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       15,
@@ -1499,7 +1710,9 @@ const DATA = {
       "Casino 15U",
       18,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1508,7 +1721,9 @@ const DATA = {
       "Nelson Bay 15U",
       23,
       36,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1517,7 +1732,9 @@ const DATA = {
       "Dubbo 15U",
       8,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1526,7 +1743,9 @@ const DATA = {
       "Manning Valley 15U",
       19,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1535,7 +1754,9 @@ const DATA = {
       "Blue Mountains 15U",
       10,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1544,7 +1765,9 @@ const DATA = {
       "Mudgee District 15U",
       8,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1553,7 +1776,9 @@ const DATA = {
       "Wollondilly 15U",
       17,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1562,7 +1787,9 @@ const DATA = {
       "Temora 15U",
       22,
       17,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       16,
@@ -1571,7 +1798,9 @@ const DATA = {
       "Tumut 15U",
       15,
       17,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1580,7 +1809,9 @@ const DATA = {
       "Southern Highlands 15U",
       15,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1589,7 +1820,9 @@ const DATA = {
       "Griffith 15U",
       23,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1598,7 +1831,9 @@ const DATA = {
       "Cessnock District 15U",
       12,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1607,7 +1842,9 @@ const DATA = {
       "Woy Woy Peninsula 15U",
       22,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1616,7 +1853,9 @@ const DATA = {
       "Great Lakes 15U",
       23,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1625,7 +1864,9 @@ const DATA = {
       "Kiama 15U",
       36,
       36,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1634,7 +1875,9 @@ const DATA = {
       "Temora 15U",
       23,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       17,
@@ -1643,7 +1886,9 @@ const DATA = {
       "Port Stephens 15U",
       12,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1652,7 +1897,9 @@ const DATA = {
       "Tamworth 15U",
       23,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1661,7 +1908,9 @@ const DATA = {
       "Casino 15U",
       10,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1670,7 +1919,9 @@ const DATA = {
       "Nelson Bay 15U",
       18,
       32,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1679,7 +1930,9 @@ const DATA = {
       "Dubbo 15U",
       15,
       36,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1688,7 +1941,9 @@ const DATA = {
       "Manning Valley 15U",
       13,
       37,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1697,7 +1952,9 @@ const DATA = {
       "Blue Mountains 15U",
       11,
       17,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1706,7 +1963,9 @@ const DATA = {
       "Mudgee District 15U",
       11,
       21,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ]
   ]
 };
@@ -1716,10 +1975,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -1742,13 +2001,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -1758,7 +2017,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -1778,7 +2037,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -1793,7 +2059,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -198,7 +202,8 @@ const DATA = {
       "pct": "238.4",
       "W": 15,
       "L": 1,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Port Stephens 17U",
@@ -208,7 +213,8 @@ const DATA = {
       "pct": "209.6",
       "W": 15,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Temora 17U",
@@ -218,7 +224,8 @@ const DATA = {
       "pct": "172.2",
       "W": 15,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Nelson Bay 17U",
@@ -228,7 +235,8 @@ const DATA = {
       "pct": "157.8",
       "W": 13,
       "L": 3,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Dungog 17U",
@@ -238,7 +246,8 @@ const DATA = {
       "pct": "152.7",
       "W": 12,
       "L": 5,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Lower Clarence 17U",
@@ -248,7 +257,8 @@ const DATA = {
       "pct": "142.0",
       "W": 12,
       "L": 5,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Glen Innes 17U",
@@ -258,7 +268,8 @@ const DATA = {
       "pct": "128.6",
       "W": 10,
       "L": 7,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Armidale District 17U",
@@ -268,7 +279,8 @@ const DATA = {
       "pct": "127.1",
       "W": 10,
       "L": 7,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Parkes District 17U",
@@ -278,7 +290,8 @@ const DATA = {
       "pct": "111.4",
       "W": 9,
       "L": 8,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "South Canberra 17U (INV)",
@@ -288,7 +301,8 @@ const DATA = {
       "pct": "116.9",
       "W": 8,
       "L": 9,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Wollondilly 17U",
@@ -298,7 +312,8 @@ const DATA = {
       "pct": "107.8",
       "W": 8,
       "L": 9,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Cowra 17U",
@@ -308,7 +323,8 @@ const DATA = {
       "pct": "84.1",
       "W": 6,
       "L": 11,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Gloucester 17U",
@@ -318,7 +334,8 @@ const DATA = {
       "pct": "70.3",
       "W": 6,
       "L": 11,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Tumut 17U",
@@ -328,7 +345,8 @@ const DATA = {
       "pct": "66.7",
       "W": 5,
       "L": 12,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Gunnedah 17U",
@@ -338,7 +356,8 @@ const DATA = {
       "pct": "55.8",
       "W": 3,
       "L": 14,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Scone 17U",
@@ -348,7 +367,8 @@ const DATA = {
       "pct": "65.3",
       "W": 2,
       "L": 14,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Goulburn & District 17U",
@@ -358,7 +378,8 @@ const DATA = {
       "pct": "51.8",
       "W": 2,
       "L": 14,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Young & District 17U",
@@ -368,128 +389,95 @@ const DATA = {
       "pct": "12.5",
       "W": 0,
       "L": 17,
-      "D": 0
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "10:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 10:00"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "11:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 11:00"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "12:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 12:00"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "13:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 13:00"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "14:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 14:00"
     },
     {
       "n": 6,
-      "day": "Sat",
-      "time": "15:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 15:00"
     },
     {
       "n": 7,
-      "day": "Sun",
-      "time": "09:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 09:30"
     },
     {
       "n": 8,
-      "day": "Sun",
-      "time": "10:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 10:30"
     },
     {
       "n": 9,
-      "day": "Sun",
-      "time": "11:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 11:30"
     },
     {
       "n": 10,
-      "day": "Sun",
-      "time": "12:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 12:30"
     },
     {
       "n": 11,
-      "day": "Sun",
-      "time": "13:30",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 13:30"
     },
     {
       "n": 12,
-      "day": "Mon",
-      "time": "08:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 08:30"
     },
     {
       "n": 13,
-      "day": "Mon",
-      "time": "09:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 09:30"
     },
     {
       "n": 14,
-      "day": "Mon",
-      "time": "10:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 10:30"
     },
     {
       "n": 15,
-      "day": "Mon",
-      "time": "11:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 11:30"
     },
     {
       "n": 16,
-      "day": "Mon",
-      "time": "12:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 12:30"
     },
     {
       "n": 17,
-      "day": "Mon",
-      "time": "13:30",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 13:30"
     }
   ],
   "games": [
@@ -500,7 +488,9 @@ const DATA = {
       "Armidale District 17U",
       12,
       13,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -509,7 +499,9 @@ const DATA = {
       "Dungog 17U",
       25,
       14,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -518,7 +510,9 @@ const DATA = {
       "Nelson Bay 17U",
       16,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -527,7 +521,9 @@ const DATA = {
       "Blayney 17U",
       29,
       17,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -536,7 +532,9 @@ const DATA = {
       "Parkes District 17U",
       15,
       18,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -545,7 +543,9 @@ const DATA = {
       "Scone 17U",
       11,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -554,7 +554,9 @@ const DATA = {
       "Port Stephens 17U",
       19,
       21,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -563,7 +565,9 @@ const DATA = {
       "Tumut 17U",
       21,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -572,7 +576,9 @@ const DATA = {
       "Young & District 17U",
       2,
       22,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -581,7 +587,9 @@ const DATA = {
       "Gunnedah 17U",
       10,
       13,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -590,7 +598,9 @@ const DATA = {
       "Lower Clarence 17U",
       17,
       14,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -599,7 +609,9 @@ const DATA = {
       "Goulburn & District 17U",
       22,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -608,7 +620,9 @@ const DATA = {
       "South Canberra 17U (INV)",
       22,
       17,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -617,7 +631,9 @@ const DATA = {
       "Glen Innes 17U",
       14,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -626,7 +642,9 @@ const DATA = {
       "Cowra 17U",
       8,
       18,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -635,7 +653,9 @@ const DATA = {
       "Temora 17U",
       17,
       21,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -644,7 +664,9 @@ const DATA = {
       "Wollondilly 17U",
       14,
       22,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -653,7 +675,9 @@ const DATA = {
       "Gloucester 17U",
       10,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -662,7 +686,9 @@ const DATA = {
       "Nelson Bay 17U",
       26,
       13,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -671,7 +697,9 @@ const DATA = {
       "Dungog 17U",
       26,
       14,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -680,7 +708,9 @@ const DATA = {
       "Armidale District 17U",
       10,
       17,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -689,7 +719,9 @@ const DATA = {
       "Gloucester 17U",
       18,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -698,7 +730,9 @@ const DATA = {
       "Blayney 17U",
       22,
       18,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -707,7 +741,9 @@ const DATA = {
       "Parkes District 17U",
       6,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -716,7 +752,9 @@ const DATA = {
       "Scone 17U",
       13,
       21,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -725,7 +763,9 @@ const DATA = {
       "Port Stephens 17U",
       17,
       22,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -734,7 +774,9 @@ const DATA = {
       "Tumut 17U",
       23,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -743,7 +785,9 @@ const DATA = {
       "South Canberra 17U (INV)",
       9,
       13,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -752,7 +796,9 @@ const DATA = {
       "Young & District 17U",
       5,
       14,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -761,7 +807,9 @@ const DATA = {
       "Lower Clarence 17U",
       17,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -770,7 +818,9 @@ const DATA = {
       "Gunnedah 17U",
       6,
       17,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -779,7 +829,9 @@ const DATA = {
       "Goulburn & District 17U",
       8,
       18,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -788,7 +840,9 @@ const DATA = {
       "Glen Innes 17U",
       12,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -797,7 +851,9 @@ const DATA = {
       "Cowra 17U",
       5,
       21,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -806,7 +862,9 @@ const DATA = {
       "Temora 17U",
       9,
       22,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -815,7 +873,9 @@ const DATA = {
       "Wollondilly 17U",
       19,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -824,7 +884,9 @@ const DATA = {
       "Blayney 17U",
       31,
       13,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -833,7 +895,9 @@ const DATA = {
       "Gloucester 17U",
       16,
       14,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -842,7 +906,9 @@ const DATA = {
       "Dungog 17U",
       20,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -851,7 +917,9 @@ const DATA = {
       "Armidale District 17U",
       15,
       17,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -860,7 +928,9 @@ const DATA = {
       "Nelson Bay 17U",
       18,
       18,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -869,7 +939,9 @@ const DATA = {
       "Wollondilly 17U",
       14,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -878,7 +950,9 @@ const DATA = {
       "Parkes District 17U",
       6,
       22,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -887,7 +961,9 @@ const DATA = {
       "Scone 17U",
       26,
       21,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -896,7 +972,9 @@ const DATA = {
       "Port Stephens 17U",
       27,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -905,7 +983,9 @@ const DATA = {
       "Glen Innes 17U",
       9,
       13,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       6,
@@ -914,7 +994,9 @@ const DATA = {
       "Tumut 17U",
       12,
       14,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       6,
@@ -923,7 +1005,9 @@ const DATA = {
       "Young & District 17U",
       3,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       6,
@@ -932,7 +1016,9 @@ const DATA = {
       "Lower Clarence 17U",
       13,
       17,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       6,
@@ -941,7 +1027,9 @@ const DATA = {
       "Gunnedah 17U",
       9,
       18,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       6,
@@ -950,7 +1038,9 @@ const DATA = {
       "South Canberra 17U (INV)",
       6,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       6,
@@ -959,7 +1049,9 @@ const DATA = {
       "Goulburn & District 17U",
       7,
       21,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       6,
@@ -968,7 +1060,9 @@ const DATA = {
       "Cowra 17U",
       22,
       23,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       6,
@@ -977,7 +1071,9 @@ const DATA = {
       "Temora 17U",
       19,
       22,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -986,7 +1082,9 @@ const DATA = {
       "Parkes District 17U",
       12,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -995,7 +1093,9 @@ const DATA = {
       "Wollondilly 17U",
       18,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -1004,7 +1104,9 @@ const DATA = {
       "Gloucester 17U",
       11,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -1013,7 +1115,9 @@ const DATA = {
       "Dungog 17U",
       25,
       28,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -1022,7 +1126,9 @@ const DATA = {
       "Armidale District 17U",
       16,
       29,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -1031,7 +1137,9 @@ const DATA = {
       "Nelson Bay 17U",
       14,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -1040,7 +1148,9 @@ const DATA = {
       "Blayney 17U",
       34,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -1049,7 +1159,9 @@ const DATA = {
       "Temora 17U",
       28,
       34,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       7,
@@ -1058,7 +1170,9 @@ const DATA = {
       "Scone 17U",
       10,
       36,
-      "done"
+      "done",
+      null,
+      "Sun 09:30"
     ],
     [
       8,
@@ -1067,7 +1181,9 @@ const DATA = {
       "Cowra 17U",
       11,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1076,7 +1192,9 @@ const DATA = {
       "Port Stephens 17U",
       15,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1085,7 +1203,9 @@ const DATA = {
       "Tumut 17U",
       8,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1094,7 +1214,9 @@ const DATA = {
       "Young & District 17U",
       1,
       28,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1103,7 +1225,9 @@ const DATA = {
       "Lower Clarence 17U",
       8,
       29,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1112,7 +1236,9 @@ const DATA = {
       "Gunnedah 17U",
       14,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1121,7 +1247,9 @@ const DATA = {
       "South Canberra 17U (INV)",
       11,
       34,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1130,7 +1258,9 @@ const DATA = {
       "Glen Innes 17U",
       16,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       8,
@@ -1139,7 +1269,9 @@ const DATA = {
       "Goulburn & District 17U",
       14,
       36,
-      "done"
+      "done",
+      null,
+      "Sun 10:30"
     ],
     [
       9,
@@ -1148,7 +1280,9 @@ const DATA = {
       "Parkes District 17U",
       20,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1157,7 +1291,9 @@ const DATA = {
       "Temora 17U",
       16,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1166,7 +1302,9 @@ const DATA = {
       "Wollondilly 17U",
       16,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1175,7 +1313,9 @@ const DATA = {
       "Gloucester 17U",
       20,
       28,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1184,7 +1324,9 @@ const DATA = {
       "Dungog 17U",
       21,
       29,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1193,7 +1335,9 @@ const DATA = {
       "Armidale District 17U",
       23,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1202,7 +1346,9 @@ const DATA = {
       "Nelson Bay 17U",
       21,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1211,7 +1357,9 @@ const DATA = {
       "Blayney 17U",
       18,
       34,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       9,
@@ -1220,7 +1368,9 @@ const DATA = {
       "Cowra 17U",
       22,
       36,
-      "done"
+      "done",
+      null,
+      "Sun 11:30"
     ],
     [
       10,
@@ -1229,7 +1379,9 @@ const DATA = {
       "South Canberra 17U (INV)",
       13,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1238,7 +1390,9 @@ const DATA = {
       "Scone 17U",
       11,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1247,7 +1401,9 @@ const DATA = {
       "Port Stephens 17U",
       18,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1256,7 +1412,9 @@ const DATA = {
       "Tumut 17U",
       13,
       28,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1265,7 +1423,9 @@ const DATA = {
       "Young & District 17U",
       4,
       29,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1274,7 +1434,9 @@ const DATA = {
       "Lower Clarence 17U",
       30,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1283,7 +1445,9 @@ const DATA = {
       "Gunnedah 17U",
       9,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1292,7 +1456,9 @@ const DATA = {
       "Goulburn & District 17U",
       5,
       34,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       10,
@@ -1301,7 +1467,9 @@ const DATA = {
       "Glen Innes 17U",
       14,
       36,
-      "done"
+      "done",
+      null,
+      "Sun 12:30"
     ],
     [
       11,
@@ -1310,7 +1478,9 @@ const DATA = {
       "Armidale District 17U",
       6,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1319,7 +1489,9 @@ const DATA = {
       "Cowra 17U",
       6,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1328,7 +1500,9 @@ const DATA = {
       "Temora 17U",
       25,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1337,7 +1511,9 @@ const DATA = {
       "Wollondilly 17U",
       14,
       28,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1346,7 +1522,9 @@ const DATA = {
       "Gloucester 17U",
       23,
       29,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1355,7 +1533,9 @@ const DATA = {
       "Dungog 17U",
       27,
       31,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1364,7 +1544,9 @@ const DATA = {
       "Glen Innes 17U",
       18,
       33,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1373,7 +1555,9 @@ const DATA = {
       "Nelson Bay 17U",
       16,
       34,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       11,
@@ -1382,7 +1566,9 @@ const DATA = {
       "Blayney 17U",
       11,
       36,
-      "done"
+      "done",
+      null,
+      "Sun 13:30"
     ],
     [
       12,
@@ -1391,7 +1577,9 @@ const DATA = {
       "Young & District 17U",
       4,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1400,7 +1588,9 @@ const DATA = {
       "Parkes District 17U",
       10,
       16,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1409,7 +1599,9 @@ const DATA = {
       "Scone 17U",
       7,
       18,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1418,7 +1610,9 @@ const DATA = {
       "Port Stephens 17U",
       21,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1427,7 +1621,9 @@ const DATA = {
       "Tumut 17U",
       16,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1436,7 +1632,9 @@ const DATA = {
       "Goulburn & District 17U",
       6,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1445,7 +1643,9 @@ const DATA = {
       "Lower Clarence 17U",
       15,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1454,7 +1654,9 @@ const DATA = {
       "Gunnedah 17U",
       10,
       35,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       12,
@@ -1463,7 +1665,9 @@ const DATA = {
       "South Canberra 17U (INV)",
       15,
       34,
-      "done"
+      "done",
+      null,
+      "Mon 08:30"
     ],
     [
       13,
@@ -1472,7 +1676,9 @@ const DATA = {
       "Wollondilly 17U",
       22,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1481,7 +1687,9 @@ const DATA = {
       "Glen Innes 17U",
       28,
       16,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1490,7 +1698,9 @@ const DATA = {
       "Cowra 17U",
       14,
       18,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1499,7 +1709,9 @@ const DATA = {
       "Temora 17U",
       40,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1508,7 +1720,9 @@ const DATA = {
       "South Canberra 17U (INV)",
       18,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1517,7 +1731,9 @@ const DATA = {
       "Gloucester 17U",
       7,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1526,7 +1742,9 @@ const DATA = {
       "Dungog 17U",
       29,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1535,7 +1753,9 @@ const DATA = {
       "Armidale District 17U",
       14,
       35,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       13,
@@ -1544,7 +1764,9 @@ const DATA = {
       "Nelson Bay 17U",
       15,
       34,
-      "done"
+      "done",
+      null,
+      "Mon 09:30"
     ],
     [
       14,
@@ -1553,7 +1775,9 @@ const DATA = {
       "Scone 17U",
       12,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1562,7 +1786,9 @@ const DATA = {
       "Blayney 17U",
       22,
       16,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1571,7 +1797,9 @@ const DATA = {
       "Parkes District 17U",
       16,
       18,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1580,7 +1808,9 @@ const DATA = {
       "Goulburn & District 17U",
       6,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1589,7 +1819,9 @@ const DATA = {
       "Port Stephens 17U",
       19,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1598,7 +1830,9 @@ const DATA = {
       "Tumut 17U",
       6,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1607,7 +1841,9 @@ const DATA = {
       "Young & District 17U",
       1,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1616,7 +1852,9 @@ const DATA = {
       "Lower Clarence 17U",
       14,
       35,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       14,
@@ -1625,7 +1863,9 @@ const DATA = {
       "Gunnedah 17U",
       6,
       34,
-      "done"
+      "done",
+      null,
+      "Mon 10:30"
     ],
     [
       15,
@@ -1634,7 +1874,9 @@ const DATA = {
       "Glen Innes 17U",
       26,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1643,7 +1885,9 @@ const DATA = {
       "South Canberra 17U (INV)",
       9,
       16,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1652,7 +1896,9 @@ const DATA = {
       "Gunnedah 17U",
       20,
       18,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1661,7 +1907,9 @@ const DATA = {
       "Cowra 17U",
       12,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1670,7 +1918,9 @@ const DATA = {
       "Temora 17U",
       18,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1679,7 +1929,9 @@ const DATA = {
       "Wollondilly 17U",
       15,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1688,7 +1940,9 @@ const DATA = {
       "Gloucester 17U",
       10,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1697,7 +1951,9 @@ const DATA = {
       "Dungog 17U",
       14,
       35,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       15,
@@ -1706,7 +1962,9 @@ const DATA = {
       "Armidale District 17U",
       10,
       34,
-      "done"
+      "done",
+      null,
+      "Mon 11:30"
     ],
     [
       16,
@@ -1715,7 +1973,9 @@ const DATA = {
       "Nelson Bay 17U",
       22,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1724,7 +1984,9 @@ const DATA = {
       "Goulburn & District 17U",
       12,
       16,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1733,7 +1995,9 @@ const DATA = {
       "Blayney 17U",
       34,
       18,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1742,7 +2006,9 @@ const DATA = {
       "Parkes District 17U",
       14,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1751,7 +2017,9 @@ const DATA = {
       "Scone 17U",
       11,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1760,7 +2028,9 @@ const DATA = {
       "Port Stephens 17U",
       22,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1769,7 +2039,9 @@ const DATA = {
       "Tumut 17U",
       10,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1778,7 +2050,9 @@ const DATA = {
       "Young & District 17U",
       4,
       35,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       16,
@@ -1787,7 +2061,9 @@ const DATA = {
       "Lower Clarence 17U",
       15,
       34,
-      "done"
+      "done",
+      null,
+      "Mon 12:30"
     ],
     [
       17,
@@ -1796,7 +2072,9 @@ const DATA = {
       "Lower Clarence 17U",
       22,
       14,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1805,7 +2083,9 @@ const DATA = {
       "Gunnedah 17U",
       30,
       16,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1814,7 +2094,9 @@ const DATA = {
       "South Canberra 17U (INV)",
       13,
       18,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1823,7 +2105,9 @@ const DATA = {
       "Glen Innes 17U",
       12,
       22,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1832,7 +2116,9 @@ const DATA = {
       "Cowra 17U",
       16,
       23,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1841,7 +2127,9 @@ const DATA = {
       "Temora 17U",
       18,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1850,7 +2138,9 @@ const DATA = {
       "Wollondilly 17U",
       11,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1859,7 +2149,9 @@ const DATA = {
       "Gloucester 17U",
       15,
       35,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ],
     [
       17,
@@ -1868,7 +2160,9 @@ const DATA = {
       "Dungog 17U",
       10,
       34,
-      "done"
+      "done",
+      null,
+      "Mon 13:30"
     ]
   ]
 };
@@ -1878,10 +2172,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -1904,13 +2198,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -1920,7 +2214,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -1940,7 +2234,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -1955,7 +2256,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

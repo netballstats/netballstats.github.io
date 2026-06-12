@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -198,7 +202,8 @@ const DATA = {
       "pct": "174.2",
       "W": 15,
       "L": 1,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Coolamon Comets Opens",
@@ -208,7 +213,8 @@ const DATA = {
       "pct": "144.1",
       "W": 16,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "ADF Reserves Opens (INV)",
@@ -218,7 +224,8 @@ const DATA = {
       "pct": "148.8",
       "W": 12,
       "L": 3,
-      "D": 3
+      "D": 3,
+      "regraded": true
     },
     {
       "code": "Scone Opens",
@@ -228,7 +235,8 @@ const DATA = {
       "pct": "148.0",
       "W": 13,
       "L": 4,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Parkes District Opens",
@@ -238,7 +246,8 @@ const DATA = {
       "pct": "134.8",
       "W": 13,
       "L": 5,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Muswellbrook Opens",
@@ -248,7 +257,8 @@ const DATA = {
       "pct": "147.1",
       "W": 12,
       "L": 5,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Singleton Opens",
@@ -258,7 +268,8 @@ const DATA = {
       "pct": "126.2",
       "W": 11,
       "L": 7,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Yass Opens",
@@ -268,7 +279,8 @@ const DATA = {
       "pct": "125.3",
       "W": 11,
       "L": 7,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Wollondilly Opens",
@@ -278,7 +290,8 @@ const DATA = {
       "pct": "113.6",
       "W": 10,
       "L": 6,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Kurri Kurri Opens",
@@ -288,7 +301,8 @@ const DATA = {
       "pct": "115.9",
       "W": 8,
       "L": 8,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Eurobodalla Opens",
@@ -298,7 +312,8 @@ const DATA = {
       "pct": "108.6",
       "W": 8,
       "L": 10,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Mount Druitt Opens",
@@ -308,7 +323,8 @@ const DATA = {
       "pct": "88.0",
       "W": 7,
       "L": 10,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Leeton Opens",
@@ -318,7 +334,8 @@ const DATA = {
       "pct": "83.1",
       "W": 7,
       "L": 10,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Quirindi Opens",
@@ -328,7 +345,8 @@ const DATA = {
       "pct": "83.4",
       "W": 6,
       "L": 11,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Young & District Opens",
@@ -338,7 +356,8 @@ const DATA = {
       "pct": "81.7",
       "W": 6,
       "L": 12,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Port Stephens Opens",
@@ -348,7 +367,8 @@ const DATA = {
       "pct": "71.4",
       "W": 5,
       "L": 13,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Narrabri Opens",
@@ -358,7 +378,8 @@ const DATA = {
       "pct": "54.3",
       "W": 2,
       "L": 16,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Cowra Opens",
@@ -368,7 +389,8 @@ const DATA = {
       "pct": "42.3",
       "W": 1,
       "L": 17,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Cootamundra Opens",
@@ -378,142 +400,105 @@ const DATA = {
       "pct": "37.6",
       "W": 1,
       "L": 17,
-      "D": 0
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "09:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 09:00"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "10:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 10:00"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "11:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 11:00"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "12:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 12:00"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "13:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 13:00"
     },
     {
       "n": 6,
-      "day": "Sat",
-      "time": "14:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 14:00"
     },
     {
       "n": 7,
-      "day": "Sat",
-      "time": "15:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 15:00"
     },
     {
       "n": 8,
-      "day": "Sun",
-      "time": "09:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 09:00"
     },
     {
       "n": 9,
-      "day": "Sun",
-      "time": "10:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 10:00"
     },
     {
       "n": 10,
-      "day": "Sun",
-      "time": "11:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 11:00"
     },
     {
       "n": 11,
-      "day": "Sun",
-      "time": "12:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 12:00"
     },
     {
       "n": 12,
-      "day": "Sun",
-      "time": "13:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 13:00"
     },
     {
       "n": 13,
-      "day": "Sun",
-      "time": "14:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 14:00"
     },
     {
       "n": 14,
-      "day": "Mon",
-      "time": "09:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 09:00"
     },
     {
       "n": 15,
-      "day": "Mon",
-      "time": "10:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 10:00"
     },
     {
       "n": 16,
-      "day": "Mon",
-      "time": "11:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 11:00"
     },
     {
       "n": 17,
-      "day": "Mon",
-      "time": "12:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 12:00"
     },
     {
       "n": 18,
-      "day": "Mon",
-      "time": "13:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 13:00"
     },
     {
       "n": 19,
-      "day": "Mon",
-      "time": "14:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 14:00"
     }
   ],
   "games": [
@@ -524,7 +509,9 @@ const DATA = {
       "Cowra Opens",
       8,
       1,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -533,7 +520,9 @@ const DATA = {
       "Cootamundra Opens",
       11,
       2,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -542,7 +531,9 @@ const DATA = {
       "Muswellbrook Opens",
       13,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -551,7 +542,9 @@ const DATA = {
       "Narrabri Opens",
       15,
       5,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -560,7 +553,9 @@ const DATA = {
       "Yass Opens",
       14,
       6,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -569,7 +564,9 @@ const DATA = {
       "Mount Druitt Opens",
       17,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -578,7 +575,9 @@ const DATA = {
       "Wollondilly Opens",
       18,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -587,7 +586,9 @@ const DATA = {
       "Singleton Opens",
       17,
       10,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -596,7 +597,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       9,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       2,
@@ -605,7 +608,9 @@ const DATA = {
       "Quirindi Opens",
       16,
       2,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -614,7 +619,9 @@ const DATA = {
       "Kurri Kurri Opens",
       21,
       1,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -623,7 +630,9 @@ const DATA = {
       "Eurobodalla Opens",
       16,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -632,7 +641,9 @@ const DATA = {
       "Leeton Opens",
       13,
       5,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -641,7 +652,9 @@ const DATA = {
       "Port Stephens Opens",
       20,
       6,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -650,7 +663,9 @@ const DATA = {
       "Young & District Opens",
       14,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -659,7 +674,9 @@ const DATA = {
       "Coolamon Comets Opens",
       22,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -668,7 +685,9 @@ const DATA = {
       "Parkes District Opens",
       15,
       10,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -677,7 +696,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       19,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       3,
@@ -686,7 +707,9 @@ const DATA = {
       "Sapphire Coast Opens",
       11,
       2,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -695,7 +718,9 @@ const DATA = {
       "Scone Opens",
       13,
       1,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -704,7 +729,9 @@ const DATA = {
       "Cowra Opens",
       17,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -713,7 +740,9 @@ const DATA = {
       "Cootamundra Opens",
       14,
       5,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -722,7 +751,9 @@ const DATA = {
       "Muswellbrook Opens",
       18,
       6,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -731,7 +762,9 @@ const DATA = {
       "Narrabri Opens",
       6,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -740,7 +773,9 @@ const DATA = {
       "Yass Opens",
       19,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -749,7 +784,9 @@ const DATA = {
       "Mount Druitt Opens",
       12,
       10,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -758,7 +795,9 @@ const DATA = {
       "Wollondilly Opens",
       16,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       4,
@@ -767,7 +806,9 @@ const DATA = {
       "Eurobodalla Opens",
       22,
       1,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -776,7 +817,9 @@ const DATA = {
       "Leeton Opens",
       14,
       2,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -785,7 +828,9 @@ const DATA = {
       "Port Stephens Opens",
       8,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -794,7 +839,9 @@ const DATA = {
       "Young & District Opens",
       26,
       5,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -803,7 +850,9 @@ const DATA = {
       "Coolamon Comets Opens",
       19,
       6,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -812,7 +861,9 @@ const DATA = {
       "Parkes District Opens",
       18,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -821,7 +872,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       22,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -830,7 +883,9 @@ const DATA = {
       "Singleton Opens",
       25,
       10,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -839,7 +894,9 @@ const DATA = {
       "Wollondilly Opens",
       22,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       5,
@@ -848,7 +905,9 @@ const DATA = {
       "Kurri Kurri Opens",
       18,
       1,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -857,7 +916,9 @@ const DATA = {
       "Quirindi Opens",
       10,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -866,7 +927,9 @@ const DATA = {
       "Sapphire Coast Opens",
       25,
       2,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -875,7 +938,9 @@ const DATA = {
       "Scone Opens",
       25,
       5,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -884,7 +949,9 @@ const DATA = {
       "Cowra Opens",
       5,
       6,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -893,7 +960,9 @@ const DATA = {
       "Cootamundra Opens",
       2,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -902,7 +971,9 @@ const DATA = {
       "Muswellbrook Opens",
       16,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -911,7 +982,9 @@ const DATA = {
       "Narrabri Opens",
       7,
       10,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -920,7 +993,9 @@ const DATA = {
       "Yass Opens",
       24,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       6,
@@ -929,7 +1004,9 @@ const DATA = {
       "Port Stephens Opens",
       9,
       1,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -938,7 +1015,9 @@ const DATA = {
       "Young & District Opens",
       9,
       2,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -947,7 +1026,9 @@ const DATA = {
       "Coolamon Comets Opens",
       21,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -956,7 +1037,9 @@ const DATA = {
       "Parkes District Opens",
       12,
       5,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -965,7 +1048,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       13,
       6,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -974,7 +1059,9 @@ const DATA = {
       "Singleton Opens",
       22,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -983,7 +1070,9 @@ const DATA = {
       "Wollondilly Opens",
       22,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -992,7 +1081,9 @@ const DATA = {
       "Mount Druitt Opens",
       2,
       10,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -1001,7 +1092,9 @@ const DATA = {
       "Yass Opens",
       25,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       7,
@@ -1010,7 +1103,9 @@ const DATA = {
       "Leeton Opens",
       18,
       2,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1019,7 +1114,9 @@ const DATA = {
       "Eurobodalla Opens",
       16,
       1,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1028,7 +1125,9 @@ const DATA = {
       "Kurri Kurri Opens",
       16,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1037,7 +1136,9 @@ const DATA = {
       "Quirindi Opens",
       12,
       5,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1046,7 +1147,9 @@ const DATA = {
       "Sapphire Coast Opens",
       28,
       6,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1055,7 +1158,9 @@ const DATA = {
       "Scone Opens",
       10,
       7,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1064,7 +1169,9 @@ const DATA = {
       "Cowra Opens",
       5,
       8,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1073,7 +1180,9 @@ const DATA = {
       "Cootamundra Opens",
       13,
       10,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1082,7 +1191,9 @@ const DATA = {
       "Muswellbrook Opens",
       21,
       12,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       8,
@@ -1091,7 +1202,9 @@ const DATA = {
       "Coolamon Comets Opens",
       28,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1100,7 +1213,9 @@ const DATA = {
       "Parkes District Opens",
       20,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1109,7 +1224,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       13,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1118,7 +1235,9 @@ const DATA = {
       "Singleton Opens",
       21,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1127,7 +1246,9 @@ const DATA = {
       "Wollondilly Opens",
       13,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1136,7 +1257,9 @@ const DATA = {
       "Mount Druitt Opens",
       18,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1145,7 +1268,9 @@ const DATA = {
       "Yass Opens",
       23,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1154,7 +1279,9 @@ const DATA = {
       "Narrabri Opens",
       11,
       17,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1163,7 +1290,9 @@ const DATA = {
       "Muswellbrook Opens",
       30,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       9,
@@ -1172,7 +1301,9 @@ const DATA = {
       "Young & District Opens",
       11,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1181,7 +1312,9 @@ const DATA = {
       "Port Stephens Opens",
       9,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1190,7 +1323,9 @@ const DATA = {
       "Leeton Opens",
       13,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1199,7 +1334,9 @@ const DATA = {
       "Eurobodalla Opens",
       13,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1208,7 +1345,9 @@ const DATA = {
       "Kurri Kurri Opens",
       14,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1217,7 +1356,9 @@ const DATA = {
       "Quirindi Opens",
       14,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1226,7 +1367,9 @@ const DATA = {
       "Sapphire Coast Opens",
       23,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1235,7 +1378,9 @@ const DATA = {
       "Scone Opens",
       24,
       17,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1244,7 +1389,9 @@ const DATA = {
       "Cowra Opens",
       13,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       10,
@@ -1253,7 +1400,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       16,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1262,7 +1411,9 @@ const DATA = {
       "Singleton Opens",
       23,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1271,7 +1422,9 @@ const DATA = {
       "Wollondilly Opens",
       15,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1280,7 +1433,9 @@ const DATA = {
       "Mount Druitt Opens",
       16,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1289,7 +1444,9 @@ const DATA = {
       "Yass Opens",
       13,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1298,7 +1455,9 @@ const DATA = {
       "Narrabri Opens",
       13,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1307,7 +1466,9 @@ const DATA = {
       "Muswellbrook Opens",
       21,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1316,7 +1477,9 @@ const DATA = {
       "Cootamundra Opens",
       6,
       17,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1325,7 +1488,9 @@ const DATA = {
       "Cowra Opens",
       6,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       11,
@@ -1334,7 +1499,9 @@ const DATA = {
       "Parkes District Opens",
       11,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1343,7 +1510,9 @@ const DATA = {
       "Coolamon Comets Opens",
       14,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1352,7 +1521,9 @@ const DATA = {
       "Young & District Opens",
       14,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1361,7 +1532,9 @@ const DATA = {
       "Port Stephens Opens",
       6,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1370,7 +1543,9 @@ const DATA = {
       "Leeton Opens",
       21,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1379,7 +1554,9 @@ const DATA = {
       "Eurobodalla Opens",
       14,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1388,7 +1565,9 @@ const DATA = {
       "Kurri Kurri Opens",
       22,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1397,7 +1576,9 @@ const DATA = {
       "Quirindi Opens",
       22,
       17,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1406,7 +1587,9 @@ const DATA = {
       "Sapphire Coast Opens",
       20,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       12,
@@ -1415,7 +1598,9 @@ const DATA = {
       "Wollondilly Opens",
       9,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1424,7 +1609,9 @@ const DATA = {
       "Mount Druitt Opens",
       8,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1433,7 +1620,9 @@ const DATA = {
       "Yass Opens",
       15,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1442,7 +1631,9 @@ const DATA = {
       "Narrabri Opens",
       15,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1451,7 +1642,9 @@ const DATA = {
       "Muswellbrook Opens",
       22,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1460,7 +1653,9 @@ const DATA = {
       "Cootamundra Opens",
       13,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1469,7 +1664,9 @@ const DATA = {
       "Cowra Opens",
       4,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1478,7 +1675,9 @@ const DATA = {
       "Scone Opens",
       18,
       17,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1487,7 +1686,9 @@ const DATA = {
       "Sapphire Coast Opens",
       23,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       13,
@@ -1496,7 +1697,9 @@ const DATA = {
       "Singleton Opens",
       25,
       6,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1505,7 +1708,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       14,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1514,7 +1719,9 @@ const DATA = {
       "Parkes District Opens",
       17,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1523,7 +1730,9 @@ const DATA = {
       "Coolamon Comets Opens",
       22,
       11,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1532,7 +1741,9 @@ const DATA = {
       "Young & District Opens",
       19,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1541,7 +1752,9 @@ const DATA = {
       "Port Stephens Opens",
       18,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1550,7 +1763,9 @@ const DATA = {
       "Leeton Opens",
       12,
       17,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1559,7 +1774,9 @@ const DATA = {
       "Eurobodalla Opens",
       8,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1568,7 +1785,9 @@ const DATA = {
       "Kurri Kurri Opens",
       19,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       14,
@@ -1577,7 +1796,9 @@ const DATA = {
       "Yass Opens",
       11,
       1,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1586,7 +1807,9 @@ const DATA = {
       "Narrabri Opens",
       10,
       2,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1595,7 +1818,9 @@ const DATA = {
       "Muswellbrook Opens",
       16,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1604,7 +1829,9 @@ const DATA = {
       "Cootamundra Opens",
       3,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1613,7 +1840,9 @@ const DATA = {
       "Cowra Opens",
       12,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1622,7 +1851,9 @@ const DATA = {
       "Scone Opens",
       26,
       8,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1631,7 +1862,9 @@ const DATA = {
       "Sapphire Coast Opens",
       32,
       11,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1640,7 +1873,9 @@ const DATA = {
       "Quirindi Opens",
       17,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1649,7 +1884,9 @@ const DATA = {
       "Kurri Kurri Opens",
       14,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       15,
@@ -1658,7 +1895,9 @@ const DATA = {
       "Mount Druitt Opens",
       22,
       1,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1667,7 +1906,9 @@ const DATA = {
       "Wollondilly Opens",
       12,
       2,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1676,7 +1917,9 @@ const DATA = {
       "Singleton Opens",
       27,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1685,7 +1928,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       18,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1694,7 +1939,9 @@ const DATA = {
       "Parkes District Opens",
       14,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1703,7 +1950,9 @@ const DATA = {
       "Coolamon Comets Opens",
       18,
       8,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1712,7 +1961,9 @@ const DATA = {
       "Young & District Opens",
       15,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1721,7 +1972,9 @@ const DATA = {
       "Port Stephens Opens",
       16,
       11,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1730,7 +1983,9 @@ const DATA = {
       "Leeton Opens",
       15,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       16,
@@ -1739,7 +1994,9 @@ const DATA = {
       "Muswellbrook Opens",
       18,
       2,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1748,7 +2005,9 @@ const DATA = {
       "Cootamundra Opens",
       14,
       1,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1757,7 +2016,9 @@ const DATA = {
       "Cowra Opens",
       6,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1766,7 +2027,9 @@ const DATA = {
       "Scone Opens",
       22,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1775,7 +2038,9 @@ const DATA = {
       "Sapphire Coast Opens",
       18,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1784,7 +2049,9 @@ const DATA = {
       "Quirindi Opens",
       12,
       8,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1793,7 +2060,9 @@ const DATA = {
       "Kurri Kurri Opens",
       11,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1802,7 +2071,9 @@ const DATA = {
       "Eurobodalla Opens",
       18,
       11,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1811,7 +2082,9 @@ const DATA = {
       "Leeton Opens",
       20,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       17,
@@ -1820,7 +2093,9 @@ const DATA = {
       "Narrabri Opens",
       15,
       1,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1829,7 +2104,9 @@ const DATA = {
       "Yass Opens",
       21,
       2,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1838,7 +2115,9 @@ const DATA = {
       "Mount Druitt Opens",
       16,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1847,7 +2126,9 @@ const DATA = {
       "Wollondilly Opens",
       9,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1856,7 +2137,9 @@ const DATA = {
       "Singleton Opens",
       18,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1865,7 +2148,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       16,
       8,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1874,7 +2159,9 @@ const DATA = {
       "Parkes District Opens",
       18,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1883,7 +2170,9 @@ const DATA = {
       "Coolamon Comets Opens",
       17,
       11,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1892,7 +2181,9 @@ const DATA = {
       "Young & District Opens",
       18,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       18,
@@ -1901,7 +2192,9 @@ const DATA = {
       "Cowra Opens",
       7,
       2,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -1910,7 +2203,9 @@ const DATA = {
       "Scone Opens",
       15,
       1,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -1919,7 +2214,9 @@ const DATA = {
       "Sapphire Coast Opens",
       29,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -1928,7 +2225,9 @@ const DATA = {
       "Quirindi Opens",
       16,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -1937,7 +2236,9 @@ const DATA = {
       "Kurri Kurri Opens",
       16,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -1946,7 +2247,9 @@ const DATA = {
       "Eurobodalla Opens",
       12,
       8,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -1955,7 +2258,9 @@ const DATA = {
       "Leeton Opens",
       11,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -1964,7 +2269,9 @@ const DATA = {
       "Port Stephens Opens",
       15,
       11,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -1973,7 +2280,9 @@ const DATA = {
       "Young & District Opens",
       16,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       19,
@@ -1982,7 +2291,9 @@ const DATA = {
       "Cootamundra Opens",
       6,
       2,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -1991,7 +2302,9 @@ const DATA = {
       "Muswellbrook Opens",
       16,
       1,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2000,7 +2313,9 @@ const DATA = {
       "Narrabri Opens",
       10,
       3,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2009,7 +2324,9 @@ const DATA = {
       "Yass Opens",
       22,
       5,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2018,7 +2335,9 @@ const DATA = {
       "Mount Druitt Opens",
       14,
       6,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2027,7 +2346,9 @@ const DATA = {
       "Wollondilly Opens",
       17,
       8,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2036,7 +2357,9 @@ const DATA = {
       "Singleton Opens",
       28,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2045,7 +2368,9 @@ const DATA = {
       "ADF Reserves Opens (INV)",
       22,
       11,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2054,7 +2379,9 @@ const DATA = {
       "Parkes District Opens",
       17,
       13,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ]
   ]
 };
@@ -2064,10 +2391,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -2090,13 +2417,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -2106,7 +2433,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -2126,7 +2453,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -2141,7 +2475,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

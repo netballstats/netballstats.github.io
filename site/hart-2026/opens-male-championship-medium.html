@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -199,7 +203,8 @@ const DATA = {
       "pct": "291.5",
       "W": 9,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Cessnock District Open Male",
@@ -209,7 +214,8 @@ const DATA = {
       "pct": "244.3",
       "W": 8,
       "L": 1,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Manly Warringah Open Male",
@@ -219,7 +225,8 @@ const DATA = {
       "pct": "214.7",
       "W": 7,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Lakeside Open Male",
@@ -229,7 +236,8 @@ const DATA = {
       "pct": "90.1",
       "W": 6,
       "L": 3,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Wyong District Open Male",
@@ -239,7 +247,8 @@ const DATA = {
       "pct": "79.4",
       "W": 5,
       "L": 4,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Ku-ring-gai Open Male",
@@ -249,7 +258,8 @@ const DATA = {
       "pct": "100.0",
       "W": 4,
       "L": 5,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Bellingen Open Male",
@@ -259,7 +269,8 @@ const DATA = {
       "pct": "68.6",
       "W": 3,
       "L": 6,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Gosford Open Male",
@@ -269,7 +280,8 @@ const DATA = {
       "pct": "78.4",
       "W": 2,
       "L": 7,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Randwick Open Male 1",
@@ -279,7 +291,8 @@ const DATA = {
       "pct": "49.3",
       "W": 1,
       "L": 8,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Eastwood Ryde Open Male",
@@ -289,72 +302,55 @@ const DATA = {
       "pct": "22.7",
       "W": 0,
       "L": 9,
-      "D": 0
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "09:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 09:30"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "10:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 10:30"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "11:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 11:30"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "12:30",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 12:30"
     },
     {
       "n": 5,
-      "day": "Sun",
-      "time": "09:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 09:00"
     },
     {
       "n": 6,
-      "day": "Sun",
-      "time": "10:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 10:00"
     },
     {
       "n": 7,
-      "day": "Sun",
-      "time": "11:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 11:00"
     },
     {
       "n": 8,
-      "day": "Sun",
-      "time": "12:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 12:00"
     },
     {
       "n": 9,
-      "day": "Sun",
-      "time": "13:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 13:00"
     }
   ],
   "games": [
@@ -365,7 +361,9 @@ const DATA = {
       "Cessnock District Open Male",
       20,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -374,7 +372,9 @@ const DATA = {
       "Gosford Open Male",
       15,
       15,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -383,7 +383,9 @@ const DATA = {
       "Liverpool City Open Male",
       23,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -392,7 +394,9 @@ const DATA = {
       "Lakeside Open Male",
       20,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       1,
@@ -401,7 +405,9 @@ const DATA = {
       "Eastwood Ryde Open Male",
       8,
       20,
-      "done"
+      "done",
+      null,
+      "Sat 09:30"
     ],
     [
       2,
@@ -410,7 +416,9 @@ const DATA = {
       "Bellingen Open Male",
       6,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -419,7 +427,9 @@ const DATA = {
       "Randwick Open Male 1",
       15,
       20,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -428,7 +438,9 @@ const DATA = {
       "Ku-ring-gai Open Male",
       29,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -437,7 +449,9 @@ const DATA = {
       "Wyong District Open Male",
       11,
       15,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       2,
@@ -446,7 +460,9 @@ const DATA = {
       "Manly Warringah Open Male",
       19,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 10:30"
     ],
     [
       3,
@@ -455,7 +471,9 @@ const DATA = {
       "Liverpool City Open Male",
       34,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -464,7 +482,9 @@ const DATA = {
       "Gosford Open Male",
       16,
       15,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -473,7 +493,9 @@ const DATA = {
       "Cessnock District Open Male",
       24,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -482,7 +504,9 @@ const DATA = {
       "Manly Warringah Open Male",
       23,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       3,
@@ -491,7 +515,9 @@ const DATA = {
       "Lakeside Open Male",
       25,
       20,
-      "done"
+      "done",
+      null,
+      "Sat 11:30"
     ],
     [
       4,
@@ -500,7 +526,9 @@ const DATA = {
       "Wyong District Open Male",
       11,
       19,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -509,7 +537,9 @@ const DATA = {
       "Eastwood Ryde Open Male",
       2,
       20,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -518,7 +548,9 @@ const DATA = {
       "Randwick Open Male 1",
       11,
       16,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -527,7 +559,9 @@ const DATA = {
       "Bellingen Open Male",
       16,
       15,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       4,
@@ -536,7 +570,9 @@ const DATA = {
       "Ku-ring-gai Open Male",
       14,
       3,
-      "done"
+      "done",
+      null,
+      "Sat 12:30"
     ],
     [
       5,
@@ -545,7 +581,9 @@ const DATA = {
       "Liverpool City Open Male",
       36,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       5,
@@ -554,7 +592,9 @@ const DATA = {
       "Manly Warringah Open Male",
       26,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       5,
@@ -563,7 +603,9 @@ const DATA = {
       "Gosford Open Male",
       29,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       5,
@@ -572,7 +614,9 @@ const DATA = {
       "Cessnock District Open Male",
       31,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       5,
@@ -581,7 +625,9 @@ const DATA = {
       "Wyong District Open Male",
       12,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       6,
@@ -590,7 +636,9 @@ const DATA = {
       "Randwick Open Male 1",
       7,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       6,
@@ -599,7 +647,9 @@ const DATA = {
       "Lakeside Open Male",
       13,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       6,
@@ -608,7 +658,9 @@ const DATA = {
       "Eastwood Ryde Open Male",
       7,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       6,
@@ -617,7 +669,9 @@ const DATA = {
       "Ku-ring-gai Open Male",
       15,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       6,
@@ -626,7 +680,9 @@ const DATA = {
       "Bellingen Open Male",
       14,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       7,
@@ -635,7 +691,9 @@ const DATA = {
       "Manly Warringah Open Male",
       43,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       7,
@@ -644,7 +702,9 @@ const DATA = {
       "Wyong District Open Male",
       14,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       7,
@@ -653,7 +713,9 @@ const DATA = {
       "Bellingen Open Male",
       9,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       7,
@@ -662,7 +724,9 @@ const DATA = {
       "Gosford Open Male",
       14,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       7,
@@ -671,7 +735,9 @@ const DATA = {
       "Cessnock District Open Male",
       18,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       8,
@@ -680,7 +746,9 @@ const DATA = {
       "Liverpool City Open Male",
       39,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       8,
@@ -689,7 +757,9 @@ const DATA = {
       "Ku-ring-gai Open Male",
       14,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       8,
@@ -698,7 +768,9 @@ const DATA = {
       "Lakeside Open Male",
       11,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       8,
@@ -707,7 +779,9 @@ const DATA = {
       "Eastwood Ryde Open Male",
       13,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       8,
@@ -716,7 +790,9 @@ const DATA = {
       "Randwick Open Male 1",
       12,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       9,
@@ -725,7 +801,9 @@ const DATA = {
       "Randwick Open Male 1",
       11,
       7,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       9,
@@ -734,7 +812,9 @@ const DATA = {
       "Bellingen Open Male",
       25,
       9,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       9,
@@ -743,7 +823,9 @@ const DATA = {
       "Wyong District Open Male",
       13,
       10,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       9,
@@ -752,7 +834,9 @@ const DATA = {
       "Manly Warringah Open Male",
       16,
       24,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       9,
@@ -761,7 +845,9 @@ const DATA = {
       "Gosford Open Male",
       12,
       26,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ]
   ]
 };
@@ -771,10 +857,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -797,13 +883,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -813,7 +899,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -833,7 +919,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -848,7 +941,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

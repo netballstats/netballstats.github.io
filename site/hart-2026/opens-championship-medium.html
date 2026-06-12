@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -199,7 +203,8 @@ const DATA = {
       "pct": "182.9",
       "W": 19,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Hills District Opens",
@@ -209,7 +214,8 @@ const DATA = {
       "pct": "172.1",
       "W": 17,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Manly Warringah Opens",
@@ -219,7 +225,8 @@ const DATA = {
       "pct": "159.6",
       "W": 17,
       "L": 2,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Gosford Opens",
@@ -229,7 +236,8 @@ const DATA = {
       "pct": "129.4",
       "W": 15,
       "L": 4,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Randwick Opens",
@@ -239,7 +247,8 @@ const DATA = {
       "pct": "118.5",
       "W": 12,
       "L": 7,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Lakeside Opens",
@@ -249,7 +258,8 @@ const DATA = {
       "pct": "108.3",
       "W": 11,
       "L": 6,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Ku-ring-gai Opens",
@@ -259,7 +269,8 @@ const DATA = {
       "pct": "120.1",
       "W": 11,
       "L": 7,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Sutherland Shire Opens",
@@ -269,7 +280,8 @@ const DATA = {
       "pct": "113.3",
       "W": 11,
       "L": 8,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Blacktown City Opens",
@@ -279,7 +291,8 @@ const DATA = {
       "pct": "97.8",
       "W": 10,
       "L": 8,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Penrith District Opens",
@@ -289,7 +302,8 @@ const DATA = {
       "pct": "97.8",
       "W": 9,
       "L": 9,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Illawarra District Opens",
@@ -299,7 +313,8 @@ const DATA = {
       "pct": "96.7",
       "W": 9,
       "L": 9,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Wyong District Opens",
@@ -309,7 +324,8 @@ const DATA = {
       "pct": "91.7",
       "W": 9,
       "L": 10,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Woolgoolga District Opens",
@@ -319,7 +335,8 @@ const DATA = {
       "pct": "81.6",
       "W": 7,
       "L": 12,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Hastings Valley Opens",
@@ -329,7 +346,8 @@ const DATA = {
       "pct": "81.4",
       "W": 6,
       "L": 11,
-      "D": 2
+      "D": 2,
+      "regraded": true
     },
     {
       "code": "Charlestown Opens",
@@ -339,7 +357,8 @@ const DATA = {
       "pct": "86.6",
       "W": 6,
       "L": 12,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Newcastle Opens",
@@ -349,7 +368,8 @@ const DATA = {
       "pct": "78.7",
       "W": 6,
       "L": 12,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Baulkham Hills Shire Opens",
@@ -359,7 +379,8 @@ const DATA = {
       "pct": "71.9",
       "W": 5,
       "L": 14,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Eastwood Ryde Opens",
@@ -369,7 +390,8 @@ const DATA = {
       "pct": "66.8",
       "W": 2,
       "L": 16,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Orange Opens",
@@ -379,7 +401,8 @@ const DATA = {
       "pct": "63.8",
       "W": 2,
       "L": 16,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Camden & District Opens",
@@ -389,142 +412,105 @@ const DATA = {
       "pct": "61.3",
       "W": 0,
       "L": 19,
-      "D": 0
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "09:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 09:00"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "10:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 10:00"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "11:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 11:00"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "12:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 12:00"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "13:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 13:00"
     },
     {
       "n": 6,
-      "day": "Sat",
-      "time": "14:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 14:00"
     },
     {
       "n": 7,
-      "day": "Sat",
-      "time": "15:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 15:00"
     },
     {
       "n": 8,
-      "day": "Sun",
-      "time": "09:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 09:00"
     },
     {
       "n": 9,
-      "day": "Sun",
-      "time": "10:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 10:00"
     },
     {
       "n": 10,
-      "day": "Sun",
-      "time": "11:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 11:00"
     },
     {
       "n": 11,
-      "day": "Sun",
-      "time": "12:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 12:00"
     },
     {
       "n": 12,
-      "day": "Sun",
-      "time": "13:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 13:00"
     },
     {
       "n": 13,
-      "day": "Sun",
-      "time": "14:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 14:00"
     },
     {
       "n": 14,
-      "day": "Mon",
-      "time": "09:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 09:00"
     },
     {
       "n": 15,
-      "day": "Mon",
-      "time": "10:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 10:00"
     },
     {
       "n": 16,
-      "day": "Mon",
-      "time": "11:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 11:00"
     },
     {
       "n": 17,
-      "day": "Mon",
-      "time": "12:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 12:00"
     },
     {
       "n": 18,
-      "day": "Mon",
-      "time": "13:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 13:00"
     },
     {
       "n": 19,
-      "day": "Mon",
-      "time": "14:00",
-      "sdate": "8/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Mon 14:00"
     }
   ],
   "games": [
@@ -535,7 +521,9 @@ const DATA = {
       "Hills District Opens",
       25,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -544,7 +532,9 @@ const DATA = {
       "Charlestown Opens",
       14,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -553,7 +543,9 @@ const DATA = {
       "Manly Warringah Opens",
       22,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -562,7 +554,9 @@ const DATA = {
       "Maitland Opens",
       21,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -571,7 +565,9 @@ const DATA = {
       "Randwick Opens",
       23,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -580,7 +576,9 @@ const DATA = {
       "Wyong District Opens",
       11,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -589,7 +587,9 @@ const DATA = {
       "Lakeside Opens",
       17,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -598,7 +598,9 @@ const DATA = {
       "Sutherland Shire Opens",
       25,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -607,7 +609,9 @@ const DATA = {
       "Baulkham Hills Shire Opens",
       16,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       1,
@@ -616,7 +620,9 @@ const DATA = {
       "Eastwood Ryde Opens",
       16,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 09:00"
     ],
     [
       2,
@@ -625,7 +631,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       14,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -634,7 +642,9 @@ const DATA = {
       "Illawarra District Opens",
       8,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -643,7 +653,9 @@ const DATA = {
       "Woolgoolga District Opens",
       24,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -652,7 +664,9 @@ const DATA = {
       "Newcastle Opens",
       13,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -661,7 +675,9 @@ const DATA = {
       "Blacktown City Opens",
       13,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -670,7 +686,9 @@ const DATA = {
       "Penrith District Opens",
       20,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -679,7 +697,9 @@ const DATA = {
       "Camden & District Opens",
       8,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -688,7 +708,9 @@ const DATA = {
       "Gosford Opens",
       22,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -697,7 +719,9 @@ const DATA = {
       "Hastings Valley Opens",
       13,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -706,7 +730,9 @@ const DATA = {
       "Orange Opens",
       10,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       3,
@@ -715,7 +741,9 @@ const DATA = {
       "Manly Warringah Opens",
       24,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -724,7 +752,9 @@ const DATA = {
       "Charlestown Opens",
       14,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -733,7 +763,9 @@ const DATA = {
       "Hills District Opens",
       14,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -742,7 +774,9 @@ const DATA = {
       "Orange Opens",
       13,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -751,7 +785,9 @@ const DATA = {
       "Maitland Opens",
       23,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -760,7 +796,9 @@ const DATA = {
       "Randwick Opens",
       17,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -769,7 +807,9 @@ const DATA = {
       "Wyong District Opens",
       19,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -778,7 +818,9 @@ const DATA = {
       "Lakeside Opens",
       24,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -787,7 +829,9 @@ const DATA = {
       "Sutherland Shire Opens",
       21,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -796,7 +840,9 @@ const DATA = {
       "Baulkham Hills Shire Opens",
       15,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       4,
@@ -805,7 +851,9 @@ const DATA = {
       "Newcastle Opens",
       16,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -814,7 +862,9 @@ const DATA = {
       "Eastwood Ryde Opens",
       12,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -823,7 +873,9 @@ const DATA = {
       "Illawarra District Opens",
       13,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -832,7 +884,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       22,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -841,7 +895,9 @@ const DATA = {
       "Woolgoolga District Opens",
       19,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -850,7 +906,9 @@ const DATA = {
       "Blacktown City Opens",
       10,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -859,7 +917,9 @@ const DATA = {
       "Penrith District Opens",
       9,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -868,7 +928,9 @@ const DATA = {
       "Camden & District Opens",
       5,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -877,7 +939,9 @@ const DATA = {
       "Gosford Opens",
       22,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -886,7 +950,9 @@ const DATA = {
       "Hastings Valley Opens",
       14,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       5,
@@ -895,7 +961,9 @@ const DATA = {
       "Maitland Opens",
       29,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -904,7 +972,9 @@ const DATA = {
       "Orange Opens",
       14,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -913,7 +983,9 @@ const DATA = {
       "Charlestown Opens",
       24,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -922,7 +994,9 @@ const DATA = {
       "Hills District Opens",
       17,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -931,7 +1005,9 @@ const DATA = {
       "Manly Warringah Opens",
       31,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -940,7 +1016,9 @@ const DATA = {
       "Hastings Valley Opens",
       14,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -949,7 +1027,9 @@ const DATA = {
       "Randwick Opens",
       15,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -958,7 +1038,9 @@ const DATA = {
       "Wyong District Opens",
       18,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -967,7 +1049,9 @@ const DATA = {
       "Lakeside Opens",
       19,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -976,7 +1060,9 @@ const DATA = {
       "Sutherland Shire Opens",
       24,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       6,
@@ -985,7 +1071,9 @@ const DATA = {
       "Blacktown City Opens",
       11,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -994,7 +1082,9 @@ const DATA = {
       "Baulkham Hills Shire Opens",
       18,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -1003,7 +1093,9 @@ const DATA = {
       "Eastwood Ryde Opens",
       13,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -1012,7 +1104,9 @@ const DATA = {
       "Illawarra District Opens",
       15,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -1021,7 +1115,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       18,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -1030,7 +1126,9 @@ const DATA = {
       "Newcastle Opens",
       17,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -1039,7 +1137,9 @@ const DATA = {
       "Woolgoolga District Opens",
       14,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -1048,7 +1148,9 @@ const DATA = {
       "Penrith District Opens",
       16,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -1057,7 +1159,9 @@ const DATA = {
       "Camden & District Opens",
       11,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -1066,7 +1170,9 @@ const DATA = {
       "Gosford Opens",
       23,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       7,
@@ -1075,7 +1181,9 @@ const DATA = {
       "Randwick Opens",
       22,
       27,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1084,7 +1192,9 @@ const DATA = {
       "Hastings Valley Opens",
       23,
       28,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1093,7 +1203,9 @@ const DATA = {
       "Orange Opens",
       14,
       29,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1102,7 +1214,9 @@ const DATA = {
       "Charlestown Opens",
       19,
       30,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1111,7 +1225,9 @@ const DATA = {
       "Hills District Opens",
       28,
       31,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1120,7 +1236,9 @@ const DATA = {
       "Manly Warringah Opens",
       23,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1129,7 +1247,9 @@ const DATA = {
       "Maitland Opens",
       26,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1138,7 +1258,9 @@ const DATA = {
       "Gosford Opens",
       22,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1147,7 +1269,9 @@ const DATA = {
       "Wyong District Opens",
       20,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       7,
@@ -1156,7 +1280,9 @@ const DATA = {
       "Lakeside Opens",
       22,
       41,
-      "done"
+      "done",
+      null,
+      "Sat 15:00"
     ],
     [
       8,
@@ -1165,7 +1291,9 @@ const DATA = {
       "Penrith District Opens",
       14,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1174,7 +1302,9 @@ const DATA = {
       "Sutherland Shire Opens",
       11,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1183,7 +1313,9 @@ const DATA = {
       "Baulkham Hills Shire Opens",
       12,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1192,7 +1324,9 @@ const DATA = {
       "Eastwood Ryde Opens",
       13,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1201,7 +1335,9 @@ const DATA = {
       "Illawarra District Opens",
       18,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1210,7 +1346,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       13,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1219,7 +1357,9 @@ const DATA = {
       "Newcastle Opens",
       16,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1228,7 +1368,9 @@ const DATA = {
       "Blacktown City Opens",
       19,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1237,7 +1379,9 @@ const DATA = {
       "Woolgoolga District Opens",
       9,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       8,
@@ -1246,7 +1390,9 @@ const DATA = {
       "Camden & District Opens",
       16,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       9,
@@ -1255,7 +1401,9 @@ const DATA = {
       "Wyong District Opens",
       20,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1264,7 +1412,9 @@ const DATA = {
       "Gosford Opens",
       21,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1273,7 +1423,9 @@ const DATA = {
       "Hastings Valley Opens",
       13,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1282,7 +1434,9 @@ const DATA = {
       "Orange Opens",
       12,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1291,7 +1445,9 @@ const DATA = {
       "Charlestown Opens",
       13,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1300,7 +1456,9 @@ const DATA = {
       "Hills District Opens",
       15,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1309,7 +1467,9 @@ const DATA = {
       "Manly Warringah Opens",
       23,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1318,7 +1478,9 @@ const DATA = {
       "Maitland Opens",
       31,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1327,7 +1489,9 @@ const DATA = {
       "Randwick Opens",
       20,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       9,
@@ -1336,7 +1500,9 @@ const DATA = {
       "Camden & District Opens",
       14,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       10,
@@ -1345,7 +1511,9 @@ const DATA = {
       "Penrith District Opens",
       17,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1354,7 +1522,9 @@ const DATA = {
       "Lakeside Opens",
       20,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1363,7 +1533,9 @@ const DATA = {
       "Sutherland Shire Opens",
       10,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1372,7 +1544,9 @@ const DATA = {
       "Baulkham Hills Shire Opens",
       13,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1381,7 +1555,9 @@ const DATA = {
       "Eastwood Ryde Opens",
       6,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1390,7 +1566,9 @@ const DATA = {
       "Illawarra District Opens",
       10,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1399,7 +1577,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       22,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1408,7 +1588,9 @@ const DATA = {
       "Newcastle Opens",
       22,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1417,7 +1599,9 @@ const DATA = {
       "Blacktown City Opens",
       16,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       10,
@@ -1426,7 +1610,9 @@ const DATA = {
       "Woolgoolga District Opens",
       13,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       11,
@@ -1435,7 +1621,9 @@ const DATA = {
       "Maitland Opens",
       18,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1444,7 +1632,9 @@ const DATA = {
       "Camden & District Opens",
       16,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1453,7 +1643,9 @@ const DATA = {
       "Gosford Opens",
       25,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1462,7 +1654,9 @@ const DATA = {
       "Hastings Valley Opens",
       12,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1471,7 +1665,9 @@ const DATA = {
       "Orange Opens",
       15,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1480,7 +1676,9 @@ const DATA = {
       "Charlestown Opens",
       21,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1489,7 +1687,9 @@ const DATA = {
       "Hills District Opens",
       28,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1498,7 +1698,9 @@ const DATA = {
       "Manly Warringah Opens",
       19,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1507,7 +1709,9 @@ const DATA = {
       "Penrith District Opens",
       13,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       11,
@@ -1516,7 +1720,9 @@ const DATA = {
       "Randwick Opens",
       24,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       12,
@@ -1525,7 +1731,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       19,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1534,7 +1742,9 @@ const DATA = {
       "Wyong District Opens",
       17,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1543,7 +1753,9 @@ const DATA = {
       "Lakeside Opens",
       11,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1552,7 +1764,9 @@ const DATA = {
       "Sutherland Shire Opens",
       15,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1561,7 +1775,9 @@ const DATA = {
       "Baulkham Hills Shire Opens",
       20,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1570,7 +1786,9 @@ const DATA = {
       "Eastwood Ryde Opens",
       15,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1579,7 +1797,9 @@ const DATA = {
       "Illawarra District Opens",
       15,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1588,7 +1808,9 @@ const DATA = {
       "Woolgoolga District Opens",
       11,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1597,7 +1819,9 @@ const DATA = {
       "Newcastle Opens",
       20,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       12,
@@ -1606,7 +1830,9 @@ const DATA = {
       "Blacktown City Opens",
       22,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       13,
@@ -1615,7 +1841,9 @@ const DATA = {
       "Charlestown Opens",
       13,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1624,7 +1852,9 @@ const DATA = {
       "Penrith District Opens",
       14,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1633,7 +1863,9 @@ const DATA = {
       "Camden & District Opens",
       13,
       13,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1642,7 +1874,9 @@ const DATA = {
       "Gosford Opens",
       19,
       14,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1651,7 +1885,9 @@ const DATA = {
       "Hastings Valley Opens",
       18,
       15,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1660,7 +1896,9 @@ const DATA = {
       "Orange Opens",
       7,
       12,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1669,7 +1907,9 @@ const DATA = {
       "Blacktown City Opens",
       13,
       20,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1678,7 +1918,9 @@ const DATA = {
       "Hills District Opens",
       23,
       21,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1687,7 +1929,9 @@ const DATA = {
       "Manly Warringah Opens",
       25,
       22,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       13,
@@ -1696,7 +1940,9 @@ const DATA = {
       "Maitland Opens",
       28,
       23,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       14,
@@ -1705,7 +1951,9 @@ const DATA = {
       "Baulkham Hills Shire Opens",
       16,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1714,7 +1962,9 @@ const DATA = {
       "Randwick Opens",
       17,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1723,7 +1973,9 @@ const DATA = {
       "Wyong District Opens",
       15,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1732,7 +1984,9 @@ const DATA = {
       "Lakeside Opens",
       24,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1741,7 +1995,9 @@ const DATA = {
       "Sutherland Shire Opens",
       16,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1750,7 +2006,9 @@ const DATA = {
       "Woolgoolga District Opens",
       10,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1759,7 +2017,9 @@ const DATA = {
       "Eastwood Ryde Opens",
       17,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1768,7 +2028,9 @@ const DATA = {
       "Illawarra District Opens",
       18,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1777,7 +2039,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       16,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       14,
@@ -1786,7 +2050,9 @@ const DATA = {
       "Newcastle Opens",
       16,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 09:00"
     ],
     [
       15,
@@ -1795,7 +2061,9 @@ const DATA = {
       "Gosford Opens",
       20,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1804,7 +2072,9 @@ const DATA = {
       "Blacktown City Opens",
       16,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1813,7 +2083,9 @@ const DATA = {
       "Penrith District Opens",
       17,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1822,7 +2094,9 @@ const DATA = {
       "Camden & District Opens",
       13,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1831,7 +2105,9 @@ const DATA = {
       "Newcastle Opens",
       8,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1840,7 +2116,9 @@ const DATA = {
       "Hastings Valley Opens",
       11,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1849,7 +2127,9 @@ const DATA = {
       "Orange Opens",
       18,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1858,7 +2138,9 @@ const DATA = {
       "Charlestown Opens",
       13,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1867,7 +2149,9 @@ const DATA = {
       "Hills District Opens",
       20,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       15,
@@ -1876,7 +2160,9 @@ const DATA = {
       "Manly Warringah Opens",
       15,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 10:00"
     ],
     [
       16,
@@ -1885,7 +2171,9 @@ const DATA = {
       "Wyong District Opens",
       21,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1894,7 +2182,9 @@ const DATA = {
       "Maitland Opens",
       18,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1903,7 +2193,9 @@ const DATA = {
       "Randwick Opens",
       22,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1912,7 +2204,9 @@ const DATA = {
       "Woolgoolga District Opens",
       9,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1921,7 +2215,9 @@ const DATA = {
       "Lakeside Opens",
       21,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1930,7 +2226,9 @@ const DATA = {
       "Sutherland Shire Opens",
       16,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1939,7 +2237,9 @@ const DATA = {
       "Baulkham Hills Shire Opens",
       16,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1948,7 +2248,9 @@ const DATA = {
       "Eastwood Ryde Opens",
       13,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1957,7 +2259,9 @@ const DATA = {
       "Illawarra District Opens",
       13,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       16,
@@ -1966,7 +2270,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       23,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 11:00"
     ],
     [
       17,
@@ -1975,7 +2281,9 @@ const DATA = {
       "Blacktown City Opens",
       26,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1984,7 +2292,9 @@ const DATA = {
       "Newcastle Opens",
       12,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -1993,7 +2303,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       24,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -2002,7 +2314,9 @@ const DATA = {
       "Penrith District Opens",
       16,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -2011,7 +2325,9 @@ const DATA = {
       "Camden & District Opens",
       19,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -2020,7 +2336,9 @@ const DATA = {
       "Gosford Opens",
       28,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -2029,7 +2347,9 @@ const DATA = {
       "Hastings Valley Opens",
       17,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -2038,7 +2358,9 @@ const DATA = {
       "Orange Opens",
       7,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -2047,7 +2369,9 @@ const DATA = {
       "Charlestown Opens",
       15,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       17,
@@ -2056,7 +2380,9 @@ const DATA = {
       "Hills District Opens",
       21,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 12:00"
     ],
     [
       18,
@@ -2065,7 +2391,9 @@ const DATA = {
       "Manly Warringah Opens",
       23,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -2074,7 +2402,9 @@ const DATA = {
       "Woolgoolga District Opens",
       10,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -2083,7 +2413,9 @@ const DATA = {
       "Maitland Opens",
       29,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -2092,7 +2424,9 @@ const DATA = {
       "Randwick Opens",
       18,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -2101,7 +2435,9 @@ const DATA = {
       "Wyong District Opens",
       13,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -2110,7 +2446,9 @@ const DATA = {
       "Lakeside Opens",
       23,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -2119,7 +2457,9 @@ const DATA = {
       "Sutherland Shire Opens",
       15,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -2128,7 +2468,9 @@ const DATA = {
       "Baulkham Hills Shire Opens",
       10,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -2137,7 +2479,9 @@ const DATA = {
       "Eastwood Ryde Opens",
       18,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       18,
@@ -2146,7 +2490,9 @@ const DATA = {
       "Illawarra District Opens",
       15,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 13:00"
     ],
     [
       19,
@@ -2155,7 +2501,9 @@ const DATA = {
       "Illawarra District Opens",
       12,
       7,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2164,7 +2512,9 @@ const DATA = {
       "Ku-ring-gai Opens",
       21,
       10,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2173,7 +2523,9 @@ const DATA = {
       "Newcastle Opens",
       17,
       12,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2182,7 +2534,9 @@ const DATA = {
       "Blacktown City Opens",
       14,
       24,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2191,7 +2545,9 @@ const DATA = {
       "Penrith District Opens",
       20,
       25,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2200,7 +2556,9 @@ const DATA = {
       "Camden & District Opens",
       9,
       26,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2209,7 +2567,9 @@ const DATA = {
       "Gosford Opens",
       23,
       27,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2218,7 +2578,9 @@ const DATA = {
       "Hastings Valley Opens",
       6,
       28,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2227,7 +2589,9 @@ const DATA = {
       "Orange Opens",
       7,
       29,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ],
     [
       19,
@@ -2236,7 +2600,9 @@ const DATA = {
       "Charlestown Opens",
       12,
       30,
-      "done"
+      "done",
+      null,
+      "Mon 14:00"
     ]
   ]
 };
@@ -2246,10 +2612,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -2272,13 +2638,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -2288,7 +2654,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -2308,7 +2674,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -2323,7 +2696,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });

@@ -24,7 +24,7 @@
     --loss-bg:  #fbe9e6;
     --draw-bg:  #fff3e0;
     --col-w:    52px;
-    --name-w:   110px;
+    --name-w:   66px;
     --row-h:    33px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -172,8 +172,12 @@
   tr.pinned th.rowhead { background: #fff7ec; }
   tr.pinned td.cell:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
   td.cell.pincol:not(.self) .mg:not(.win):not(.loss):not(.live):not(.draw) { background-color: #fffaf2; }
+  tr.rg th.rowhead .nm { color: var(--muted); }
+  tr.rg th.rowhead .rkn { color: var(--line); }
+  th.colhead.rg { color: var(--muted); }
+  tr.rg td.cell, td.cell.rgcol { opacity: 0.35; }
   @media (max-width: 400px) {
-    :root { --col-w: 42px; --name-w: 90px; }
+    :root { --col-w: 42px; --name-w: 54px; }
   }
 
 </style>
@@ -199,7 +203,8 @@ const DATA = {
       "pct": "189.7",
       "W": 10,
       "L": 0,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Sutherland Shire Open Male",
@@ -209,7 +214,8 @@ const DATA = {
       "pct": "187.0",
       "W": 8,
       "L": 1,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Christchurch NZ Open Male (INV)",
@@ -219,7 +225,8 @@ const DATA = {
       "pct": "131.9",
       "W": 7,
       "L": 2,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Maitland Open Male",
@@ -229,7 +236,8 @@ const DATA = {
       "pct": "144.9",
       "W": 7,
       "L": 3,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Hawkesbury City Open Male",
@@ -239,7 +247,8 @@ const DATA = {
       "pct": "130.8",
       "W": 6,
       "L": 3,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Blue Mountains Open Male",
@@ -249,7 +258,8 @@ const DATA = {
       "pct": "129.6",
       "W": 4,
       "L": 5,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Bathurst Open Male",
@@ -259,7 +269,8 @@ const DATA = {
       "pct": "118.4",
       "W": 4,
       "L": 5,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "Randwick Open Male 2 (INV)",
@@ -269,7 +280,8 @@ const DATA = {
       "pct": "104.7",
       "W": 3,
       "L": 6,
-      "D": 1
+      "D": 1,
+      "regraded": true
     },
     {
       "code": "ADF Reserve Male (INV)",
@@ -279,7 +291,8 @@ const DATA = {
       "pct": "78.2",
       "W": 2,
       "L": 8,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Illawarra District Open Male",
@@ -289,7 +302,8 @@ const DATA = {
       "pct": "62.6",
       "W": 1,
       "L": 9,
-      "D": 0
+      "D": 0,
+      "regraded": true
     },
     {
       "code": "Young & District Open Male",
@@ -299,86 +313,65 @@ const DATA = {
       "pct": "11.0",
       "W": 0,
       "L": 10,
-      "D": 0
+      "D": 0,
+      "regraded": true
     }
   ],
   "rounds": [
     {
       "n": 1,
-      "day": "Sat",
-      "time": "10:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 10:00"
     },
     {
       "n": 2,
-      "day": "Sat",
-      "time": "11:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 11:00"
     },
     {
       "n": 3,
-      "day": "Sat",
-      "time": "12:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 12:00"
     },
     {
       "n": 4,
-      "day": "Sat",
-      "time": "13:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 13:00"
     },
     {
       "n": 5,
-      "day": "Sat",
-      "time": "14:00",
-      "sdate": "6/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sat 14:00"
     },
     {
       "n": 6,
-      "day": "Sun",
-      "time": "09:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 09:00"
     },
     {
       "n": 7,
-      "day": "Sun",
-      "time": "10:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 10:00"
     },
     {
       "n": 8,
-      "day": "Sun",
-      "time": "11:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 11:00"
     },
     {
       "n": 9,
-      "day": "Sun",
-      "time": "12:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 12:00"
     },
     {
       "n": 10,
-      "day": "Sun",
-      "time": "13:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 13:00"
     },
     {
       "n": 11,
-      "day": "Sun",
-      "time": "14:00",
-      "sdate": "7/6",
-      "state": "done"
+      "state": "done",
+      "ds": "Sun 14:00"
     }
   ],
   "games": [
@@ -389,7 +382,9 @@ const DATA = {
       "Christchurch NZ Open Male (INV)",
       18,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -398,7 +393,9 @@ const DATA = {
       "Young & District Open Male",
       0,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -407,7 +404,9 @@ const DATA = {
       "Illawarra District Open Male",
       5,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -416,7 +415,9 @@ const DATA = {
       "Hawkesbury City Open Male",
       14,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       1,
@@ -425,7 +426,9 @@ const DATA = {
       "ADF Reserve Male (INV)",
       12,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 10:00"
     ],
     [
       2,
@@ -434,7 +437,9 @@ const DATA = {
       "Sutherland Shire Open Male",
       22,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -443,7 +448,9 @@ const DATA = {
       "Blue Mountains Open Male",
       13,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -452,7 +459,9 @@ const DATA = {
       "Randwick Open Male 2 (INV)",
       23,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -461,7 +470,9 @@ const DATA = {
       "ADF Open Male (INV)",
       24,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       2,
@@ -470,7 +481,9 @@ const DATA = {
       "ADF Reserve Male (INV)",
       13,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 11:00"
     ],
     [
       3,
@@ -479,7 +492,9 @@ const DATA = {
       "Bathurst Open Male",
       10,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -488,7 +503,9 @@ const DATA = {
       "Maitland Open Male",
       19,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -497,7 +514,9 @@ const DATA = {
       "Christchurch NZ Open Male (INV)",
       12,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -506,7 +525,9 @@ const DATA = {
       "Young & District Open Male",
       3,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       3,
@@ -515,7 +536,9 @@ const DATA = {
       "Illawarra District Open Male",
       11,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 12:00"
     ],
     [
       4,
@@ -524,7 +547,9 @@ const DATA = {
       "Randwick Open Male 2 (INV)",
       10,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -533,7 +558,9 @@ const DATA = {
       "ADF Open Male (INV)",
       15,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -542,7 +569,9 @@ const DATA = {
       "ADF Reserve Male (INV)",
       9,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -551,7 +580,9 @@ const DATA = {
       "Hawkesbury City Open Male",
       12,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       4,
@@ -560,7 +591,9 @@ const DATA = {
       "Illawarra District Open Male",
       24,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 13:00"
     ],
     [
       5,
@@ -569,7 +602,9 @@ const DATA = {
       "Blue Mountains Open Male",
       12,
       32,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -578,7 +613,9 @@ const DATA = {
       "Sutherland Shire Open Male",
       16,
       33,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -587,7 +624,9 @@ const DATA = {
       "Bathurst Open Male",
       15,
       34,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -596,7 +635,9 @@ const DATA = {
       "Maitland Open Male",
       12,
       36,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       5,
@@ -605,7 +646,9 @@ const DATA = {
       "Christchurch NZ Open Male (INV)",
       24,
       37,
-      "done"
+      "done",
+      null,
+      "Sat 14:00"
     ],
     [
       6,
@@ -614,7 +657,9 @@ const DATA = {
       "ADF Reserve Male (INV)",
       7,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       6,
@@ -623,7 +668,9 @@ const DATA = {
       "Hawkesbury City Open Male",
       16,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       6,
@@ -632,7 +679,9 @@ const DATA = {
       "Illawarra District Open Male",
       4,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       6,
@@ -641,7 +690,9 @@ const DATA = {
       "Young & District Open Male",
       3,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       6,
@@ -650,7 +701,9 @@ const DATA = {
       "Christchurch NZ Open Male (INV)",
       13,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 09:00"
     ],
     [
       7,
@@ -659,7 +712,9 @@ const DATA = {
       "ADF Open Male (INV)",
       15,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       7,
@@ -668,7 +723,9 @@ const DATA = {
       "Randwick Open Male 2 (INV)",
       11,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       7,
@@ -677,7 +734,9 @@ const DATA = {
       "Blue Mountains Open Male",
       37,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       7,
@@ -686,7 +745,9 @@ const DATA = {
       "Sutherland Shire Open Male",
       15,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       7,
@@ -695,7 +756,9 @@ const DATA = {
       "Bathurst Open Male",
       12,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 10:00"
     ],
     [
       8,
@@ -704,7 +767,9 @@ const DATA = {
       "Illawarra District Open Male",
       5,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       8,
@@ -713,7 +778,9 @@ const DATA = {
       "Young & District Open Male",
       3,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       8,
@@ -722,7 +789,9 @@ const DATA = {
       "Christchurch NZ Open Male (INV)",
       17,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       8,
@@ -731,7 +800,9 @@ const DATA = {
       "Maitland Open Male",
       16,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       8,
@@ -740,7 +811,9 @@ const DATA = {
       "Bathurst Open Male",
       9,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 11:00"
     ],
     [
       9,
@@ -749,7 +822,9 @@ const DATA = {
       "Hawkesbury City Open Male",
       37,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       9,
@@ -758,7 +833,9 @@ const DATA = {
       "ADF Reserve Male (INV)",
       7,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       9,
@@ -767,7 +844,9 @@ const DATA = {
       "ADF Open Male (INV)",
       20,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       9,
@@ -776,7 +855,9 @@ const DATA = {
       "Randwick Open Male 2 (INV)",
       16,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       9,
@@ -785,7 +866,9 @@ const DATA = {
       "Blue Mountains Open Male",
       9,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 12:00"
     ],
     [
       10,
@@ -794,7 +877,9 @@ const DATA = {
       "Christchurch NZ Open Male (INV)",
       19,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       10,
@@ -803,7 +888,9 @@ const DATA = {
       "Maitland Open Male",
       12,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       10,
@@ -812,7 +899,9 @@ const DATA = {
       "Bathurst Open Male",
       14,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       10,
@@ -821,7 +910,9 @@ const DATA = {
       "Sutherland Shire Open Male",
       12,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       10,
@@ -830,7 +921,9 @@ const DATA = {
       "Blue Mountains Open Male",
       11,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 13:00"
     ],
     [
       11,
@@ -839,7 +932,9 @@ const DATA = {
       "Young & District Open Male",
       4,
       2,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       11,
@@ -848,7 +943,9 @@ const DATA = {
       "Illawarra District Open Male",
       6,
       1,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       11,
@@ -857,7 +954,9 @@ const DATA = {
       "Hawkesbury City Open Male",
       14,
       3,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       11,
@@ -866,7 +965,9 @@ const DATA = {
       "ADF Reserve Male (INV)",
       11,
       5,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ],
     [
       11,
@@ -875,7 +976,9 @@ const DATA = {
       "ADF Open Male (INV)",
       18,
       8,
-      "done"
+      "done",
+      null,
+      "Sun 14:00"
     ]
   ]
 };
@@ -885,10 +988,10 @@ function render(d) {
 
   // Build M as arrays — all games per pair, sorted by round.
   const M = {};
-  d.games.forEach(([rd, h, hs, a, as_, court, st]) => {
+  d.games.forEach(([rd, h, hs, a, as_, court, st, fw, ds]) => {
     const k = key(h, a);
     if (!M[k]) M[k] = [];
-    M[k].push({ rd, h, hs, a, as: as_, court, st });
+    M[k].push({ rd, h, hs, a, as: as_, court, st, fw: fw || null, ds: ds || "" });
   });
   Object.values(M).forEach(arr => arr.sort((x, y) => x.rd - y.rd));
 
@@ -911,13 +1014,13 @@ function render(d) {
     : d.title;
   html += `<th class="corner"><div class="lbl">${titleEl}</div></th>`;
   d.teams.forEach(t => {
-    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
+    html += `<th class="colhead${t.code === d.pin ? " pinhead" : ""}${t.regraded ? " rg" : ""}"><span class="ckn">${t.rank}</span>${t.name}</th>`;
   });
   html += "</tr></thead><tbody>";
 
   d.teams.forEach((rowT) => {
     const pinnedRow = rowT.code === d.pin;
-    html += `<tr class="${pinnedRow ? "pinned" : ""}">`;
+    html += `<tr class="${pinnedRow ? "pinned" : ""}${rowT.regraded ? " rg" : ""}">`;
     html += `<th class="rowhead">
                <div class="rn">
                  <span class="rkn">${rowT.rank}</span>
@@ -927,7 +1030,7 @@ function render(d) {
 
     d.teams.forEach((colT) => {
       const pinCol = colT.code === d.pin && !pinnedRow;
-      const pcls = pinCol ? " pincol" : "";
+      const pcls = (pinCol ? " pincol" : "") + (colT.regraded ? " rgcol" : "");
 
       if (rowT.code === colT.code) {
         html += `<td class="cell self">
@@ -947,7 +1050,14 @@ function render(d) {
         const rmeta = roundByN[m.rd] || {};
         const ncls = m.rd === nextRound[rowT.code] ? " next" : "";
 
-        if (m.st === "live" && rowScore != null) {
+        if (m.fw) {
+          const rowWon = m.h === rowT.code ? m.fw === "home" : m.fw === "away";
+          const cls = rowWon ? "win" : "loss";
+          html += `<div class="mg ${cls}${ncls}">
+                     <span class="rd">R${m.rd}</span>
+                     <span class="score">FORF</span>
+                   </div>`;
+        } else if (m.st === "live" && rowScore != null) {
           html += `<div class="mg live${ncls}">
                      <span class="rd">R${m.rd}</span>
                      <span class="score"><span class="dot"></span>${rowScore}–${colScore}</span>
@@ -962,7 +1072,7 @@ function render(d) {
           const liveCls = m.st === "live" ? " live" : "";
           html += `<div class="mg fix${liveCls}${ncls}">
                      <span class="fl1"><b>R${m.rd}</b> C${m.court}</span>
-                     <span class="fl2">${rmeta.day || ""} ${rmeta.time || ""}</span>
+                     <span class="fl2">${m.ds}</span>
                    </div>`;
         }
       });
